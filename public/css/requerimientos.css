@@ -1,0 +1,31 @@
+nav{
+	margin-bottom: 20px;
+}
+.card{
+	height: 75vh;
+	overflow: scroll;
+}
+.copi-rojo-claro{
+	background-color: rgb(218,41,28);
+}
+.copi-rojo-oscuro{
+	background-color: rgb(134,38,51);
+}
+
+.copi-naranja-claro{
+	background-color: rgb(240,179,45)
+}
+
+.copi-naranja-oscuro{
+	background-color: rgb(234,118,0)
+}
+
+.copi-azul-claro{
+	background-color: rgb(0,119,20);
+}
+
+.copi-azul-oscuro{
+	background-color: rgb(0,40,85);
+}
+
+

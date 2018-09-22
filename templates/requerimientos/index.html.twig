@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello {{ controller_name }}!{% endblock %}
+
+
+{% block body %}
+<link rel="stylesheet" type="text/css" href="css/requerimientos.css">
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<h3>{{app.session.get('rol_usuario')}}</h3><br>
+<section>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-3 col-md-4 col-sm-4 col-xs-4" >
+					<form>
+						<label>Filtrar por:</label>
+						
+
+						<div class="form-group">
+							<label>Área</label>
+							<select class="form-control" id="fArea">
+								{% for area in areas %}
+								<option value="{{area.id}}">{{area.nombre}}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="form-group">
+							<label># Requerimiento</label>
+							<select class="form-control" id="fReq">
+								{% for req in requerimiento %}
+
+								<option  value="{{req.numerorequerimiento}}">{{req.numerorequerimiento}}</option>
+								{% endfor %}
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Estado</label>
+							<select class="form-control" id="fEstado">
+								{% for esta in estado %}
+								<option  value="{{esta.id}}">{{esta.nombre}}</option>
+								{% endfor %}
+							</select>
+						</div>
+
+						<div class="form-group">
+							<label>Módulo</label>
+							<select class="form-control" id="fModulo">
+								{% for mod in modulo %}
+								<option value="{{mod.id}}">{{mod.nombre}}</option>
+								{% endfor %}
+							</select>
+						</div>
+
+						<button type="button" class="btn btn-primary" onclick="filtrar()">Filtrar</button>
+					</form>
+				</div>
+
+
+				<div class="col-lg-9 col-md-8 col-sm-8 col-xs-8">
+					<div class="card">
+						<div class="card-body" id="requerimientos">
+							
+
+							
+							
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+
+
+
+
+	</section>
+
+
+
+
+{% endblock %}

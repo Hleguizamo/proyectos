@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Coopidrogas</title>
+        <link rel="stylesheet" type="text/css" href="">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+   		
+        <title>{% block title %}Welcome!{% endblock %}</title>
+         <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+   
+      
+       {% if(app.session.get('rol_usuario')) %}
+
+    
+    <nav class="navbar navbar-light bg-light">
+		<a class="navbar-brand" href="#">
+			<img src="{{asset('img/coopidrogas.png')}}" width="150" height="80" alt="">
+		</a>
+	
+		<span class="navbar-text">
+   			Usuario : {{app.session.get('nombre_usuario')}}  &nbsp; &nbsp;
+   			<a class="btn btn-primary" href="{{'cerrar'}}">Salir</a>
+    	</span>
+		
+	</nav>
+        {% block body %}{% endblock %}
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script   src="https://code.jquery.com/jquery-3.3.1.min.js"   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous"></script>
+         <script src="js/usuarios.js"></script>
+         <script src="js/requerimientos.js"></script>
+
+
+        {% block javascripts %}{% endblock %}
+        {% else %}
+            Usuario no logueado
+        {%
+
+            endif
+            
+
+        %}
+    </body>
+</html>
