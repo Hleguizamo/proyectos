@@ -22,6 +22,7 @@
 						<div class="form-group">
 							<label>Área</label>
 							<select class="form-control" id="fArea">
+								<option value="null">Sin seleccionar</option>
 								{% for area in areas %}
 								<option value="{{area.id}}">{{area.nombre}}</option>
 								{% endfor %}
@@ -29,7 +30,9 @@
 						</div>
 						<div class="form-group">
 							<label># Requerimiento</label>
+							
 							<select class="form-control" id="fReq">
+								<option value="null">Sin seleccionar</option>
 								{% for req in requerimiento %}
 
 								<option  value="{{req.numerorequerimiento}}">{{req.numerorequerimiento}}</option>
@@ -40,6 +43,7 @@
 						<div class="form-group">
 							<label>Estado</label>
 							<select class="form-control" id="fEstado">
+								<option value="null">Sin seleccionar</option>
 								{% for esta in estado %}
 								<option  value="{{esta.id}}">{{esta.nombre}}</option>
 								{% endfor %}
@@ -49,6 +53,7 @@
 						<div class="form-group">
 							<label>Módulo</label>
 							<select class="form-control" id="fModulo">
+								<option value="null">Sin seleccionar</option>
 								{% for mod in modulo %}
 								<option value="{{mod.id}}">{{mod.nombre}}</option>
 								{% endfor %}

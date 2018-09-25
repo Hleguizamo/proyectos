@@ -154,6 +154,8 @@ class RequerimientoRepository extends ServiceEntityRepository
                 
                 $parametros[ 'id_usuario'] = $id_usuario;
                 
+        //$d = array ('sql'=>$sql,'params'=>$parametros);
+        //dd($d);
         $stmt = $conn->prepare($sql);
         $stmt->execute($parametros);
         return $stmt->fetchAll();
