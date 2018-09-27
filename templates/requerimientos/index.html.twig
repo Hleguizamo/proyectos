@@ -29,15 +29,10 @@
 							</select>
 						</div>
 						<div class="form-group">
-							<label># Requerimiento</label>
+							<label>Número de Requerimiento</label>
+							<input type="text" name="" class="form-control" id="fReq">
 							
-							<select class="form-control" id="fReq">
-								<option value="null">Sin seleccionar</option>
-								{% for req in requerimiento %}
-
-								<option  value="{{req.numerorequerimiento}}">{{req.numerorequerimiento}}</option>
-								{% endfor %}
-							</select>
+							
 						</div>
 
 						<div class="form-group">

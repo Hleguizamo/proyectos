@@ -27,6 +27,7 @@ class RequerimientoRepository extends ServiceEntityRepository
                 usuarios.apellidos apellido_usuario,
                 RQ.numero_requerimiento,
                 RQ.descripcion,
+                
                 RQ.fecha_asignacion,
                 RQ.fecha_inicio,
                 RQ.fecha_estimada_entrega,
