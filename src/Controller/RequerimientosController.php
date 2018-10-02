@@ -28,7 +28,7 @@ class RequerimientosController extends AbstractController
     	$esta = $this->getDoctrine()->getRepository(EstadoRequerimiento::class)->findAll();
     	$mod = $this->getDoctrine()->getRepository(Modulos::class)->findAll();
   
-        return $this->render('requerimientos/index.html.twig', [
+        return $this->render('requerimientos/requerimientos.html.twig', [
             'controller_name' => 'RequerimientosController',
             'areas' => $areas,
             'requerimiento' => $req,
@@ -46,6 +46,34 @@ class RequerimientosController extends AbstractController
     	$session =new  Session(new NativeSessionStorage(), new AttributeBag());
     	$id_usuario = $session->get('id_usuario');
     	$empr = $this->getDoctrine()->getRepository(Requerimiento::class)->getRequerimientos($id_usuario);
+	    try {
+	    	 $arr = array(
+	                'success' => true,
+	                'msg' => 'Todo funciono correctamente',
+	                'datos' => $empr,
+	            );
+	    	
+	    } catch (Exception $e) {
+	    	 $arr = array(
+	                'success' => false,
+	                'msg' => 'error',
+	                'datos' => null,
+	            );
+	    }
+        
+       
+	       
+    	
+    	return new JsonResponse($arr);
+    }
+    /**
+     * @Route("/misRequerimientosById2", name="requerimientosById2")
+     */
+    public function mis_requerimientos_by_id2()
+    {
+    	$session =new  Session(new NativeSessionStorage(), new AttributeBag());
+    	$id_usuario = $session->get('id_usuario');
+    	$empr = $this->getDoctrine()->getRepository(Requerimiento::class)->getRequerimientosGrid();
 	    try {
 	    	 $arr = array(
 	                'success' => true,

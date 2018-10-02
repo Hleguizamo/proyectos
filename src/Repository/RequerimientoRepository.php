@@ -18,6 +18,33 @@ class RequerimientoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Requerimiento::class);
     }
+    public function getRequerimientosGrid(){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql='  SELECT 
+                RQ.fecha_creacion,
+                RQ.numero_requerimiento,
+                RQ.descripcion,
+                APP.nombre nombre_aplicacion,
+                MD.nombre nombre_modulo,
+                gerencias.nombre nombre_gerencia,
+                areas.nombre nombre_area,
+                RQ_ST.nombre estado_requerimiento,
+                RQ.fecha_asignacion,
+                RQ.fecha_estimada_entrega,
+                RQ.fecha_cierre,
+                RQ.observaciones
+                FROM requerimientos RQ
+                INNER JOIN modulos MD ON RQ.modulo_id = MD.id
+                INNER JOIN aplicaciones APP ON MD.aplicacion_id = APP.id
+                INNER JOIN areas ON APP.area_id = areas.id
+                INNER JOIN gerencias ON areas.gerencia_id = gerencias.id
+                INNER JOIN empresas EMP ON gerencias.empresas_id = EMP.id
+                INNER JOIN estado_requerimientos RQ_ST ON RQ.estado_requerimientos_id = RQ_ST.id';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 
     public function getRequerimientos($id_usuario){
         $conn = $this->getEntityManager()->getConnection();
