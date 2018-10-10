@@ -57,6 +57,7 @@ class UsuariosController extends AbstractController
 	    	if($valido){
 	    	
 	    		$session->set('rol_usuario',$data[0]['nombre_rol']);
+	    		$session->set('id_rol',$data[0]['id_rol']);
 	    		$session->set('nombre_usuario',$data[0]['nombre_usuario']." ".$data[0]['apellido_usuario']);
 	    		$session->set('id_usuario',$data[0]['id_usuario']);
 	    	

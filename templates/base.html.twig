@@ -67,6 +67,7 @@
                 <!-- SIDEBAR MENU -->
                 <div class="profile-usermenu">
                     <ul class="nav">
+                        {% if(app.session.get('id_rol')!= 2 and app.session.get('id_rol')!= 3) %}
                         <li class="active">
                             <a href="#">
                                 <i class="glyphicon glyphicon-home"></i>
@@ -107,6 +108,52 @@
                                 <i class="glyphicon glyphicon-flag"></i>
                             Aplicaciones </a>
                         </li>
+                        {%
+
+                        endif
+
+
+                        %}
+                         {% if(app.session.get('id_rol')== 2) %}
+
+                            <li class="active">
+                                <a href="#">
+                                    
+                                    <i class="glyphicon glyphicon-home"></i>
+                                    Home 
+                                </a>
+                                </li>
+                            <li>
+                                <a href="#">
+                                    <i class="glyphicon glyphicon-user"></i>
+                                Seguimiento </a>
+                            </li>
+
+                         {%
+
+                        endif
+
+
+                        %}
+                        {% if(app.session.get('id_rol')== 3) %}
+
+                            <li class="active">
+                                <a href="#">
+                                    
+                                    <i class="glyphicon glyphicon-home"></i>
+                                    Home 
+                                </a>
+                            </li>
+                           
+
+                         {%
+
+                        endif
+
+
+                        %}
+
+
                     </ul>
                 </div>
                 <!-- END MENU -->

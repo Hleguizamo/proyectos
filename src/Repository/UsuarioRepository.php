@@ -21,7 +21,7 @@ class UsuarioRepository extends ServiceEntityRepository
 
     public function Login($cc){
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'SELECT e.nombres nombre_usuario ,e.apellidos apellido_usuario, roles.nombre nombre_rol, e.id id_usuario
+        $sql = 'SELECT e.nombres nombre_usuario ,e.apellidos apellido_usuario, roles.nombre nombre_rol, roles.id id_rol, e.id id_usuario
         FROM usuarios e
         INNER JOIN roles ON e.rol_id=roles.id
         WHERE numero_documento=:cc';
