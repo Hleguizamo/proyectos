@@ -5,8 +5,28 @@ var tablaDatos = null;
 
 $( document ).ready(function() {
   loadDataConfig();
+
+
   
 });
+
+function setColumnFilters(tableId){
+
+  $('#'+tableId+' thead tr').clone(true).appendTo( '#'+tableId+' thead' );
+    $('#'+tableId+' thead tr:eq(1) th').each( function (i) {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="'+title+'" class="form-control" />' );
+ 
+        $( 'input', this ).on( 'keyup change', function () {
+            if ( tablaDatos.column(i).search() !== this.value ) {
+                tablaDatos
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );
+}
 
 function loadDataConfig(){
   var segment = $(location).attr('href').split("/")[3];
@@ -49,13 +69,16 @@ function addTableHead(columns){
 }
 
 function loadDataTable(url,dataSrc,columns){
+  setColumnFilters("reqTable");
   tablaDatos = $('#reqTable').DataTable({
+    orderCellsTop: true,
     ajax: {
         url: url,
         dataSrc: dataSrc
     },
     columns: columns
   });
+  
 }
 
 function showAdd(){
