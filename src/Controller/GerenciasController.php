@@ -44,7 +44,7 @@ class GerenciasController extends AbstractController
     }
 
     /**
-     * @Route("/gerencias/crudData", name="gerencias/crudData")
+     * @Route("/gerencias/crudDatas", name="gerencias/crudData")
      */
     public function getCrudData(){
         $data = array(

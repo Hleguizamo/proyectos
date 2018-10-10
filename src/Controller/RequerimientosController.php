@@ -37,7 +37,7 @@ class RequerimientosController extends AbstractController
         ]);
     }
     /**
-     * @Route("/requerimientos/crudData", name="requerimientos/crudData")
+     * @Route("/requerimientos/crudDatas", name="requerimientos/crudData")
      */
     public function getCrudData(){
     	$data = array(

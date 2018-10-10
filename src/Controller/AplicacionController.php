@@ -46,7 +46,7 @@ class AplicacionController extends AbstractController
     }
 
     /**
-     * @Route("/aplicaciones/crudData", name="areaaplicaciones/crudData")
+     * @Route("/aplicaciones/crudDatas", name="areaaplicaciones/crudData")
      */
     public function getCrudData(){
         $area =  $this->getDoctrine()->getRepository(Area::class)->findAreasOption();

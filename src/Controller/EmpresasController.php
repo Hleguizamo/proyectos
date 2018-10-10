@@ -43,7 +43,7 @@ class EmpresasController extends AbstractController
     }
 
     /**
-     * @Route("/empresas/crudData", name="empresas")
+     * @Route("/empresas/crudDatas", name="empresas/crudData")
      */
     public function getCrudData(){
     	$data = array(

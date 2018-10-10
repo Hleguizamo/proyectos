@@ -46,7 +46,7 @@ class AreasController extends AbstractController
     }
 
     /**
-     * @Route("/areas/crudData", name="areas/crudData")
+     * @Route("/areas/crudDatas", name="areas/crudData")
      */
     public function getCrudData(){
         $gerencias = $this->getDoctrine()->getRepository(Gerencia::class)->findGerenciasOptions();
