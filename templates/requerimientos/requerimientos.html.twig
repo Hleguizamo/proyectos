@@ -2,6 +2,8 @@
 
 {% block title %}Hello {{ controller_name }}!{% endblock %}
 
+{% block bodyTitle %} Requerimientos {% endblock %}
+
 
 {% block body %}
 <link rel="stylesheet" type="text/css" href="css/requerimientos.css">
@@ -15,7 +17,7 @@
     }
 </style>
 
-<h3>{{app.session.get('rol_usuario')}}</h3><br>
+
 <section>
 		<div class="container-fluid">
 			
@@ -24,20 +26,8 @@
 				<div class="contenidotable">
 					<table class="table table-bordered" id="reqTable">
 						<thead>
-							<tr>
-								<th>Fecha Creación</th>
-								<th>Nro de requerimiento</th>
-								<th>Descripcion</th>
-								<th>Aplicación</th>
-								<th>Módulo</th>
-								<th>Gerencia</th>
-								<th>Area</th>
-							
-								<th>Estado del requerimiento</th>
-								<th>Fecha Asignación</th>
-								<th>Fecha estimada de entrega</th>
-								<th>Fecha de cierre</th>
-								<th>Observación</th>
+							<tr id="tableHead">
+								
 							</tr>
 						</thead>
 						<tbody id="cuerpo">

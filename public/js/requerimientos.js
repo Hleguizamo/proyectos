@@ -1,17 +1,174 @@
+var columns = [];
+var distribucion = null;
+var saveUrl = null;
+var tablaDatos = null;
+
 $( document ).ready(function() {
-  //$('#reqTable').DataTable();
-  $.ajax({
-  	url : "misRequerimientosById2",
-  	type : "GET",
-  	data: {},
-  	success : function(data){
-  		if(data.success){
-        console.log(data);
-  			mostrarRequerimientos(data.datos);
-  		}
-  	}
-  });
+  loadDataConfig();
+  
 });
+
+function loadDataConfig(){
+  var segment = $(location).attr('href').split("/")[3];
+  $.ajax({
+    url : segment+"/crudData",
+    type : "GET",
+    data: {},
+    success : function(data){
+      $("#contentTitle").html(data.PageTitle);
+      columns = data.columns;
+      distribucion = data.dist;
+      saveUrl = data.saveUrl;
+      addTableHead(data.columns);
+      loadDataTable(data.dataRoute,data.dataSrc,data.columns);
+    }
+  });
+}
+
+function getDistrib(){
+  distribucion = null;
+  switch(distribucion){
+    case "2-cols":
+        return "col-xs-6";
+    case "3-cols":
+        return "col-xs-4";
+    case "4-cols":
+        return "col-xs-12 col-sm-6 col-md-3 col-lg-3";
+    default:
+        return "col-xs-12";
+  }
+}
+
+function addTableHead(columns){
+  var code = '';
+  $.each(columns,function(index,col){
+    var name = col.name != undefined && col.name != "" ? col.name : col.data;
+    code = code + '<th> '+name+'</th>';
+  });
+  $('#tableHead').html(code);
+}
+
+function loadDataTable(url,dataSrc,columns){
+  tablaDatos = $('#reqTable').DataTable({
+    ajax: {
+        url: url,
+        dataSrc: dataSrc
+    },
+    columns: columns
+  });
+}
+
+function showAdd(){
+  $.confirm({
+    title: 'Agregar',
+    columnClass : "xl",
+    content: getForm(),
+    buttons: {
+        formSubmit: {
+            text: 'Submit',
+            btnClass: 'btn-blue',
+            action: function () {
+              var form = $("#saveForm");
+                var data = getFormJsonData(form);
+                save(data);
+            }
+        },
+        cancel: function () {
+            //close
+        },
+    },
+    
+  });
+}
+
+function getFormJsonData($form){
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}
+
+function getForm(){
+  var code = '<form id="saveForm">';
+  
+  $.each(columns,function(index,col){
+    code = code + '<div class="'+getDistrib()+'">';
+    code = code +   '<label>'+col.name+'</label>';
+    if(col.type =="select"){
+      code = code + '<select class="form-control" name="'+col.data+'">';
+      code = code + getSelectOptions(col.options);
+      code = code + '</select>';
+    }else{
+      code = code +   '<input type="'+col.type+'" class="form-control" name="'+col.data+'">';  
+    }
+    
+    code = code + '</div>';
+  });
+  code = code + '</form>';
+  return code;
+}
+
+
+function getSelectOptions(options){
+  var code = "";
+  $.each(options,function(indx,opt){
+    var selected = indx == 0? "selected" : "";
+    code = code + '<option value="'+opt.value+'" '+selected+'>'+opt.name+'</option>';
+    
+  });
+  return code;
+}
+
+function save(data){
+  $.ajax({
+    url : saveUrl,
+    type:"POST",
+    data : data,
+    success : function(ReqData){
+      if(ReqData.success){
+        if (ReqData.msg) {}
+      }
+      var color = (data.success)? "green" : "red";
+      if(ReqData.msg){
+        $.confirm({
+            title: 'Alerta',
+            content: ReqData.msg,
+            type: 'red',
+            typeAnimated: true,
+            buttons: {
+                
+                close: function () {
+                }
+            }
+        });
+        if(ReqData.success){
+          tablaDatos.ajax.reload();
+        }
+      }
+      
+
+    },
+    error : function(errors){
+      $.confirm({
+            title: 'Error Inesperado',
+            content: 'Ha ocurrido un error inesperado',
+            type: 'red',
+            typeAnimated: true,
+            buttons: {
+                
+                close: function () {
+                }
+            }
+        });
+      console.log(errors);
+    }
+  });
+}
+
 
 
 

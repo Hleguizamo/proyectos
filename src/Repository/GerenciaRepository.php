@@ -19,6 +19,24 @@ class GerenciaRepository extends ServiceEntityRepository
         parent::__construct($registry, Gerencia::class);
     }
 
+    public function findGerencias(){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT g.nombre nombre_gerencia
+                FROM gerencias g";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function findGerenciasOptions(){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT g.id value, g.nombre name
+                FROM gerencias g";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
 //    /**
 //     * @return Gerencia[] Returns an array of Gerencia objects
 //     */

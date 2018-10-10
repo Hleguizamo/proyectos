@@ -1,61 +1,164 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Coopidrogas</title>
-        <link rel="stylesheet" type="text/css" href="">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coopidrogas</title>
+    <link rel="stylesheet" type="text/css" href="">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
 
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.bootstrap4.min.css">
-   		
-        <title>{% block title %}Welcome!{% endblock %}</title>
-         <link rel="stylesheet" href="{{ asset('build/app.css') }}">
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-   
-      
-       {% if(app.session.get('rol_usuario')) %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.bootstrap4.min.css">
 
-    
-    <nav class="navbar navbar-light bg-light">
-		<a class="navbar-brand" href="#">
-			<img src="{{asset('img/coopidrogas.png')}}" width="150" height="80" alt="">
-		</a>
-	
-		<span class="navbar-text">
-   			Usuario : {{app.session.get('nombre_usuario')}}  &nbsp; &nbsp;
-   			<a class="btn btn-primary" href="{{'cerrar'}}">Salir</a>
-    	</span>
-		
-	</nav>
-        {% block body %}{% endblock %}
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script   src="https://code.jquery.com/jquery-3.3.1.min.js"   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 
-        <script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
-
-        <script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
-
-        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
-
-        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.bootstrap4.min.js"></script>
-
-         <script src="js/usuarios.js"></script>
-         <script src="js/requerimientos.js"></script>
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
 
 
-        {% block javascripts %}{% endblock %}
-        {% else %}
-            Usuario no logueado
-        {%
+ {% if(app.session.get('rol_usuario')) %}
 
-            endif
-            
 
-        %}
-    </body>
+ <nav class="navbar navbar-light bg-light">
+  <a class="navbar-brand" href="#">
+     <img src="{{asset('img/coopidrogas.png')}}" width="150" height="80" alt="">
+ </a>
+
+ <span class="navbar-text">
+  Usuario : {{app.session.get('nombre_usuario')}}  &nbsp; &nbsp;
+  <a class="btn btn-primary" href="{{'cerrar'}}">Salir</a>
+</span>
+
+</nav>
+
+
+
+
+<div class="c_sidebar">
+    <div class="row profile">
+        <div class="col-md-3 col-lg-3">
+            <div class="profile-sidebar">
+                <!-- SIDEBAR USERPIC -->
+                <div class="profile-userpic">
+                    <img src="http://keenthemes.com/preview/metronic/theme/assets/admin/pages/media/profile/profile_user.jpg" class="img-responsive" alt="">
+                </div>
+                <!-- END SIDEBAR USERPIC -->
+                <!-- SIDEBAR USER TITLE -->
+                <div class="profile-usertitle">
+                    <div class="profile-usertitle-name">
+                        {{app.session.get('nombre_usuario')}}
+                    </div>
+                    <div class="profile-usertitle-job">
+                        {{app.session.get('rol_usuario')}}
+                    </div>
+                </div>
+                <!-- END SIDEBAR USER TITLE -->
+                <!-- SIDEBAR BUTTONS -->
+                <!--<div class="profile-userbuttons">
+                    <button type="button" class="btn btn-success btn-sm">Follow</button>
+                    <button type="button" class="btn btn-danger btn-sm">Message</button>
+                </div>-->
+                <!-- END SIDEBAR BUTTONS -->
+                <!-- SIDEBAR MENU -->
+                <div class="profile-usermenu">
+                    <ul class="nav">
+                        <li class="active">
+                            <a href="#">
+                                <i class="glyphicon glyphicon-home"></i>
+                            Home </a>
+                        </li>
+                        <li>
+                            <a href="{{asset('requerimientos')}}">
+                                <i class="glyphicon glyphicon-user"></i>
+                            Requerimientos </a>
+                        </li>
+                        <li>
+                            <a href="#" target="_blank">
+                                <i class="glyphicon glyphicon-ok"></i>
+                            Usuarios </a>
+                        </li>
+                        <li>
+                            <a href="{{asset('areas')}}">
+                                <i class="glyphicon glyphicon-flag"></i>
+                            Areas </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="glyphicon glyphicon-flag"></i>
+                            Modulos </a>
+                        </li>
+                        <li>
+                            <a href="{{asset('gerencias')}}">
+                                <i class="glyphicon glyphicon-flag"></i>
+                            Gerencias </a>
+                        </li>
+                        <li>
+                            <a href="{{asset('empresas')}}">
+                                <i class="glyphicon glyphicon-flag"></i>
+                            Empresas </a>
+                        </li>
+                        <li>
+                            <a href="{{asset('aplicaciones')}}">
+                                <i class="glyphicon glyphicon-flag"></i>
+                            Aplicaciones </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- END MENU -->
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="profile-content">
+                <div class="col-xs-12">
+                    <div class="col-xs-3">
+                        <h2 id="contentTitle">{% block bodyTitle %}{% endblock %}</h2>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <button class="btn btn-success btn-sm" onclick="showAdd()">Agregar</button>
+                    </div>
+                    
+                    
+                </div>
+                <div class="col-xs-12 content-body">
+                    {% block body %}{% endblock %}
+                </div>
+             
+         </div>
+     </div>
+ </div>
+</div>
+
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script   src="https://code.jquery.com/jquery-3.3.1.min.js"   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.bootstrap4.min.js"></script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+<script src="js/usuarios.js"></script>
+<script src="js/requerimientos.js"></script>
+
+
+{% block javascripts %}{% endblock %}
+{% else %}
+Usuario no logueado
+{%
+
+    endif
+
+
+    %}
+</body>
 </html>

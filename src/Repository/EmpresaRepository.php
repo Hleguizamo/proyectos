@@ -21,11 +21,16 @@ class EmpresaRepository extends ServiceEntityRepository
 
     public function findEmpresas(){
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'SELECT e.nombre nombre_empresa ,g.nombre nombre_gerencia
+        $sql = "SELECT 
+                    e.nombre nombre_empresa ,
+                    e.codigo codigo_empresa, 
+                    e.pais pais, 
+                    CASE e.estado 
+                        WHEN '1' THEN 'Activo'
+                        ELSE 'Inactivo'
+                    END estado
         FROM empresas e
-        INNER JOIN gerencias g
-        ON e.id=g.empresas_id
-        ';
+        ";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();

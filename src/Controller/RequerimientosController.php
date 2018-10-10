@@ -36,6 +36,33 @@ class RequerimientosController extends AbstractController
             'modulo' => $mod,
         ]);
     }
+    /**
+     * @Route("/requerimientos/crudData", name="requerimientos/crudData")
+     */
+    public function getCrudData(){
+    	$data = array(
+    		'PageTitle' => 'Requerimientos',
+    		'columns' => array(
+    			["data"=> "fecha_creacion", 			"name" => "Fecha Creación",		"type"=>"date"],
+		        ["data"=> "numero_requerimiento", 		"name"=> "# Requerimiento",		"type"=>"text"],
+		        ["data"=> "descripcion", 				"name"=> "Descripción",			"type"=>"text"],
+		        ["data"=> "nombre_aplicacion", 			"name"=> "Nombre Aplicación",	"type"=>"text"],
+		        ["data"=> "nombre_modulo", 				"name"=> "Módulo",				"type"=>"text"],
+		        ["data"=> "nombre_gerencia", 			"name"=> "Gerencia",			"type"=>"text"],
+		        ["data"=> "nombre_area", 				"name"=> "Área",				"type"=>"text"],
+		        ["data"=> "estado_requerimiento", 		"name"=> "Estado Req.",			"type"=>"text"],
+		        ["data"=> "fecha_asignacion", 			"name"=> "Fecha Asignación",	"type"=>"date"],
+		        ["data"=> "fecha_estimada_entrega", 	"name"=> "Fecha Entrega",		"type"=>"date"],
+		        ["data"=> "fecha_cierre", 				"name"=> "Fecha Cierre",		"type"=>"date"],
+		        ["data"=> "observaciones", 				"name"=> "Observaciones",		"type"=>"text"]
+    		),
+    		'dataRoute' => "misRequerimientosById2",
+    		'dataSrc' => "datos",
+    		'dist' => '4-cols',
+    		'saveUrl' => 'agregarRequerimiento',
+    	);
+    	return new JsonResponse($data);
+    }
     
 
     /**
