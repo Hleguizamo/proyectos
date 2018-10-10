@@ -31,7 +31,7 @@ function setColumnFilters(tableId){
 function loadDataConfig(){
   var segment = $(location).attr('href').split("/")[3];
   $.ajax({
-    url : segment+"/crudData",
+    url : segment+"/crudDatas",
     type : "GET",
     data: {},
     success : function(data){
