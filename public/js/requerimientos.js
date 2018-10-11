@@ -74,11 +74,22 @@ function loadDataTable(url,dataSrc,columns){
     orderCellsTop: true,
     ajax: {
         url: url,
-        dataSrc: dataSrc
+        dataSrc: dataSrc,
+
     },
-    columns: columns
+    columns: columns,
+    "initComplete": function(settings, json) {
+          hideColumns(columns);
+    }
   });
   
+}
+
+function hideColumns(columns){
+  $.each(columns, function(index,col){
+      console.log(col.CURD);
+      tablaDatos.column(index).visible(col.CRUD[1]);
+  });
 }
 
 function showAdd(){
@@ -119,17 +130,21 @@ function getForm(){
   var code = '<form id="saveForm">';
   
   $.each(columns,function(index,col){
-    code = code + '<div class="'+getDistrib()+'">';
-    code = code +   '<label>'+col.name+'</label>';
-    if(col.type =="select"){
-      code = code + '<select class="form-control" name="'+col.data+'">';
-      code = code + getSelectOptions(col.options);
-      code = code + '</select>';
-    }else{
-      code = code +   '<input type="'+col.type+'" class="form-control" name="'+col.data+'">';  
+    if(col.CRUD[0]){
+      code = code + '<div class="'+getDistrib()+'">';
+      code = code +   '<label>'+col.name+'</label>';
+      if(col.type =="select"){
+        code = code + '<select class="form-control" name="'+col.data+'">';
+        code = code + getSelectOptions(col.options);
+        code = code + '</select>';
+      }else{
+        code = code +   '<input type="'+col.type+'" class="form-control" name="'+col.data+'">';  
+      }
+      
+      code = code + '</div>';
+
     }
     
-    code = code + '</div>';
   });
   code = code + '</form>';
   return code;
