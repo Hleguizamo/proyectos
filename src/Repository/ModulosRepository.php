@@ -19,7 +19,7 @@ class ModulosRepository extends ServiceEntityRepository
         parent::__construct($registry, Modulos::class);
     }
 
-<<<<<<< HEAD
+
     public function findModulos(){
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT 
@@ -27,12 +27,15 @@ class ModulosRepository extends ServiceEntityRepository
                     m.id id_modulo,
                     m.aplicacion_id id_aplicacion          
         FROM modulos m";
-=======
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function findModulosOptions(){
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT m.id value, m.nombre name
                 FROM modulos m";
->>>>>>> 5ff503b81405e1b4d63576a073bd0487786369c7
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();
