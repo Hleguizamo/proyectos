@@ -21,7 +21,7 @@ class EstadoRequerimientoRepository extends ServiceEntityRepository
      public function findEstados(){
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT 
-                    e.nombre nombre_estado,
+                    e.nombre nombre_estado
                     
                             
         FROM estado_requerimientos e";

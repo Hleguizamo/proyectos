@@ -47,7 +47,7 @@ class EstadosRequerimientosController extends AbstractController
     }
 
     /**
-     * @Route("/estados/crudDatas", name="modulos/crudData")
+     * @Route("/estados/crudDatas", name="estados/crudData")
      */
     public function getCrudData(){
         
@@ -69,7 +69,7 @@ class EstadosRequerimientosController extends AbstractController
     }
 
     /**
-     * @Route("/agregarModulos", name="agregarModulos")
+     * @Route("/agregarEstados", name="agregarEstados")
      */
     public function agregarEstados(Request $rq){
         $nombre = $rq->get("nombre_estado");
@@ -91,7 +91,7 @@ class EstadosRequerimientosController extends AbstractController
     }
 
     /**
-     * @Route("/getModulos", name="getModulos")
+     * @Route("/getEstados", name="getEstados")
      */
     public function getEstados(){
         try {

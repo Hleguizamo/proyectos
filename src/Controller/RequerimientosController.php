@@ -97,13 +97,19 @@ class RequerimientosController extends AbstractController
 	    	//$req->setAplicacionId($rq->get("nombre_aplicacion"));
 	    	//$req->setGerenciaId($rq->get("nombre_gerencia"));
 	    	//$req->setAreaId($rq->get("nombre_area"));
+	    	
 	    	$req->setEstadoRequerimientosId($rq->get("estado_requerimiento"));
+	    	$objDT = \DateTime::createFromFormat('Y-m-d', $rq->get("fecha_estimada_entrega"));
+	    	$req->setFechaEntrega($objDT);
 	    	$objDT = \DateTime::createFromFormat('Y-m-d', $rq->get("fecha_asignacion"));
 	    	$req->setFechaAsigna($objDT);
 	    	$objDT = \DateTime::createFromFormat('Y-m-d', $rq->get("fecha_cierre"));
 	    	$req->setFechaCierre($objDT);
-	    	/*$objDT = \DateTime::createFromFormat('Y-m-d', '2018-01-01');
-	    	$req->setFechaCreacion($objDT);*/
+	    	$fecha=date("Y-m-d");
+
+	    	$objDT = \DateTime::createFromFormat('Y-m-d', $fecha);
+	    	//dd($objDT);
+	    	$req->setFechaCreacion($objDT);
 	    	$req->setObservacion($rq->get("observaciones"));
 	    	$entityManager->persist($req);
 	        $entityManager->flush();

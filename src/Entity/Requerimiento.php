@@ -59,6 +59,11 @@ class Requerimiento
      */
     private $fecha_creacion;
 
+     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $fecha_estimada_entrega;
+
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -152,13 +157,24 @@ class Requerimiento
 
         return $this;
     }
+    
+    public function getFechaEntrega(): ?\DateTimeInterface
+    {
+        return $this->fecha_estimada_entrega;
+    }
 
+    public function setFechaEntrega($fecha_estimada_entrega): self
+    {
+        $this->fecha_estimada_entrega = $fecha_estimada_entrega;
+
+        return $this;
+    }
     public function getFechaCreacion(): ?\DateTimeInterface
     {
         return $this->fecha_creacion;
     }
 
-    public function setFechaCreacion(?\DateTimeInterface $fecha_creacion = null): self
+    public function setFechaCreacion($fecha_creacion): self
     {
         $this->fecha_creacion = $fecha_creacion;
 
