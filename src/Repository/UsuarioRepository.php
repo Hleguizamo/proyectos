@@ -40,7 +40,7 @@ class UsuarioRepository extends ServiceEntityRepository
         return $stmt;
     }
 
-<<<<<<< HEAD
+
 
     public function findUsuario(){
         $conn = $this->getEntityManager()->getConnection();
@@ -63,7 +63,8 @@ class UsuarioRepository extends ServiceEntityRepository
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();
-=======
+    }
+
     public function getUsersByRolOption($id_rol){
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT 
@@ -74,7 +75,6 @@ class UsuarioRepository extends ServiceEntityRepository
         $stmt->execute(["id_rol"=>$id_rol]);
         return $stmt->fetchAll();
 
->>>>>>> 5ff503b81405e1b4d63576a073bd0487786369c7
     }
 
 //    /**
