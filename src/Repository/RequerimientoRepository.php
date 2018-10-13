@@ -18,9 +18,9 @@ class RequerimientoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Requerimiento::class);
     }
-    public function getRequerimientosGrid(){
+    public function getRequerimientosGrid($id_usuario,$id_rol){
         $conn = $this->getEntityManager()->getConnection();
-        $sql='  SELECT 
+        $sql="  SELECT 
                 RQ.fecha_creacion,
                 RQ.numero_requerimiento,
                 RQ.descripcion,
@@ -32,21 +32,55 @@ class RequerimientoRepository extends ServiceEntityRepository
                 RQ.fecha_asignacion,
                 RQ.fecha_estimada_entrega,
                 RQ.fecha_cierre,
-                RQ.observaciones
+                RQ.observaciones,
+                concat_ws(' ', consultor.nombres, consultor.apellidos )  nombre_consultor,
+                concat_ws(' ', usureq.nombres, usureq.apellidos )  nombre_usuario
                 FROM requerimientos RQ
                 INNER JOIN modulos MD ON RQ.modulo_id = MD.id
                 INNER JOIN aplicaciones APP ON MD.aplicacion_id = APP.id
                 INNER JOIN areas ON APP.area_id = areas.id
                 INNER JOIN gerencias ON areas.gerencia_id = gerencias.id
                 INNER JOIN empresas EMP ON gerencias.empresas_id = EMP.id
-                INNER JOIN estado_requerimientos RQ_ST ON RQ.estado_requerimientos_id = RQ_ST.id';
+                INNER JOIN estado_requerimientos RQ_ST ON RQ.estado_requerimientos_id = RQ_ST.id
+                LEFT JOIN (
+                    SELECT usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                    FROM trazabilidad_requerimmientos
+                    INNER JOIN usuarios ON usuarios.id = usuario_id
+                    WHERE usuarios.rol_id = 2
+                    GROUP BY usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                ) consultor ON consultor.requermiento_id = RQ.id
+                LEFT JOIN (
+                    SELECT usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                    FROM trazabilidad_requerimmientos
+                    INNER JOIN usuarios ON usuarios.id = usuario_id
+                    WHERE usuarios.rol_id = 3
+                    GROUP BY usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                ) usureq ON usureq.requermiento_id = RQ.id 
+
+                ";
+        //Si es un conultor se filtran los proyectos donde aparezca como consultor        
+        if($id_rol == 2){
+            $sql = $sql . " WHERE consultor.usuario_id = :id_usuario";
+        }else if($id_rol == 3){
+            //Si es un usuario se filtran solo los requerimientos que el usuario tenga
+            $sql = $sql . " WHERE usureq.usuario_id = :id_usuario";
+        }
+        $sql = $sql . " ORDER BY RQ.id DESC";
+        //Si es un administrador muestra todo
         $stmt = $conn->prepare($sql);
-        $stmt->execute();
+        //Cuando el rol es administrador no se pasa usario para que muestre todos los requerimientos
+        if($id_rol == 1){
+            $stmt->execute();
+        }else{
+            $stmt->execute(['id_usuario'=> $id_usuario]);    
+        }
+        
 
         return $stmt->fetchAll();
     }
 
     public function getRequerimientos($id_usuario){
+        dd("hola");
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT 
                 usuarios.numero_documento documento_usuario,
@@ -68,7 +102,11 @@ class RequerimientoRepository extends ServiceEntityRepository
                 modulos.nombre nombre_modulo,
                 modulos.id modulo_id,
                 areas.id area_id,
-                areas.nombre nombre_area
+                areas.nombre nombre_area,
+                consultor.nombres nombre_consultor,
+                consultor.apellidos apellidos_consultor,
+                usureq.nombres nombres_usuario,
+                usureq.apellidos apellidos_usuario
                 FROM usuarios 
                 INNER JOIN trazabilidad_requerimmientos TR_RQ ON TR_RQ.usuario_id = usuarios.id
                 INNER JOIN requerimientos RQ ON RQ.id = TR_RQ.requermiento_id
@@ -76,6 +114,20 @@ class RequerimientoRepository extends ServiceEntityRepository
                 INNER JOIN modulos ON modulos.id = RQ.modulo_id
                 INNER JOIN roles ON usuarios.rol_id = roles.id
                 INNER JOIN areas ON areas.id = usuarios.area_id
+                LEFT JOIN (
+                    SELECT usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                    FROM trazabilidad_requerimmientos
+                    INNER JOIN usuarios ON usuarios.id = usuario_id
+                    WHERE usuarios.rol_id = 2
+                    GROUP BY usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                ) consultor ON consultor.requermiento_id = RQ.id
+                LEFT JOIN (
+                    SELECT usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                    FROM trazabilidad_requerimmientos
+                    INNER JOIN usuarios ON usuarios.id = usuario_id
+                    WHERE usuarios.rol_id = 2
+                    GROUP BY usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                ) usureq ON usureq.requermiento_id = RQ.id 
                 where usuarios.id = :id_usuario
                 ORDER BY RQ.id DESC ';
         $stmt = $conn->prepare($sql);

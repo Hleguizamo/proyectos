@@ -19,6 +19,8 @@ class AplicacionesRepository extends ServiceEntityRepository
         parent::__construct($registry, Aplicaciones::class);
     }
 
+    
+
 //    /**
 //     * @return Aplicaciones[] Returns an array of Aplicaciones objects
 //     */

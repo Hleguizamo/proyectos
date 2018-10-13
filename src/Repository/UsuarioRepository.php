@@ -40,6 +40,18 @@ class UsuarioRepository extends ServiceEntityRepository
         return $stmt;
     }
 
+    public function getUsersByRolOption($id_rol){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT 
+        concat_ws(' ', nombres, apellidos ) name,
+        id value
+        FROM usuarios WHERE rol_id = :id_rol";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(["id_rol"=>$id_rol]);
+        return $stmt->fetchAll();
+
+    }
+
 //    /**
 //     * @return Usuario[] Returns an array of Usuario objects
 //     */

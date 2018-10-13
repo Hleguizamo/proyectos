@@ -30,17 +30,16 @@ class Requerimiento
     /**
      * @ORM\Column(name="numero_requerimiento", type="string", length=45)
      */
-    private $numerorequerimiento;
+    private $numero_requerimiento;
 
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(name="descripcion", type="string", length=45)
      */
     private $descripcion;
 
     /**
-     * @ORM\Column(type="datetime")
-     *
+     * @ORM\Column(name="fecha_asignacion", type="datetime")
      */
     private $fecha_asignacion;
 
@@ -56,7 +55,7 @@ class Requerimiento
     private $observacion;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $fecha_creacion;
 
@@ -123,9 +122,9 @@ class Requerimiento
         return $this->fecha_asigna;
     }
 
-    public function setFechaAsigna(\DateTimeInterface $fecha_asigna): self
+    public function setFechaAsigna($fecha_asigna): self
     {
-        $this->fecha_asigna = $fecha_asigna;
+        $this->fecha_asignacion = $fecha_asigna;
 
         return $this;
     }
@@ -135,7 +134,7 @@ class Requerimiento
         return $this->fecha_cierre;
     }
 
-    public function setFechaCierre(\DateTimeInterface $fecha_cierre): self
+    public function setFechaCierre($fecha_cierre): self
     {
         $this->fecha_cierre = $fecha_cierre;
 
@@ -159,7 +158,7 @@ class Requerimiento
         return $this->fecha_creacion;
     }
 
-    public function setFechaCreacion(\DateTimeInterface $fecha_creacion): self
+    public function setFechaCreacion(?\DateTimeInterface $fecha_creacion = null): self
     {
         $this->fecha_creacion = $fecha_creacion;
 

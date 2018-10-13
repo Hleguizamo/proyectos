@@ -19,6 +19,15 @@ class ModulosRepository extends ServiceEntityRepository
         parent::__construct($registry, Modulos::class);
     }
 
+    public function findModulosOptions(){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT m.id value, m.nombre name
+                FROM modulos m";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
 //    /**
 //     * @return Modulos[] Returns an array of Modulos objects
 //     */

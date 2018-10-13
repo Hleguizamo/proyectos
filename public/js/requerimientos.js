@@ -98,18 +98,22 @@ function showAdd(){
     columnClass : "xl",
     content: getForm(),
     buttons: {
-        formSubmit: {
-            text: 'Submit',
-            btnClass: 'btn-blue',
+        aceptar: {
+            text: 'Aceptar',
+            btnClass: 'btn-success',
             action: function () {
               var form = $("#saveForm");
                 var data = getFormJsonData(form);
                 save(data);
             }
         },
-        cancel: function () {
-            //close
+        Cancelar: {
+            text: 'Cancelar',
+            btnClass: 'btn-danger',
+            action: function () {
+            }
         },
+        
     },
     
   });
@@ -139,10 +143,8 @@ function getForm(){
         code = code + '</select>';
       }else{
         code = code +   '<input type="'+col.type+'" class="form-control" name="'+col.data+'">';  
-      }
-      
+      } 
       code = code + '</div>';
-
     }
     
   });

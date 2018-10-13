@@ -29,6 +29,15 @@ class AplicacionRepository extends ServiceEntityRepository
 
     }
 
+    public function findAplicacionesOptions(){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT app.id value, app.nombre name
+                FROM aplicaciones app";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
 //    /**
 //     * @return Aplicacion[] Returns an array of Aplicacion objects
 //     */

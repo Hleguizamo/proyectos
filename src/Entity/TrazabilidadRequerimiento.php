@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrazabilidadRequerimientoRepository")
+ * @ORM\Table(name="trazabilidad_requerimmientos")
  */
 class TrazabilidadRequerimiento
 {
@@ -19,7 +20,8 @@ class TrazabilidadRequerimiento
     /**
      * @ORM\Column(type="integer")
      */
-    private $requerimiento_id;
+    private $requermiento_id;
+            
 
     /**
      * @ORM\Column(type="integer")
@@ -34,10 +36,10 @@ class TrazabilidadRequerimiento
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $observacion;
+    private $observaciones;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $fecha_creacion;
 
@@ -53,12 +55,12 @@ class TrazabilidadRequerimiento
 
     public function getRequerimientoId(): ?int
     {
-        return $this->requerimiento_id;
+        return $this->requermiento_id;
     }
 
     public function setRequerimientoId(int $requerimiento_id): self
     {
-        $this->requerimiento_id = $requerimiento_id;
+        $this->requermiento_id = $requerimiento_id;
 
         return $this;
     }
@@ -89,12 +91,12 @@ class TrazabilidadRequerimiento
 
     public function getObservacion(): ?string
     {
-        return $this->observacion;
+        return $this->observaciones;
     }
 
     public function setObservacion(string $observacion): self
     {
-        $this->observacion = $observacion;
+        $this->observaciones = $observacion;
 
         return $this;
     }
@@ -104,7 +106,7 @@ class TrazabilidadRequerimiento
         return $this->fecha_creacion;
     }
 
-    public function setFechaCreacion(\DateTimeInterface $fecha_creacion): self
+    public function setFechaCreacion(\DateTimeInterface $fecha_creacion = null): self
     {
         $this->fecha_creacion = $fecha_creacion;
 
@@ -116,7 +118,7 @@ class TrazabilidadRequerimiento
         return $this->fecha_actualizacion;
     }
 
-    public function setFechaActualizacion(?\DateTimeInterface $fecha_actualizacion): self
+    public function setFechaActualizacion(?\DateTimeInterface $fecha_actualizacion = null): self
     {
         $this->fecha_actualizacion = $fecha_actualizacion;
 
