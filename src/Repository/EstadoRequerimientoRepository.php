@@ -30,6 +30,17 @@ class EstadoRequerimientoRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
+    public function findEstadoRequerimientoOption(){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql ="SELECT rq_st.nombre name, rq_st.id value
+               FROM estado_requerimientos rq_st";
+              
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+
+    }
+
 //    /**
 //     * @return EstadoRequerimiento[] Returns an array of EstadoRequerimiento objects
 //     */

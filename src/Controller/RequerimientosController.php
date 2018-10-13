@@ -15,6 +15,10 @@ use App\Entity\Area;
 use App\Entity\EstadoRequerimiento;
 use App\Entity\Modulos;
 use App\Entity\Usuario;
+use App\Entity\Aplicacion;
+use App\Entity\Gerencia;
+use App\Entity\TrazabilidadRequerimiento;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class RequerimientosController extends AbstractController
 {
@@ -42,21 +46,32 @@ class RequerimientosController extends AbstractController
      * @Route("/requerimientos/crudDatas", name="requerimientos/crudData")
      */
     public function getCrudData(){
+    	$apps = $this->getDoctrine()->getRepository(Aplicacion::class)->findAplicacionesOptions();
+    	$mod = $this->getDoctrine()->getRepository(Modulos::class)->findModulosOptions();
+    	$gerencias = $this->getDoctrine()->getRepository(Gerencia::class)->findGerenciasOptions();
+    	$areas =  $this->getDoctrine()->getRepository(Area::class)->findAreasOption();
+    	$estados =  $this->getDoctrine()->getRepository(EstadoRequerimiento::class)->findEstadoRequerimientoOption();
+    	$consultores =  $this->getDoctrine()->getRepository(Usuario::class)->getUsersByRolOption(2);
+    	$usuarios =  $this->getDoctrine()->getRepository(Usuario::class)->getUsersByRolOption(3);
+
+    	
     	$data = array(
     		'PageTitle' => 'Requerimientos',
     		'columns' => array(
-    			["data"=> "fecha_creacion", 			"name" => "Fecha Creación",		"type"=>"date", "CRUD"=> [0,1,1,1] ],
-		        ["data"=> "numero_requerimiento", 		"name"=> "# Requerimiento",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "descripcion", 				"name"=> "Descripción",			"type"=>"text", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "nombre_aplicacion", 			"name"=> "Nombre Aplicación",	"type"=>"text", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "nombre_modulo", 				"name"=> "Módulo",				"type"=>"text", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "nombre_gerencia", 			"name"=> "Gerencia",			"type"=>"text", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "nombre_area", 				"name"=> "Área",				"type"=>"text", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "estado_requerimiento", 		"name"=> "Estado Req.",			"type"=>"text", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "fecha_asignacion", 			"name"=> "Fecha Asignación",	"type"=>"date", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "fecha_estimada_entrega", 	"name"=> "Fecha Entrega",		"type"=>"date", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "fecha_cierre", 				"name"=> "Fecha Cierre",		"type"=>"date", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "observaciones", 				"name"=> "Observaciones",		"type"=>"text", "CRUD"=> [1,1,1,1] ]
+    			["data"=> "fecha_creacion", 		"name" => "Fecha Creación",		"type"=>"date", "CRUD"=> [0,1,1,1] ],
+		        ["data"=> "numero_requerimiento", 	"name"=> "# Requerimiento",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "descripcion", 			"name"=> "Descripción",			"type"=>"text", "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "nombre_aplicacion", 		"name"=> "Aplicación",			"type"=>"select", "options"=> $apps, 	  "CRUD"=> [0,1,1,1] ],
+		        ["data"=> "nombre_modulo", 			"name"=> "Módulo",				"type"=>"select", "options"=> $mod,  	  "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "nombre_gerencia", 		"name"=> "Gerencia",			"type"=>"select", "options"=> $gerencias, "CRUD"=> [0,1,1,1] ],
+		        ["data"=> "nombre_area", 			"name"=> "Área",				"type"=>"select", "options"=> $areas,     "CRUD"=> [0,1,1,1] ],
+		        ["data"=> "estado_requerimiento", 	"name"=> "Estado Req.",			"type"=>"select", "options"=> $estados,   "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "fecha_asignacion", 		"name"=> "Fecha Asignación",	"type"=>"date", "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "fecha_estimada_entrega", "name"=> "Fecha Entrega",		"type"=>"date", "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "fecha_cierre", 			"name"=> "Fecha Cierre",		"type"=>"date", "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "observaciones", 			"name"=> "Observaciones",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "nombre_consultor", 		"name"=> "Consultor",			"type"=>"select", "options"=> $consultores,     "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "nombre_usuario", 		"name"=> "Usuario", 			"type"=>"select", "options"=> $usuarios,        "CRUD"=> [1,1,1,1] ],
     		),
     		'dataRoute' => "misRequerimientosById2",
     		'dataSrc' => "datos",
@@ -64,6 +79,57 @@ class RequerimientosController extends AbstractController
     		'saveUrl' => 'agregarRequerimiento',    		
     		'buttons' => ['Estado'=>'mostrarCambiarEstado()']
     	);
+    	return new JsonResponse($data);
+    }
+
+    /**
+     * @Route("/agregarRequerimiento", name="agregarRequerimiento")
+     */
+    public function agregarRequerimiento(Request $rq){
+    	$entityManager = $this->getDoctrine()->getManager();
+    	$entityManager->getConnection()->beginTransaction();
+    	try{
+	    	
+	    	$req = new Requerimiento();
+	    	$req->setNumeroRequerimiento($rq->get("numero_requerimiento"));
+	    	$req->setDescripcion($rq->get("descripcion"));
+	    	$req->setModuloId($rq->get("nombre_modulo"));
+	    	//$req->setAplicacionId($rq->get("nombre_aplicacion"));
+	    	//$req->setGerenciaId($rq->get("nombre_gerencia"));
+	    	//$req->setAreaId($rq->get("nombre_area"));
+	    	$req->setEstadoRequerimientosId($rq->get("estado_requerimiento"));
+	    	$objDT = \DateTime::createFromFormat('Y-m-d', $rq->get("fecha_asignacion"));
+	    	$req->setFechaAsigna($objDT);
+	    	$objDT = \DateTime::createFromFormat('Y-m-d', $rq->get("fecha_cierre"));
+	    	$req->setFechaCierre($objDT);
+	    	/*$objDT = \DateTime::createFromFormat('Y-m-d', '2018-01-01');
+	    	$req->setFechaCreacion($objDT);*/
+	    	$req->setObservacion($rq->get("observaciones"));
+	    	$entityManager->persist($req);
+	        $entityManager->flush();
+
+	        $trazaRq = new TrazabilidadRequerimiento();
+	        $trazaRq->setRequerimientoId($req->getId());
+	        $trazaRq->setUsuarioId($rq->get("nombre_usuario"));
+	        $trazaRq->setEstadoRequerimientoId($req->getEstadoRequerimientosId());
+	        $trazaRq->setObservacion($req->getObservacion());
+	        $entityManager->persist($trazaRq);
+
+	        
+	        $trazaRq = new TrazabilidadRequerimiento();
+	        $trazaRq->setRequerimientoId($req->getId());
+	        $trazaRq->setUsuarioId($rq->get("nombre_consultor"));
+	        $trazaRq->setEstadoRequerimientoId($req->getEstadoRequerimientosId());
+	        $trazaRq->setObservacion($req->getObservacion());
+	        $entityManager->persist($trazaRq);
+			
+	        $entityManager->flush();
+	        $data = array('success' => true);
+	        $entityManager->getConnection()->commit();
+	    }catch(Exception $e){
+	    	$entityManager->getConnection()->rollBack();
+	    	$data = array('success'=>false);
+	    }
     	return new JsonResponse($data);
     }
     
@@ -102,8 +168,10 @@ class RequerimientosController extends AbstractController
     public function mis_requerimientos_by_id2()
     {
     	$session =new  Session(new NativeSessionStorage(), new AttributeBag());
-    	$id_usuario = $session->get('id_usuario');
-    	$empr = $this->getDoctrine()->getRepository(Requerimiento::class)->getRequerimientosGrid();
+    	$id_usuario = $session->get('id_usuario');//id_rol
+    	$id_rol = $session->get('id_rol');//
+
+    	$empr = $this->getDoctrine()->getRepository(Requerimiento::class)->getRequerimientosGrid($id_usuario,$id_rol);
 	    try {
 	    	 $arr = array(
 	                'success' => true,
