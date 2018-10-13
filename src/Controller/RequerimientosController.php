@@ -170,7 +170,7 @@ class RequerimientosController extends AbstractController
     	$session =new  Session(new NativeSessionStorage(), new AttributeBag());
     	$id_usuario = $session->get('id_usuario');//id_rol
     	$id_rol = $session->get('id_rol');//
-
+    	
     	$empr = $this->getDoctrine()->getRepository(Requerimiento::class)->getRequerimientosGrid($id_usuario,$id_rol);
 	    try {
 	    	 $arr = array(
@@ -288,5 +288,26 @@ class RequerimientosController extends AbstractController
 	       
     	
     	return new JsonResponse($arr);
+    }
+
+    /**
+     * @Route("/ListaEstados", name="ListaEstados")
+     */
+    public function obtenerEstados(){
+    	$estados =  $this->getDoctrine()->getRepository(EstadoRequerimiento::class)->findEstadoRequerimientoOption();
+    	return new JsonResponse(array('estados'=>$estados));
+    }
+    /**
+     * @Route("/UpdateStates", name="UpdateStates")
+     */
+    public function updateState(Request $rq){
+    	$id = $rq->get("estado");
+    	$req = $rq->get("req");
+
+    	$entityManager = $this->getDoctrine()->getManager();
+    	$RQ = $this->getDoctrine()->getRepository(Requerimiento::class)->findOneBy(['numero_requerimiento' => $req]);
+    	$RQ->setEstadoRequerimientosId($id);
+    	$entityManager->flush();
+    	return new JsonResponse($RQ);
     }
 }

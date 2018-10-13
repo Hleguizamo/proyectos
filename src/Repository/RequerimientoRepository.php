@@ -66,6 +66,8 @@ class RequerimientoRepository extends ServiceEntityRepository
             $sql = $sql . " WHERE usureq.usuario_id = :id_usuario";
         }
         $sql = $sql . " ORDER BY RQ.id DESC";
+
+       
         //Si es un administrador muestra todo
         $stmt = $conn->prepare($sql);
         //Cuando el rol es administrador no se pasa usario para que muestre todos los requerimientos
