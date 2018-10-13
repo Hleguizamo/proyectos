@@ -159,9 +159,11 @@ class Usuario
         return $this;
     }
 
-       public function setAreaId(string $area_id): ?int
+       public function setAreaId(string $area_id): self
     {
-        return $this->area_id;
+        $this->area_id=$area_id;
+
+        return $this;
     }
 
     public function getNumeroDocumento(): ?string

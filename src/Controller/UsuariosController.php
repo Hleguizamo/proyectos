@@ -11,6 +11,7 @@ use App\Entity\EstadoRequerimiento;
 use App\Entity\Modulos;
 use App\Entity\Rol;
 use App\Entity\Area;
+use App\Entity\TipoDocumento;
 use App\Entity\Usuario;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -45,6 +46,7 @@ class UsuariosController extends AbstractController
             'requerimiento' => $req,
             'estado' => $esta,
             'modulo' => $mod,
+            'js' => '',
         ]);
     }
 
@@ -52,29 +54,81 @@ class UsuariosController extends AbstractController
      * @Route("/usuarios/crudDatas", name="areaaplicaciones/crudData")
      */
     public function getCrudData(){
-        $tipo_documento =  $this->getDoctrine()->getRepository(Area::class)->findAreasOption();
+        $tipo_documento =  $this->getDoctrine()->getRepository(TipoDocumento::class)->findDocumento();
         $rol= $this->getDoctrine()->getRepository(Rol::class)->findRol();
+         $area =  $this->getDoctrine()->getRepository(Area::class)->findAreasOption();
+
         $data = array(
             'PageTitle' => 'Usuarios',
             'columns' => array(
-            	["data"=> "nombre_documento",               "name" => "Tipo_documento",    "type"=>"text"],
-                ["data"=> "numero_documento",             "name" => "Numero_documento",     "type"=>"number"],
-                ["data"=> "nombre_usuario",             		  "name" => "Nombre",     "type"=>"text"],
-                ["data"=> "apellido_usuario",             		  "name" => "Apellido",     "type"=>"text"],
-                ["data"=> "celular",             		  "name" => "Celular",     "type"=>"text"],
-                ["data"=> "telefono",             		  "name" => "Telefono",     "type"=>"text"],
-                ["data"=> "email",             			  "name" => "Email",     "type"=>"email"],
-                ["data"=> "nombre_rol",             	  "name" => "nombre_rol",    "type"=>"text"],
-                ["data"=> "estado",             		  "name" => "Estado",     "type"=>"text"],
-                
-                
+                ["data"=> "id_documento",               "name" => "Tipo documentos",    "type"=>"select", "options"=>$tipo_documento, "CRUD"=> [1,0,0,0] ],
+            	["data"=> "nombre_documento",           "name" => "Tipo_documento",    "type"=>"text","CRUD"=> [0,1,1,1] ],
+                ["data"=> "numero_documento",           "name" => "Numero_documento",     "type"=>"number", "CRUD"=> [1,1,1,1] ],
+                ["data"=> "nombre_usuario",             "name" => "Nombre",     "type"=>"text","CRUD"=> [1,1,1,1] ],
+                ["data"=> "apellido_usuario",           "name" => "Apellido",     "type"=>"text","CRUD"=> [1,1,1,1] ],
+                ["data"=> "id_rol",                     "name" => "Rol",    "type"=>"select", "options"=>$rol, "CRUD"=> [1,0,0,0] ],               
+                ["data"=> "celular",             		"name" => "Celular",     "type"=>"text","CRUD"=> [1,1,1,1] ],
+                ["data"=> "telefono",             		"name" => "Telefono",     "type"=>"text","CRUD"=> [1,1,1,1] ],
+                ["data"=> "email",             			"name" => "Email",     "type"=>"email","CRUD"=> [1,1,1,1] ],
+                ["data"=> "nombre_rol",             	"name" => "nombre_rol",    "type"=>"text","CRUD"=> [0,1,1,1] ],
+                ["data"=> "area_id",                    "name" => "Area",    "type"=>"select", "options"=>$area,"CRUD"=> [1,0,0,0] ],
+                ["data"=> "estado",                    "name"=> "Estado",      "type"=>"select", 
+                                                        "options"=> 
+                                                            array(
+                                                                ['value'=>'1','name'=>'Activo'],
+                                                                ['value'=>'0','name'=>'Inactivo'])
+                ,"CRUD"=> [1,1,1,1]]              
             ),
             'dataRoute' => "getUsuarios",
             'dataSrc' => "datos",
             'dist' => '4-cols',
-            'saveUrl' => 'agregarUsuario',
+            'saveUrl' => 'agregarUsuarios',
         );
         return new JsonResponse($data);
+    }
+   
+               
+               
+    /**
+     * @Route("/agregarUsuarios", name="agregarUsuarios")
+     */
+     public function agregarUsuarios(Request $rq){
+        $session =new  Session(new NativeSessionStorage(), new AttributeBag());
+        $nombre = $rq->get("nombre_usuario");
+        $apellido = $rq->get("apellido_usuario");
+        $rol   = $rq->get("id_rol");
+        $celular = $rq->get("celular");
+        $telefono = $rq->get("telefono");
+        $area = $rq->get("area_id");
+        $email   = $rq->get("email");
+        $estado = $rq->get("estado");
+        $num_doc = $rq->get("numero_documento");
+        $tipo_doc = $rq->get("id_documento");
+        $id_empresa=$session->get('id_empresa');
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $usuario = new Usuario();
+        $usuario->setEmpresaId($id_empresa);
+        $usuario->setRolId($rol);
+        $usuario->setTipoDocumentoId($tipo_doc);
+        $usuario->setEstado($estado);
+        $usuario->setNumeroDocumento($num_doc);
+        $usuario->setNombres($nombre);
+        $usuario->setApellidos($apellido);
+        $usuario->setCelular($celular);
+        $usuario->setTelefono($telefono);
+        $usuario->setAreaId($area);
+        $usuario->setEmail($email);
+
+        
+        $entityManager->persist($usuario);
+        $entityManager->flush();
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Usuario insertada correctamente'
+        ));
+
+
     }
 
 
@@ -158,6 +212,7 @@ class UsuariosController extends AbstractController
 	    		$session->set('rol_usuario',$data[0]['nombre_rol']);
 	    		$session->set('nombre_usuario',$data[0]['nombre_usuario']." ".$data[0]['apellido_usuario']);
 	    		$session->set('id_usuario',$data[0]['id_usuario']);
+                $session->set('id_empresa',$data[0]['id_empresa']);
 	    	
 
 

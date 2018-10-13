@@ -18,6 +18,16 @@ class TipoDocumentoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TipoDocumento::class);
     }
+    public function findDocumento(){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT 
+                    t.nombre name,
+                    t.id value                    
+        FROM tipo_documentos t";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 
 //    /**
 //     * @return TipoDocumento[] Returns an array of TipoDocumento objects

@@ -21,7 +21,7 @@ class UsuarioRepository extends ServiceEntityRepository
 
     public function Login($cc){
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'SELECT e.nombres nombre_usuario ,e.apellidos apellido_usuario, roles.nombre nombre_rol, roles.id id_rol, e.id id_usuario
+        $sql = 'SELECT e.nombres nombre_usuario ,e.apellidos apellido_usuario, roles.nombre nombre_rol, roles.id id_rol, e.id id_usuario, e.empresa_id id_empresa
         FROM usuarios e
         INNER JOIN roles ON e.rol_id=roles.id
         WHERE numero_documento=:cc';
@@ -43,7 +43,19 @@ class UsuarioRepository extends ServiceEntityRepository
 
     public function findUsuario(){
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'SELECT u.numero_documento numero_documento, roles.nombre nombre_rol, t.nombre nombre_documento, u.nombres nombre_usuario ,u.apellidos apellido_usuario,u.id id_usuario, u.celular celular, u.email email, u.telefono telefono, u.estado estado
+        $sql = 'SELECT u.numero_documento numero_documento,
+        u.tipo_documento_id id_documento, 
+        roles.nombre nombre_rol,
+        u.rol_id id_rol,        
+        t.nombre nombre_documento, 
+        u.nombres nombre_usuario ,
+        u.apellidos apellido_usuario,
+        u.id id_usuario, 
+        u.celular celular, 
+        u.email email, 
+        u.telefono telefono, 
+        u.estado estado,
+        u.area_id area_id
         FROM usuarios u
         INNER JOIN tipo_documentos t ON u.tipo_documento_id=t.id
         INNER JOIN roles ON u.rol_id=roles.id';

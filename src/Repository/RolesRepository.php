@@ -18,6 +18,16 @@ class RolesRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Roles::class);
     }
+    public function findRol(){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT 
+                    r.nombre nombre_rol,
+                    r.id id_rol                    
+        FROM roles r";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 
 //    /**
 //     * @return Roles[] Returns an array of Roles objects

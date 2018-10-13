@@ -39,6 +39,7 @@ class EmpresasController extends AbstractController
             'requerimiento' => $req,
             'estado' => $esta,
             'modulo' => $mod,
+            'js' => '',
         ]);
     }
 
@@ -49,15 +50,15 @@ class EmpresasController extends AbstractController
     	$data = array(
     		'PageTitle' => 'Empresas',
     		'columns' => array(
-    			["data"=> "nombre_empresa", 			"name" => "Nombre",		"type"=>"text"],
-		        ["data"=> "pais", 						"name"=> "Pais",		"type"=>"text"],
-		        ["data"=> "codigo_empresa", 			"name"=> "Código",		"type"=>"text"],
+    			["data"=> "nombre_empresa", 			"name" => "Nombre",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "pais", 						"name"=> "Pais",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "codigo_empresa", 			"name"=> "Código",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "estado", 					"name"=> "Estado",		"type"=>"select", 
 		        										"options"=> 
 		        											array(
 		        												['value'=>'1','name'=>'Activo'],
 		        												['value'=>'0','name'=>'Inactivo'])
-		        ]
+		        , "CRUD"=> [1,0,0,0] ]
     		),
     		'dataRoute' => "getEmpresas",
     		'dataSrc' => "datos",

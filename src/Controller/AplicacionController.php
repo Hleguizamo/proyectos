@@ -42,11 +42,12 @@ class AplicacionController extends AbstractController
             'requerimiento' => $req,
             'estado' => $esta,
             'modulo' => $mod,
+            'js' => '',
         ]);
     }
 
     /**
-     * @Route("/aplicaciones/crudDatas", name="areaaplicaciones/crudData")
+     * @Route("/aplicaciones/crudDatas", name="aplicaciones/crudData")
      */
     public function getCrudData(){
         $area =  $this->getDoctrine()->getRepository(Area::class)->findAreasOption();
@@ -54,8 +55,8 @@ class AplicacionController extends AbstractController
         $data = array(
             'PageTitle' => 'Aplicaciones',
             'columns' => array(
-                ["data"=> "nombre_aplicacion",             "name" => "Nombre",     "type"=>"text"],
-                ["data"=> "area_id",             "name" => "Area",    "type"=>"select", "options"=>$area],
+                ["data"=> "name",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
+                ["data"=> "area_id",             "name" => "Area",    "type"=>"select", "options"=>$area, "CRUD"=> [1,1,1,1] ],
                 
                 
             ),
@@ -71,7 +72,7 @@ class AplicacionController extends AbstractController
      * @Route("/agregarAplicacion", name="agregarAplicacion")
      */
     public function agregarArea(Request $rq){
-        $nombre = $rq->get("nombre_aplicacion");
+        $nombre = $rq->get("name");
         $area = $rq->get("area_id");
        
         $entityManager = $this->getDoctrine()->getManager();

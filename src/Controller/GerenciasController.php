@@ -40,6 +40,7 @@ class GerenciasController extends AbstractController
             'requerimiento' => $req,
             'estado' => $esta,
             'modulo' => $mod,
+            'js' => '',
         ]);
     }
 
@@ -50,7 +51,7 @@ class GerenciasController extends AbstractController
         $data = array(
             'PageTitle' => 'Gerencia',
             'columns' => array(
-                ["data"=> "nombre_gerencia",             "name" => "Nombre",     "type"=>"text"],
+                ["data"=> "nombre_gerencia",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
                 
                 
             ),

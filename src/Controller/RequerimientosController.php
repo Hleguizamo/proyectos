@@ -35,6 +35,7 @@ class RequerimientosController extends AbstractController
             'requerimiento' => $req,
             'estado' => $esta,
             'modulo' => $mod,
+            'js' => 'req.js',
         ]);
     }
     /**
@@ -60,7 +61,8 @@ class RequerimientosController extends AbstractController
     		'dataRoute' => "misRequerimientosById2",
     		'dataSrc' => "datos",
     		'dist' => '4-cols',
-    		'saveUrl' => 'agregarRequerimiento',
+    		'saveUrl' => 'agregarRequerimiento',    		
+    		'buttons' => ['Estado'=>'mostrarCambiarEstado()']
     	);
     	return new JsonResponse($data);
     }

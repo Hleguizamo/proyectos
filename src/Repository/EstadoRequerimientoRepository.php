@@ -18,6 +18,17 @@ class EstadoRequerimientoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, EstadoRequerimiento::class);
     }
+     public function findEstados(){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT 
+                    e.nombre nombre_estado,
+                    
+                            
+        FROM estado_requerimientos e";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 
 //    /**
 //     * @return EstadoRequerimiento[] Returns an array of EstadoRequerimiento objects

@@ -21,8 +21,8 @@ class RolRepository extends ServiceEntityRepository
     public function findRol(){
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT 
-                    r.nombre nombre_rol,
-                    r.id id_rol                    
+                    r.nombre name,
+                    r.id value                    
         FROM roles r";
         $stmt = $conn->prepare($sql);
         $stmt->execute();

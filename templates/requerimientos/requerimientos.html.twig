@@ -5,6 +5,11 @@
 {% block bodyTitle %} Requerimientos {% endblock %}
 
 
+
+{% block javascripts %} <script src="{{asset('js/'~js~'.js')}}"></script> {% endblock %}
+
+
+
 {% block body %}
 <link rel="stylesheet" type="text/css" href="css/requerimientos.css">
 <style>
@@ -20,9 +25,10 @@
 
 <section>
 		<div class="container-fluid">
-			
+		
 			<div class="row">
 				
+				<?php echo $data['js'];?>
 				<div class="contenidotable">
 					<table class="table table-bordered" id="reqTable">
 						<thead>

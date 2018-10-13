@@ -42,6 +42,7 @@ class AreasController extends AbstractController
             'requerimiento' => $req,
             'estado' => $esta,
             'modulo' => $mod,
+            'js' => '',
         ]);
     }
 
@@ -54,8 +55,8 @@ class AreasController extends AbstractController
         $data = array(
             'PageTitle' => 'Areas',
             'columns' => array(
-                ["data"=> "nombre_area",             "name" => "Nombre",     "type"=>"text"],
-                ["data"=> "gerencia_id",             "name" => "Gerencia",    "type"=>"select", "options"=>$gerencias],
+                ["data"=> "nombre_area",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
+                ["data"=> "gerencia_id",             "name" => "Gerencia",    "type"=>"select", "options"=>$gerencias, "CRUD"=> [1,1,1,1] ],
                 
                 
             ),

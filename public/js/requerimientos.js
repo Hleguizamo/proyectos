@@ -41,8 +41,17 @@ function loadDataConfig(){
       saveUrl = data.saveUrl;
       addTableHead(data.columns);
       loadDataTable(data.dataRoute,data.dataSrc,data.columns);
+      loadButtons(data.buttons);
     }
   });
+
+}
+
+function loadButtons(buttons){
+  $.each(buttons,function(buttonName,buttonAction){
+      $("#buttons").append('<button type="button" onclick="'+buttonAction+'" class="btn btn-primary btn-sm"> '+buttonName+' </button>');
+  });
+
 }
 
 function getDistrib(){
