@@ -5,6 +5,7 @@ var editUrl = null; //Url donde se mandan a ediatar los datos
 var dataEditUrl = null; //Url donde se consultan los datos a editar
 var id_registro = null; //nombre de la columna que es id para el registro actual
 var tablaDatos = null;
+var id_edit = null; //id del registro que se esta actualizando actualmente
 
 $( document ).ready(function() {
   loadDataConfig();
@@ -38,7 +39,8 @@ function getDataEdit(id_reg){
     success : function(data){
       if(data.success){
         console.log(data);
-        showEdit(data.data[0]);
+        showEdit(data.data[0],id_reg);
+
       }
     },
     error : function(errors){
@@ -47,7 +49,7 @@ function getDataEdit(id_reg){
   });
 }
 
-function showEdit(data){
+function showEdit(data,id_reg){
   $.confirm({
     title: 'Editar',
     columnClass : "xl",
@@ -59,6 +61,7 @@ function showEdit(data){
             action: function () {
               var form = $("#updateForm");
                 var data = getFormJsonData(form);
+                id_edit = id_reg;
                 save(data,editUrl);
             }
         },
@@ -282,6 +285,9 @@ function getSelectOptions(options, value=null ){
 
 function save(data, url = null){
   url = url == null ? saveUrl :  url;
+  if(id_edit != null){
+    data.id = id_edit;
+  }
   $.ajax({
     url : url,
     type:"POST",
@@ -307,7 +313,7 @@ function save(data, url = null){
           tablaDatos.ajax.reload();
         }
       }
-      
+      id_edit = null;
 
     },
     error : function(errors){
@@ -323,6 +329,7 @@ function save(data, url = null){
             }
         });
       console.log(errors);
+      id_edit = null;
     }
   });
 }
