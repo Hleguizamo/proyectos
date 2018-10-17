@@ -21,6 +21,7 @@ class RequerimientoRepository extends ServiceEntityRepository
     public function getRequerimientosGrid($id_usuario,$id_rol){
         $conn = $this->getEntityManager()->getConnection();
         $sql="  SELECT 
+                RQ.id id_requerimiento,
                 RQ.fecha_creacion,
                 RQ.numero_requerimiento,
                 RQ.descripcion,
@@ -66,6 +67,7 @@ class RequerimientoRepository extends ServiceEntityRepository
             $sql = $sql . " WHERE usureq.usuario_id = :id_usuario";
         }
         $sql = $sql . " ORDER BY RQ.id DESC";
+        //$sql = $this->addOptionsToGrid($sql);
         //Si es un administrador muestra todo
         $stmt = $conn->prepare($sql);
         //Cuando el rol es administrador no se pasa usario para que muestre todos los requerimientos
@@ -77,6 +79,64 @@ class RequerimientoRepository extends ServiceEntityRepository
         
 
         return $stmt->fetchAll();
+    }
+
+    public function getRequerimientosGridEdit($id_req){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql="  SELECT 
+                RQ.id id_requerimiento,
+                RQ.fecha_creacion,
+                RQ.numero_requerimiento,
+                RQ.descripcion,
+                APP.id nombre_aplicacion,
+                MD.id nombre_modulo,
+                gerencias.id nombre_gerencia,
+                areas.id nombre_area,
+                RQ_ST.id estado_requerimiento,
+                RQ.fecha_asignacion,
+                RQ.fecha_estimada_entrega,
+                RQ.fecha_cierre,
+                RQ.observaciones,
+                consultor.usuario_id  nombre_consultor,
+                usureq.usuario_id  nombre_usuario
+                FROM requerimientos RQ
+                INNER JOIN modulos MD ON RQ.modulo_id = MD.id
+                INNER JOIN aplicaciones APP ON MD.aplicacion_id = APP.id
+                INNER JOIN areas ON APP.area_id = areas.id
+                INNER JOIN gerencias ON areas.gerencia_id = gerencias.id
+                INNER JOIN empresas EMP ON gerencias.empresas_id = EMP.id
+                INNER JOIN estado_requerimientos RQ_ST ON RQ.estado_requerimientos_id = RQ_ST.id
+                LEFT JOIN (
+                    SELECT usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                    FROM trazabilidad_requerimmientos
+                    INNER JOIN usuarios ON usuarios.id = usuario_id
+                    WHERE usuarios.rol_id = 2
+                    GROUP BY usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                ) consultor ON consultor.requermiento_id = RQ.id
+                LEFT JOIN (
+                    SELECT usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                    FROM trazabilidad_requerimmientos
+                    INNER JOIN usuarios ON usuarios.id = usuario_id
+                    WHERE usuarios.rol_id = 3
+                    GROUP BY usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                ) usureq ON usureq.requermiento_id = RQ.id 
+
+                ";
+        
+        $sql = $sql . "WHERE RQ.id = :id_req ORDER BY RQ.id DESC";
+        //$sql = $this->addOptionsToGrid($sql);
+        //Si es un administrador muestra todo
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['id_req'=> $id_req]);    
+       
+        
+
+        return $stmt->fetchAll();
+    }
+
+    public function addOptionsToGrid($sql){
+        $sql = "SELECT A.*, '<span class=\"glyphicon glyphicon-edit\" >' as options FROM ($sql) A ";
+        return $sql;
     }
 
     public function getRequerimientos($id_usuario){

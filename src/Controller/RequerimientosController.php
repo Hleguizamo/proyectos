@@ -58,6 +58,7 @@ class RequerimientosController extends AbstractController
     	$data = array(
     		'PageTitle' => 'Requerimientos',
     		'columns' => array(
+    			["data"=> "id_requerimiento", 		"name" => "id_requerimiento",		"type"=>"number", "CRUD"=> [0,1,0,0] ],
     			["data"=> "fecha_creacion", 		"name" => "Fecha Creación",		"type"=>"date", "CRUD"=> [0,1,1,1] ],
 		        ["data"=> "numero_requerimiento", 	"name"=> "# Requerimiento",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "descripcion", 			"name"=> "Descripción",			"type"=>"text", "CRUD"=> [1,1,1,1] ],
@@ -72,17 +73,39 @@ class RequerimientosController extends AbstractController
 		        ["data"=> "observaciones", 			"name"=> "Observaciones",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "nombre_consultor", 		"name"=> "Consultor",			"type"=>"select", "options"=> $consultores,     "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "nombre_usuario", 		"name"=> "Usuario", 			"type"=>"select", "options"=> $usuarios,        "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "options", 		            "name"=> "Opciones" , "defaultContent"=> '<a href="#" class="editor_edit" onclick="edit(event,this)" >Edit</a> / <a href="" class="editor_remove">Delete</a>', "CRUD"=> [0,1,0,0] ],
     		),
     		'dataRoute' => "misRequerimientosById2",
     		'dataSrc' => "datos",
     		'dist' => '4-cols',
-    		'saveUrl' => 'agregarRequerimiento',    		
+    		'saveUrl' => 'agregarRequerimiento', //url donde se mandan a guardar los datos  
+    		'editUrl' => 'editarRequerimiento',  // url donde se mandan a editar los datos
+    		'getDataEdit' => 'datosEditarReqs',  // url donde se consultan los datos a editar
+    		'idColumn' => 'id_requerimiento',  	// nombre de la columna que es id para los registros	
     		'buttons' => ['Estado'=>'mostrarCambiarEstado()']
     	);
     	return new JsonResponse($data);
     }
 
-    /**
+    /** 
+     * @Route("/editarRequerimiento", name="editarRequerimiento")
+     */
+    public function editarRequerimiento(Request $rq){
+
+    }
+
+
+    /** 
+     * @Route("/datosEditarReqs", name="datosEditarReqs")
+     */
+    public function datosEditarReqs(Request $rq){
+    	$id = $rq->get("id");
+    	$entityManager = $this->getDoctrine()->getManager();
+    	$data = $this->getDoctrine()->getRepository(Requerimiento::class)->getRequerimientosGridEdit($id);
+    	return new JsonResponse(array('success'=>true, 'data' => $data));
+    }
+
+    /** 
      * @Route("/agregarRequerimiento", name="agregarRequerimiento")
      */
     public function agregarRequerimiento(Request $rq){
@@ -176,7 +199,7 @@ class RequerimientosController extends AbstractController
     	$session =new  Session(new NativeSessionStorage(), new AttributeBag());
     	$id_usuario = $session->get('id_usuario');//id_rol
     	$id_rol = $session->get('id_rol');//
-
+    	
     	$empr = $this->getDoctrine()->getRepository(Requerimiento::class)->getRequerimientosGrid($id_usuario,$id_rol);
 	    try {
 	    	 $arr = array(
@@ -294,5 +317,26 @@ class RequerimientosController extends AbstractController
 	       
     	
     	return new JsonResponse($arr);
+    }
+
+    /**
+     * @Route("/ListaEstados", name="ListaEstados")
+     */
+    public function obtenerEstados(){
+    	$estados =  $this->getDoctrine()->getRepository(EstadoRequerimiento::class)->findEstadoRequerimientoOption();
+    	return new JsonResponse(array('estados'=>$estados));
+    }
+    /**
+     * @Route("/UpdateStates", name="UpdateStates")
+     */
+    public function updateState(Request $rq){
+    	$id = $rq->get("estado");
+    	$req = $rq->get("req");
+
+    	$entityManager = $this->getDoctrine()->getManager();
+    	$RQ = $this->getDoctrine()->getRepository(Requerimiento::class)->findOneBy(['numero_requerimiento' => $req]);
+    	$RQ->setEstadoRequerimientosId($id);
+    	$entityManager->flush();
+    	return new JsonResponse($RQ);
     }
 }

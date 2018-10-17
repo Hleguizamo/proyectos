@@ -1,6 +1,9 @@
 var columns = [];
 var distribucion = null;
-var saveUrl = null;
+var saveUrl = null;  //Url donde se mandan a crear los datos
+var editUrl = null; //Url donde se mandan a ediatar los datos
+var dataEditUrl = null; //Url donde se consultan los datos a editar
+var id_registro = null; //nombre de la columna que es id para el registro actual
 var tablaDatos = null;
 
 $( document ).ready(function() {
@@ -9,6 +12,71 @@ $( document ).ready(function() {
 
   
 });
+
+function edit(event,control){
+  event.preventDefault();
+  var index = $(control).parent().parent().index();
+  var pagina = tablaDatos.page();
+  var numReg = pagina == 0? 0 : tablaDatos.page.len();
+  pagina = pagina == 0? 1 : pagina;
+  index = (index * pagina) + numReg;
+  var index2 = tablaDatos.rows()[0][index];
+  //console.log("index "+index+" index2: "+index2)
+  var data = tablaDatos.row(index2).data();
+
+  //console.log(data);
+  var id = data[id_registro];
+  getDataEdit(id);
+  
+}
+
+function getDataEdit(id_reg){
+  $.ajax({
+    url : dataEditUrl,
+    type : "POST",
+    data : {id : id_reg},
+    success : function(data){
+      if(data.success){
+        console.log(data);
+        showEdit(data.data[0]);
+      }
+    },
+    error : function(errors){
+      conosle.log(errors);
+    }
+  });
+}
+
+function showEdit(data){
+  $.confirm({
+    title: 'Editar',
+    columnClass : "xl",
+    content: getFormUpdate(data),
+    buttons: {
+        aceptar: {
+            text: 'Aceptar',
+            btnClass: 'btn-success',
+            action: function () {
+              var form = $("#updateForm");
+                var data = getFormJsonData(form);
+                save(data,editUrl);
+            }
+        },
+        Cancelar: {
+            text: 'Cancelar',
+            btnClass: 'btn-danger',
+            action: function () {
+            }
+        },
+        
+    },
+    
+  });
+}
+
+function update(data){
+
+}
 
 function setColumnFilters(tableId){
 
@@ -39,6 +107,9 @@ function loadDataConfig(){
       columns = data.columns;
       distribucion = data.dist;
       saveUrl = data.saveUrl;
+      dataEditUrl = data.getDataEdit;
+      id_registro =  data.idColumn;
+      editUrl = data.editUrl;
       addTableHead(data.columns);
       loadDataTable(data.dataRoute,data.dataSrc,data.columns);
       loadButtons(data.buttons);
@@ -76,6 +147,8 @@ function addTableHead(columns){
   });
   $('#tableHead').html(code);
 }
+
+
 
 function loadDataTable(url,dataSrc,columns){
   setColumnFilters("reqTable");
@@ -162,19 +235,55 @@ function getForm(){
 }
 
 
-function getSelectOptions(options){
+
+function getFormUpdate(data){
+  var code = '<form id="updateForm">';
+  $.each(columns,function(index,col){
+    if(col.CRUD[2]){
+      code = code + '<div class="'+getDistrib()+'">';
+      code = code +   '<label>'+col.name+'</label>';
+      if(col.type =="select"){
+        code = code + '<select class="form-control" name="'+col.data+'">';
+        code = code + getSelectOptions(col.options,data[col.data]);
+        code = code + '</select>';
+      }else{
+        value = "";
+        if(col.type == "date"){
+          d = new Date(data[col.data]);
+          var month = (d.getMonth() + 1) < 10 ? ("0"+(d.getMonth() + 1)) : (d.getMonth() + 1);
+          var day = (d.getDate() < 10 )? ( "0"+d.getDate() ) : d.getDate();
+          value = d.getFullYear() + "-" + month + "-" + day;
+        }else{
+          value = data[col.data]
+        }
+        code = code +   '<input type="'+col.type+'" class="form-control" name="'+col.data+'" value="'+ value +'">';  
+      } 
+      code = code + '</div>';
+    }
+    
+  });
+  code = code + '</form>';
+  return code;
+}
+
+
+
+
+function getSelectOptions(options, value=null ){
   var code = "";
   $.each(options,function(indx,opt){
     var selected = indx == 0? "selected" : "";
+    selected = value == null ? selected : ( opt.value == value? 'selected' : '' );
     code = code + '<option value="'+opt.value+'" '+selected+'>'+opt.name+'</option>';
     
   });
   return code;
 }
 
-function save(data){
+function save(data, url = null){
+  url = url == null ? saveUrl :  url;
   $.ajax({
-    url : saveUrl,
+    url : url,
     type:"POST",
     data : data,
     success : function(ReqData){
