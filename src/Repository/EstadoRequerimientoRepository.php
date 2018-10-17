@@ -21,7 +21,8 @@ class EstadoRequerimientoRepository extends ServiceEntityRepository
      public function findEstados(){
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT 
-                    e.nombre nombre_estado
+                    e.nombre nombre_estado,
+                    e.id id_estado
                     
                             
         FROM estado_requerimientos e";
@@ -39,6 +40,22 @@ class EstadoRequerimientoRepository extends ServiceEntityRepository
         $stmt->execute();
         return $stmt->fetchAll();
 
+    }
+
+    public function findEstadoById($id_estado){
+
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT 
+                    e.nombre nombre_estado,
+                    e.id id_estado
+                    
+                            
+        FROM estado_requerimientos e
+        WHERE e.id = :id_estado";
+        $parametros = array('id_estado'=>$id_estado);
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($parametros);
+        return $stmt->fetchAll();
     }
 
 //    /**

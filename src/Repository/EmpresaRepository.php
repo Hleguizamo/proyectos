@@ -23,7 +23,8 @@ class EmpresaRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT 
                     e.nombre nombre_empresa ,
-                    e.codigo codigo_empresa, 
+                    e.codigo codigo_empresa,
+                    e.id id_empresa,
                     e.pais pais, 
                     CASE e.estado 
                         WHEN '1' THEN 'Activo'
@@ -57,7 +58,8 @@ class EmpresaRepository extends ServiceEntityRepository
         $sql = "SELECT 
                     e.nombre nombre_empresa ,
                     e.codigo codigo_empresa, 
-                    e.pais pais, 
+                    e.pais pais,
+                    e.id id_empresa,
                     CASE e.estado 
                         WHEN '1' THEN 'Activo'
                         ELSE 'Inactivo'
@@ -65,7 +67,7 @@ class EmpresaRepository extends ServiceEntityRepository
         FROM empresas e
         WHERE e.id = :id_empresa";
        
-        $parametros = array('id_empresa'=>$id_empresa);
+        $parametros = array('id_empresa'=>$id);
         $stmt = $conn->prepare($sql);
         $stmt->execute($parametros);
         return $stmt->fetchAll();

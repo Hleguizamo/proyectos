@@ -73,7 +73,7 @@ class RequerimientosController extends AbstractController
 		        ["data"=> "observaciones", 			"name"=> "Observaciones",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "nombre_consultor", 		"name"=> "Consultor",			"type"=>"select", "options"=> $consultores,     "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "nombre_usuario", 		"name"=> "Usuario", 			"type"=>"select", "options"=> $usuarios,        "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "options", 		            "name"=> "Opciones" , "defaultContent"=> '<a href="#" class="editor_edit" onclick="edit(event,this)" >Edit</a> / <a href="" class="editor_remove">Delete</a>', "CRUD"=> [0,1,0,0] ],
+		        ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
     		),
     		'dataRoute' => "misRequerimientosById2",
     		'dataSrc' => "datos",
@@ -90,8 +90,63 @@ class RequerimientosController extends AbstractController
     /** 
      * @Route("/editarRequerimiento", name="editarRequerimiento")
      */
-    public function editarRequerimiento(Request $rq){
+     public function editarRequerimiento(Request $rq){
+     	$id = $rq->get("id");
 
+    	$entityManager = $this->getDoctrine()->getManager();
+    	$entityManager->getConnection()->beginTransaction();
+    	try{
+	    	
+	    	$req = $entityManager->find(Requerimiento::class,$id);
+	    	$req->setNumeroRequerimiento($rq->get("numero_requerimiento"));
+	    	$req->setDescripcion($rq->get("descripcion"));
+	    	$req->setModuloId($rq->get("nombre_modulo"));
+	    	//$req->setAplicacionId($rq->get("nombre_aplicacion"));
+	    	//$req->setGerenciaId($rq->get("nombre_gerencia"));
+	    	//$req->setAreaId($rq->get("nombre_area"));
+	    	
+	    	$req->setEstadoRequerimientosId($rq->get("estado_requerimiento"));
+	    	$objDT = \DateTime::createFromFormat('Y-m-d', $rq->get("fecha_estimada_entrega"));
+	    	$req->setFechaEntrega($objDT);
+	    	$objDT = \DateTime::createFromFormat('Y-m-d', $rq->get("fecha_asignacion"));
+	    	$req->setFechaAsigna($objDT);
+	    	$objDT = \DateTime::createFromFormat('Y-m-d', $rq->get("fecha_cierre"));
+	    	$req->setFechaCierre($objDT);
+	    	$fecha=date("Y-m-d");
+
+	    	$objDT = \DateTime::createFromFormat('Y-m-d', $fecha);
+	    	//dd($objDT);
+	    	$req->setFechaCreacion($objDT);
+	    	$req->setObservacion($rq->get("observaciones"));
+	    	$entityManager->persist($req);
+	        $entityManager->flush();
+
+	        $trazaRq = new TrazabilidadRequerimiento();
+	        $trazaRq->setRequerimientoId($req->getId());
+	        $trazaRq->setUsuarioId($rq->get("nombre_usuario"));
+	        $trazaRq->setEstadoRequerimientoId($req->getEstadoRequerimientosId());
+	        $trazaRq->setObservacion($req->getObservacion());
+	        $entityManager->persist($trazaRq);
+
+	        
+	        $trazaRq = new TrazabilidadRequerimiento();
+	        $trazaRq->setRequerimientoId($req->getId());
+	        $trazaRq->setUsuarioId($rq->get("nombre_consultor"));
+	        $trazaRq->setEstadoRequerimientoId($req->getEstadoRequerimientosId());
+	        $trazaRq->setObservacion($req->getObservacion());
+	        $entityManager->persist($trazaRq);
+			
+	        $entityManager->flush();
+	        $data = array('success' => true);
+	        $entityManager->getConnection()->commit();
+	    }catch(Exception $e){
+	    	$entityManager->getConnection()->rollBack();
+	    	$data = array('success'=>false);
+	    }
+    	return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Requerimiento actualizado correctamente'
+        ));
     }
 
 

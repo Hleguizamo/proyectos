@@ -58,7 +58,7 @@ class AplicacionController extends AbstractController
                 ["data"=> "name",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "area_id",             "name" => "Area",    "type"=>"select", "options"=>$area, "CRUD"=> [1,1,1,1] ],
                 ["data"=> "id_aplicacion",       "name" => "id_aplicacion",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
-                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<a href="#" class="editor_edit" onclick="edit(event,this)" >Edit</a> / <a href="" class="editor_remove">Delete</a>', "CRUD"=> [0,1,0,0] ],
+                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
                 
             ),
             'dataRoute' => "getAplicacion",
@@ -98,7 +98,7 @@ class AplicacionController extends AbstractController
      * @Route("/showAplicacion", name="showAplicacion")
      */
     public function showAplicacion(Request $rq){
-        $id=$rq->get("id_aplicacion");
+        $id=$rq->get("id");
         $aplicacion = $this->getDoctrine()->getRepository(Aplicacion::class)->findAplicacionById($id);
         return new JsonResponse(array(
             'success' => true,
@@ -115,7 +115,7 @@ class AplicacionController extends AbstractController
         $id_aplicacion=$rq->get("id");
        
         $entityManager = $this->getDoctrine()->getManager();
-        $aplicacion = $entityManager->find($id_aplicacion);
+        $aplicacion = $entityManager->find(Aplicacion::class,$id_aplicacion);
         $aplicacion->setNombre($nombre);
         $aplicacion->setAreaId($area);
        

@@ -56,14 +56,18 @@ class EstadosRequerimientosController extends AbstractController
             'PageTitle' => 'Estados de requerimiento',
             'columns' => array(
                 ["data"=> "nombre_estado",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
-                
-  
+                ["data"=> "id_estado",       "name" => "id_estado",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
+                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
+    
                 
             ),
             'dataRoute' => "getEstados",
             'dataSrc' => "datos",
             'dist' => '4-cols',
             'saveUrl' => 'agregarEstados',
+            'editUrl' => 'updateEstados',  // url donde se mandan a editar los datos
+            'getDataEdit' => 'showEstado',  // url donde se consultan los datos a editar
+            'idColumn' => 'id_estado',   // nombre de la columna que es id para los registros    
         );
         return new JsonResponse($data);
     }
@@ -88,6 +92,41 @@ class EstadosRequerimientosController extends AbstractController
         ));
 
 
+    }
+    /**
+     * @Route("/updateEstados", name="updateEstados")
+     */
+    public function updateEstados(Request $rq){
+
+        $nombre = $rq->get("nombre_estado");
+        $id_estado=$rq->get('id');
+       
+        $entityManager = $this->getDoctrine()->getManager();
+        $estado = $entityManager->find(EstadoRequerimiento::class,$id_estado);
+        $estado->setNombre($nombre);
+    
+       
+        $entityManager->persist($estado);
+        $entityManager->flush();
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Estado actualizado correctamente'
+        ));
+
+
+    }
+      /**
+     * @Route("/showEstado", name="showEstado")
+     */
+
+    public function showEstado(Request $rq){
+        $id_estado=$rq->get('id');
+        $estado = $this->getDoctrine()->getRepository(EstadoRequerimiento::class)->findEstadoById($id_estado);
+  
+        return new JsonResponse(array(
+            'success' => true,
+            'data' => $estado,
+        ));
     }
 
     /**

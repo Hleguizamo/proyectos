@@ -58,7 +58,7 @@ class AreasController extends AbstractController
                 ["data"=> "nombre_area",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "gerencia_id",             "name" => "Gerencia",    "type"=>"select", "options"=>$gerencias, "CRUD"=> [1,1,1,1] ],
                 ["data"=> "id_area",       "name" => "id_area",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
-                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<a href="#" class="editor_edit" onclick="edit(event,this)" >Edit</a> / <a href="" class="editor_remove">Delete</a>', "CRUD"=> [0,1,0,0] ],
+                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
                 
             ),
             'dataRoute' => "getAreas",
@@ -115,7 +115,7 @@ class AreasController extends AbstractController
         $id_area=$rq->get('id');
        
         $entityManager = $this->getDoctrine()->getManager();
-        $area = $entityManager->find($id_area);
+        $area = $entityManager->find(Area::class,$id_area);
         $area->setNombre($nombre);
         $area->setGerenciaId($gerencia);
        

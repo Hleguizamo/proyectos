@@ -57,6 +57,7 @@ class UsuarioRepository extends ServiceEntityRepository
         u.telefono telefono, 
         u.estado estado,
         u.area_id area_id
+    
         FROM usuarios u
         INNER JOIN tipo_documentos t ON u.tipo_documento_id=t.id
         INNER JOIN roles ON u.rol_id=roles.id';
@@ -94,7 +95,7 @@ class UsuarioRepository extends ServiceEntityRepository
         FROM usuarios u
         INNER JOIN tipo_documentos t ON u.tipo_documento_id=t.id
         INNER JOIN roles ON u.rol_id=roles.id
-        WHERE a.id = :id_usuario';
+        WHERE u.id = :id_usuario';
         $parametros = array('id_usuario'=>$id_usuario);
         $stmt = $conn->prepare($sql);
         $stmt->execute($parametros);

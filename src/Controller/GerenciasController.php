@@ -52,13 +52,17 @@ class GerenciasController extends AbstractController
             'PageTitle' => 'Gerencia',
             'columns' => array(
                 ["data"=> "nombre_gerencia",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
-                
+                ["data"=> "id_gerencia",       "name" => "id_gerencia",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
+                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
                 
             ),
             'dataRoute' => "getGerencias",
             'dataSrc' => "datos",
             'dist' => '4-cols',
             'saveUrl' => 'agregarGerencia',
+            'editUrl' => 'updateGerencia',  // url donde se mandan a editar los datos
+            'getDataEdit' => 'showGerencia',  // url donde se consultan los datos a editar
+            'idColumn' => 'id_gerencia',   // nombre de la columna que es id para los registros    
         );
         return new JsonResponse($data);
     }
@@ -86,9 +90,13 @@ class GerenciasController extends AbstractController
     /**
      * @Route("/showGerencia", name="showGerencia")
      */
-    public function showGerencia($id){
+    public function showGerencia(Request $rq){
+        $id=$rq->get("id");
         $gerencia = $this->getDoctrine()->getRepository(Gerencia::class)->findGerenciaById($id);
-        return new JsonResponse($gerencia);
+        return new JsonResponse(array(
+            'success' => true,
+            'data' => $gerencia
+        ));
     }
 
 
@@ -100,7 +108,7 @@ class GerenciasController extends AbstractController
         $nombre = $rq->get("nombre_gerencia");
         $id_gerencia=$rq->get("id");
         $entityManager = $this->getDoctrine()->getManager();
-        $gerencia = $entityManager->find($id_gerencia);
+        $gerencia = $entityManager->find(Gerencia::class,$id_gerencia);
         $gerencia->setNombre($nombre);
        
         $entityManager->persist($gerencia);

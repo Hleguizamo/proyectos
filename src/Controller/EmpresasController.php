@@ -58,12 +58,17 @@ class EmpresasController extends AbstractController
 		        											array(
 		        												['value'=>'1','name'=>'Activo'],
 		        												['value'=>'0','name'=>'Inactivo'])
-		        , "CRUD"=> [1,0,0,0] ]
+		        , "CRUD"=> [1,0,0,0] ],
+                ["data"=> "id_empresa",       "name" => "id_empresa",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
+                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
     		),
     		'dataRoute' => "getEmpresas",
     		'dataSrc' => "datos",
     		'dist' => '4-cols',
     		'saveUrl' => 'agregarEmpresa',
+            'editUrl' => 'updateEmpresas',  // url donde se mandan a editar los datos
+            'getDataEdit' => 'showEmpresas',  // url donde se consultan los datos a editar
+            'idColumn' => 'id_empresa',   // nombre de la columna que es id para los registros    
     	);
     	return new JsonResponse($data);
     }
@@ -95,9 +100,13 @@ class EmpresasController extends AbstractController
     /**
      * @Route("/showEmpresas", name="showEmpresas")
      */
-    public function showEmpresas($id){
-        $empresa = $this->getDoctrine()->getRepository(Empresa::class)->findAreaById($id);
-        return new JsonResponse($empresa);
+    public function showEmpresas(Request $rq){
+        $id_empresa = $rq->get("id");
+        $empresa = $this->getDoctrine()->getRepository(Empresa::class)->findEmpresaById($id_empresa);
+        return new JsonResponse(array(
+            'success' =>    true,
+            'data' => $empresa
+        ));
     }
 
     /**
@@ -110,7 +119,7 @@ class EmpresasController extends AbstractController
         $estado = $rq->get("estado");
         $id_empresa = $rq->get("id");
         $entityManager = $this->getDoctrine()->getManager();
-        $empresa = $entityManager->find($id_empresa);
+        $empresa = $entityManager->find(Empresa::class,$id_empresa);
         $empresa->setNombre($nombre);
         $empresa->setCodigo($codigo);
         $empresa->setPais($pais);

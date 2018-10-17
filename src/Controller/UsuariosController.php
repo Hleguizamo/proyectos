@@ -77,12 +77,17 @@ class UsuariosController extends AbstractController
                                                             array(
                                                                 ['value'=>'1','name'=>'Activo'],
                                                                 ['value'=>'0','name'=>'Inactivo'])
-                ,"CRUD"=> [1,1,1,1]]              
+                ,"CRUD"=> [1,1,1,1]],
+                ["data"=> "id_usuario",       "name" => "id_usuario",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
+                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
             ),
             'dataRoute' => "getUsuarios",
             'dataSrc' => "datos",
             'dist' => '4-cols',
             'saveUrl' => 'agregarUsuarios',
+            'editUrl' => 'updateUsuarios',  // url donde se mandan a editar los datos
+            'getDataEdit' => 'showUsuario',  // url donde se consultan los datos a editar
+            'idColumn' => 'id_usuario',   // nombre de la columna que es id para los registros    
         );
         return new JsonResponse($data);
     }
@@ -134,9 +139,13 @@ class UsuariosController extends AbstractController
     /**
      * @Route("/showUsuario", name="showUsuario")
      */
-    public function showUsuario($id){
-        $usuario = $this->getDoctrine()->getRepository(Usuario::class)->findUsuarioById($id);
-        return new JsonResponse($usuario);
+    public function showUsuario(Request $rq){
+        $id_usuario= $rq->get('id');
+        $usuario = $this->getDoctrine()->getRepository(Usuario::class)->findUsuarioById($id_usuario);
+        return new JsonResponse(array(
+            'success' => true,
+            'data' => $usuario
+        ));
     }
 
     /**
@@ -158,7 +167,7 @@ class UsuariosController extends AbstractController
         $id_empresa=$session->get('id_empresa');
         $entityManager = $this->getDoctrine()->getManager();
 
-        $usuario = $entityManager->find($id_usuario);
+        $usuario = $entityManager->find(Usuario::class,$id_usuario);
         $usuario->setEmpresaId($id_empresa);
         $usuario->setRolId($rol);
         $usuario->setTipoDocumentoId($tipo_doc);
@@ -264,7 +273,7 @@ class UsuariosController extends AbstractController
 	    		$session->set('nombre_usuario',$data[0]['nombre_usuario']." ".$data[0]['apellido_usuario']);
 	    		$session->set('id_usuario',$data[0]['id_usuario']);
                 $session->set('id_empresa',$data[0]['id_empresa']);
-	    	
+	    	    $session->set('id_rol',$data[0]['id_rol']);
 
 
 

@@ -57,7 +57,8 @@ class ModulosController extends AbstractController
             'columns' => array(
                 ["data"=> "nombre_modulo",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "id_aplicacion",             "name" => "Aplicacion",    "type"=>"select", "options"=>$aplicacion, "CRUD"=> [1,1,1,1] ],
-                
+                ["data"=> "id_modulo",       "name" => "id_modulo",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
+                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
   
                 
             ),
@@ -65,6 +66,9 @@ class ModulosController extends AbstractController
             'dataSrc' => "datos",
             'dist' => '4-cols',
             'saveUrl' => 'agregarModulos',
+            'editUrl' => 'updateModulos',  // url donde se mandan a editar los datos
+            'getDataEdit' => 'showModulo',  // url donde se consultan los datos a editar
+            'idColumn' => 'id_modulo',   // nombre de la columna que es id para los registros    
         );
         return new JsonResponse($data);
     }
@@ -94,9 +98,13 @@ class ModulosController extends AbstractController
     /**
      * @Route("/showModulo", name="showModulo")
      */
-    public function showModulo($id){
-        $modulo = $this->getDoctrine()->getRepository(Modulo::class)->findModuloById($id);
-        return new JsonResponse($modulo);
+    public function showModulo(Request $rq){
+        $id_modulo = $rq->get("id");
+        $modulo = $this->getDoctrine()->getRepository(Modulos::class)->findModuloById($id_modulo);
+          return new JsonResponse(array(
+            'success' => true,
+            'data' => $modulo
+        ));
     }
 
 
@@ -106,9 +114,9 @@ class ModulosController extends AbstractController
     public function updateModulos(Request $rq){
         $nombre = $rq->get("nombre_modulo");
         $aplicacion = $rq->get("id_aplicacion");
-        $id_aplicacion = $rq->get("id");
+        $id_modulo = $rq->get("id");
         $entityManager = $this->getDoctrine()->getManager();
-        $mod = $entityManager->find($id_aplicacion);
+        $mod = $entityManager->find(Modulos::class,$id_modulo);
         $mod->setNombre($nombre);
         $mod->setAplicacionId($aplicacion);
        
