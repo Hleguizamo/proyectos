@@ -37,6 +37,17 @@ class GerenciaRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
+    public function findGerenciaById($id_gerencia){
+         $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT g.nombre nombre_gerencia
+                FROM gerencias g
+                WHERE g.id = :id_gerencia";
+        $parametros = array('id_gerencia'=>$id_gerencia);
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($parametros);
+        return $stmt->fetchAll();
+    }
+
 //    /**
 //     * @return Gerencia[] Returns an array of Gerencia objects
 //     */

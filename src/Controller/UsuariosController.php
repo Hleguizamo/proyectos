@@ -131,6 +131,57 @@ class UsuariosController extends AbstractController
 
     }
 
+    /**
+     * @Route("/showUsuario", name="showUsuario")
+     */
+    public function showUsuario($id){
+        $usuario = $this->getDoctrine()->getRepository(Usuario::class)->findUsuarioById($id);
+        return new JsonResponse($usuario);
+    }
+
+    /**
+     * @Route("/updateUsuarios", name="updateUsuarios")
+     */
+     public function updateUsuarios(Request $rq){
+        $session =new  Session(new NativeSessionStorage(), new AttributeBag());
+        $id_usuario= $rq->get('id');
+        $nombre = $rq->get("nombre_usuario");
+        $apellido = $rq->get("apellido_usuario");
+        $rol   = $rq->get("id_rol");
+        $celular = $rq->get("celular");
+        $telefono = $rq->get("telefono");
+        $area = $rq->get("area_id");
+        $email   = $rq->get("email");
+        $estado = $rq->get("estado");
+        $num_doc = $rq->get("numero_documento");
+        $tipo_doc = $rq->get("id_documento");
+        $id_empresa=$session->get('id_empresa');
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $usuario = $entityManager->find($id_usuario);
+        $usuario->setEmpresaId($id_empresa);
+        $usuario->setRolId($rol);
+        $usuario->setTipoDocumentoId($tipo_doc);
+        $usuario->setEstado($estado);
+        $usuario->setNumeroDocumento($num_doc);
+        $usuario->setNombres($nombre);
+        $usuario->setApellidos($apellido);
+        $usuario->setCelular($celular);
+        $usuario->setTelefono($telefono);
+        $usuario->setAreaId($area);
+        $usuario->setEmail($email);
+
+        
+        $entityManager->persist($usuario);
+        $entityManager->flush();
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Usuario actualizado correctamente'
+        ));
+
+
+    }
+
 
     /**
      * @Route("/getUsuarios", name="getUsuarios")

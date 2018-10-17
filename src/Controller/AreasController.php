@@ -89,6 +89,34 @@ class AreasController extends AbstractController
 
 
     }
+    /**
+     * @Route("/showArea", name="showArea")
+     */
+    public function showArea($id){
+        $area = $this->getDoctrine()->getRepository(Area::class)->findAreaById($id);
+        return new JsonResponse($area);
+    }
+
+    /**
+     * @Route("/updateArea", name="updateArea")
+     */
+    public function updateArea(Request $rq){
+        $nombre = $rq->get("nombre_area");
+        $gerencia = $rq->get("gerencia_id");
+        $id_area=$rq->get('id_area');
+       
+        $entityManager = $this->getDoctrine()->getManager();
+        $area = $entityManager->find($id_area);
+        $area->setNombre($nombre);
+        $area->setGerenciaId($gerencia);
+       
+        $entityManager->persist($area);
+        $entityManager->flush();
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Area actualizada correctamente'
+        ));
+    }
 
     /**
      * @Route("/getAreas", name="getAreas")

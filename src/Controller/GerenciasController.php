@@ -84,6 +84,35 @@ class GerenciasController extends AbstractController
     }
 
     /**
+     * @Route("/showGerencia", name="showGerencia")
+     */
+    public function showGerencia($id){
+        $gerencia = $this->getDoctrine()->getRepository(Gerencia::class)->findGerenciaById($id);
+        return new JsonResponse($gerencia);
+    }
+
+
+
+    /**
+     * @Route("/updateGerencia", name="updateGerencia")
+     */
+    public function updateGerencia(Request $rq){
+        $nombre = $rq->get("nombre_gerencia");
+        $id_gerencia=$rq->get("id");
+        $entityManager = $this->getDoctrine()->getManager();
+        $gerencia = $entityManager->find($id_gerencia);
+        $gerencia->setNombre($nombre);
+       
+        $entityManager->persist($gerencia);
+        $entityManager->flush();
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Gerencia actualizada correctamente'
+        ));
+
+
+    }
+    /**
      * @Route("/getGerencias", name="getGerencias")
      */
     public function getGerencias(){

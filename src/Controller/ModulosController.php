@@ -92,6 +92,37 @@ class ModulosController extends AbstractController
     }
 
     /**
+     * @Route("/showModulo", name="showModulo")
+     */
+    public function showModulo($id){
+        $modulo = $this->getDoctrine()->getRepository(Modulo::class)->findModuloById($id);
+        return new JsonResponse($modulo);
+    }
+
+
+    /**
+     * @Route("/updateModulos", name="updateModulos")
+     */
+    public function updateModulos(Request $rq){
+        $nombre = $rq->get("nombre_modulo");
+        $aplicacion = $rq->get("id_aplicacion");
+        $id_aplicacion = $rq->get("id");
+        $entityManager = $this->getDoctrine()->getManager();
+        $mod = $entityManager->find($id_aplicacion);
+        $mod->setNombre($nombre);
+        $mod->setAplicacionId($aplicacion);
+       
+        $entityManager->persist($mod);
+        $entityManager->flush();
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Modulo actualizado correctamente'
+        ));
+
+
+    }
+
+    /**
      * @Route("/getModulos", name="getModulos")
      */
     public function getModulos(){

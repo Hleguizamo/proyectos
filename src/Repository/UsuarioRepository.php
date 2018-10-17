@@ -76,6 +76,30 @@ class UsuarioRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
 
     }
+    public findUsuarioById($id_usuario){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT u.numero_documento numero_documento,
+        u.tipo_documento_id id_documento, 
+        roles.nombre nombre_rol,
+        u.rol_id id_rol,        
+        t.nombre nombre_documento, 
+        u.nombres nombre_usuario ,
+        u.apellidos apellido_usuario,
+        u.id id_usuario, 
+        u.celular celular, 
+        u.email email, 
+        u.telefono telefono, 
+        u.estado estado,
+        u.area_id area_id
+        FROM usuarios u
+        INNER JOIN tipo_documentos t ON u.tipo_documento_id=t.id
+        INNER JOIN roles ON u.rol_id=roles.id
+        WHERE a.id = :id_usuario';
+        $parametros = array('id_usuario'=>$id_usuario);
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($parametros);
+        return $stmt->fetchAll();
+    }
 
 //    /**
 //     * @return Usuario[] Returns an array of Usuario objects

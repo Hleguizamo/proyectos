@@ -71,7 +71,7 @@ class AplicacionController extends AbstractController
     /**
      * @Route("/agregarAplicacion", name="agregarAplicacion")
      */
-    public function agregarArea(Request $rq){
+    public function agregarAplicacion(Request $rq){
         $nombre = $rq->get("name");
         $area = $rq->get("area_id");
        
@@ -85,6 +85,37 @@ class AplicacionController extends AbstractController
         return new JsonResponse(array(
             'success' => true,
             'msg' => 'Aplicacion insertada correctamente'
+        ));
+
+
+    }
+
+    /**
+     * @Route("/showAplicacion", name="showAplicacion")
+     */
+    public function showAplicacion($id){
+        $aplicacion = $this->getDoctrine()->getRepository(Aplicacion::class)->findAplicacionById($id);
+        return new JsonResponse($aplicacion);
+    }
+
+    /**
+     * @Route("/updateAplicacion", name="updateAplicacion")
+     */
+    public function updateAplicacion(Request $rq){
+        $nombre = $rq->get("name");
+        $area = $rq->get("area_id");
+        $id_aplicacion=$rq->get("id");
+       
+        $entityManager = $this->getDoctrine()->getManager();
+        $aplicacion = $entityManager->find($id_aplicacion);
+        $aplicacion->setNombre($nombre);
+        $aplicacion->setAreaId($area);
+       
+        $entityManager->persist($aplicacion);
+        $entityManager->flush();
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Aplicacion actualizada correctamente'
         ));
 
 

@@ -40,7 +40,7 @@ class EmpresasController extends AbstractController
             'estado' => $esta,
             'modulo' => $mod,
             'js' => '',
-        ]);
+            ]);
     }
 
     /**
@@ -88,6 +88,39 @@ class EmpresasController extends AbstractController
     		'success' => true,
     		'msg' => 'Empresa insertada correctamente'
     	));
+
+
+    }
+
+    /**
+     * @Route("/showEmpresas", name="showEmpresas")
+     */
+    public function showEmpresas($id){
+        $empresa = $this->getDoctrine()->getRepository(Empresa::class)->findAreaById($id);
+        return new JsonResponse($empresa);
+    }
+
+    /**
+     * @Route("/updateEmpresas", name="updateEmpresas")
+     */
+    public function updateEmpresas(Request $rq){
+        $nombre = $rq->get("nombre_empresa");
+        $codigo = $rq->get("codigo_empresa");
+        $pais   = $rq->get("pais");
+        $estado = $rq->get("estado");
+        $id_empresa = $rq->get("id");
+        $entityManager = $this->getDoctrine()->getManager();
+        $empresa = $entityManager->find($id_empresa);
+        $empresa->setNombre($nombre);
+        $empresa->setCodigo($codigo);
+        $empresa->setPais($pais);
+        $empresa->setEstado($estado);
+        $entityManager->persist($empresa);
+        $entityManager->flush();
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Empresa actualizada correctamente'
+        ));
 
 
     }

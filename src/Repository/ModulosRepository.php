@@ -41,6 +41,22 @@ class ModulosRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
     }
 
+    public function findModuloById($id_modulo){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT 
+                    m.nombre nombre_modulo,
+                    m.id id_modulo,
+                    m.aplicacion_id id_aplicacion          
+        FROM modulos m
+        WHERE m.id = :id_modulo";
+        $parametros = array('id_modulo'=>$id_modulo);
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($parametros);
+        return $stmt->fetchAll();
+     
+
+    }
+
 //    /**
 //     * @return Modulos[] Returns an array of Modulos objects
 //     */

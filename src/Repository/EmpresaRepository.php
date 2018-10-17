@@ -51,6 +51,25 @@ class EmpresaRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findEmpresaById($id){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "SELECT 
+                    e.nombre nombre_empresa ,
+                    e.codigo codigo_empresa, 
+                    e.pais pais, 
+                    CASE e.estado 
+                        WHEN '1' THEN 'Activo'
+                        ELSE 'Inactivo'
+                    END estado
+        FROM empresas e
+        WHERE e.id = :id_empresa";
+       
+        $parametros = array('id_empresa'=>$id_empresa);
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($parametros);
+        return $stmt->fetchAll();
+    }
     
 
     /*
