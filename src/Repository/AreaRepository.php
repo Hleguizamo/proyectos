@@ -39,7 +39,7 @@ class AreaRepository extends ServiceEntityRepository
 
     public function findAreas(){
         $conn = $this->getEntityManager()->getConnection();
-        $sql ="SELECT a.nombre nombre_area, g.nombre gerencia_id
+        $sql ="SELECT a.nombre nombre_area, g.nombre gerencia_id, a.id id_area
                FROM areas a
                INNER JOIN gerencias g ON a.gerencia_id = g.id";
         $stmt = $conn->prepare($sql);
@@ -60,7 +60,7 @@ class AreaRepository extends ServiceEntityRepository
 
     public function findAreaById($id_area){
         $conn = $this->getEntityManager()->getConnection();
-        $sql ="SELECT a.nombre nombre_area, g.nombre gerencia_id
+        $sql ="SELECT a.nombre nombre_area, g.nombre gerencia_id, a.id id_area
                FROM areas a
                INNER JOIN gerencias g ON a.gerencia_id = g.id
                WHERE a.id = :id_area";

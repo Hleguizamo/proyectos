@@ -57,13 +57,17 @@ class AreasController extends AbstractController
             'columns' => array(
                 ["data"=> "nombre_area",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "gerencia_id",             "name" => "Gerencia",    "type"=>"select", "options"=>$gerencias, "CRUD"=> [1,1,1,1] ],
-                
+                ["data"=> "id_area",       "name" => "id_area",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
+                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<a href="#" class="editor_edit" onclick="edit(event,this)" >Edit</a> / <a href="" class="editor_remove">Delete</a>', "CRUD"=> [0,1,0,0] ],
                 
             ),
             'dataRoute' => "getAreas",
             'dataSrc' => "datos",
             'dist' => '4-cols',
             'saveUrl' => 'agregarArea',
+            'editUrl' => 'updateArea',  // url donde se mandan a editar los datos
+            'getDataEdit' => 'showArea',  // url donde se consultan los datos a editar
+            'idColumn' => 'id_area',   // nombre de la columna que es id para los registros    
         );
         return new JsonResponse($data);
     }
@@ -92,9 +96,14 @@ class AreasController extends AbstractController
     /**
      * @Route("/showArea", name="showArea")
      */
-    public function showArea($id){
-        $area = $this->getDoctrine()->getRepository(Area::class)->findAreaById($id);
-        return new JsonResponse($area);
+    public function showArea(Request $rq){
+        $id_area=$rq->get('id');
+        $area = $this->getDoctrine()->getRepository(Area::class)->findAreaById($id_area);
+  
+        return new JsonResponse(array(
+            'success' => true,
+            'data' => $area,
+        ));
     }
 
     /**
@@ -103,7 +112,7 @@ class AreasController extends AbstractController
     public function updateArea(Request $rq){
         $nombre = $rq->get("nombre_area");
         $gerencia = $rq->get("gerencia_id");
-        $id_area=$rq->get('id_area');
+        $id_area=$rq->get('id');
        
         $entityManager = $this->getDoctrine()->getManager();
         $area = $entityManager->find($id_area);

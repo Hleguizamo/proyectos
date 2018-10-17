@@ -20,7 +20,7 @@ class AplicacionRepository extends ServiceEntityRepository
     }
     public function findAplicacion(){
         $conn = $this->getEntityManager()->getConnection();
-        $sql ="SELECT a.nombre name, a.id value, ar.nombre area_id
+        $sql ="SELECT a.nombre name, a.id value, ar.nombre area_id,a.id id_aplicacion
                FROM aplicaciones a
                INNER JOIN areas ar ON ar.id = a.area_id";
         $stmt = $conn->prepare($sql);
@@ -40,7 +40,7 @@ class AplicacionRepository extends ServiceEntityRepository
 
     public function findAplicacionById($id_aplicacion){
         $conn = $this->getEntityManager()->getConnection();
-        $sql ="SELECT a.nombre name, a.id value, ar.nombre area_id
+        $sql ="SELECT a.nombre name, a.id value, ar.nombre area_id,a.id id_aplicacion
                FROM aplicaciones a
                INNER JOIN areas ar ON ar.id = a.area_id;
                WHERE a.id = :id_aplicacion";

@@ -76,7 +76,7 @@ class UsuarioRepository extends ServiceEntityRepository
         return $stmt->fetchAll();
 
     }
-    public findUsuarioById($id_usuario){
+    public function findUsuarioById($id_usuario){
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT u.numero_documento numero_documento,
         u.tipo_documento_id id_documento, 
