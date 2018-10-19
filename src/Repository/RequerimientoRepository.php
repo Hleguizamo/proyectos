@@ -18,6 +18,46 @@ class RequerimientoRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Requerimiento::class);
     }
+
+    public function uploadCsv($registro){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = "INSERT INTO requerimientos
+            (
+                fecha_creacion,
+                numero_requerimiento,
+                descripcion,
+                modulo_id,
+                estado_requerimientos_id,
+                fecha_asignacion,
+                fecha_estimada_entrega,
+                fecha_cierre,
+                observaciones
+            )VALUES
+            (
+                date(),
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?,
+                ?
+            )
+        ";
+        $stmt->execute([
+            'numero_requerimiento'  =>$registro[0],
+            'descripcion'           =>$registro[1],
+            'modulo_id'             =>$registro[2],
+            'fecha_asignacion'      =>$registro[3],
+            'fecha_estimada_entrega'=>$registro[4],
+            'fecha_cierre'          =>$registro[5],
+            'observaciones'         =>$registro[6]
+        ]);    
+        return true;
+        
+    }
+
     public function getRequerimientosGrid($id_usuario,$id_rol){
         $conn = $this->getEntityManager()->getConnection();
         $sql="  SELECT 

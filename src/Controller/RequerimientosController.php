@@ -22,6 +22,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class RequerimientosController extends AbstractController
 {
+
+
     /**
      * @Route("/requerimientos", name="requerimientos")
      */
@@ -58,21 +60,26 @@ class RequerimientosController extends AbstractController
     	$data = array(
     		'PageTitle' => 'Requerimientos',
     		'columns' => array(
-    			["data"=> "id_requerimiento", 		"name" => "id_requerimiento",		"type"=>"number", "CRUD"=> [0,1,0,0] ],
     			["data"=> "fecha_creacion", 		"name" => "Fecha Creación",		"type"=>"date", "CRUD"=> [0,1,1,1] ],
-		        ["data"=> "numero_requerimiento", 	"name"=> "# Requerimiento",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "descripcion", 			"name"=> "Descripción",			"type"=>"text", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "nombre_aplicacion", 		"name"=> "Aplicación",			"type"=>"select", "options"=> $apps, 	  "CRUD"=> [0,1,1,1] ],
+    			["data"=> "numero_requerimiento", 	"name"=> "# Requerimiento",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
+    			["data"=> "id_requerimiento", 		"name" => "id_requerimiento",		"type"=>"number", "CRUD"=> [0,1,0,0] ],
+    			["data"=> "descripcion", 			"name"=> "Descripción",			"type"=>"text", "CRUD"=> [1,1,1,1] ],
+    			["data"=> "nombre_aplicacion", 		"name"=> "Aplicación",			"type"=>"select", "options"=> $apps, 	  "CRUD"=> [0,1,1,1] ],
+		        
+		        
+		        
 		        ["data"=> "nombre_modulo", 			"name"=> "Módulo",				"type"=>"select", "options"=> $mod,  	  "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "nombre_gerencia", 		"name"=> "Gerencia",			"type"=>"select", "options"=> $gerencias, "CRUD"=> [0,1,1,1] ],
 		        ["data"=> "nombre_area", 			"name"=> "Área",				"type"=>"select", "options"=> $areas,     "CRUD"=> [0,1,1,1] ],
+		        ["data"=> "nombre_usuario", 		"name"=> "Usuario", 			"type"=>"select", "options"=> $usuarios,        "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "nombre_consultor", 		"name"=> "Consultor",			"type"=>"select", "options"=> $consultores,     "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "estado_requerimiento", 	"name"=> "Estado Req.",			"type"=>"select", "options"=> $estados,   "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "fecha_asignacion", 		"name"=> "Fecha Asignación",	"type"=>"date", "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "fecha_estimada_entrega", "name"=> "Fecha Entrega",		"type"=>"date", "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "fecha_cierre", 			"name"=> "Fecha Cierre",		"type"=>"date", "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "observaciones", 			"name"=> "Observaciones",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "nombre_consultor", 		"name"=> "Consultor",			"type"=>"select", "options"=> $consultores,     "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "nombre_usuario", 		"name"=> "Usuario", 			"type"=>"select", "options"=> $usuarios,        "CRUD"=> [1,1,1,1] ],
+		        
+		        
 		        ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
     		),
     		'dataRoute' => "misRequerimientosById2",
@@ -393,5 +400,33 @@ class RequerimientosController extends AbstractController
     	$RQ->setEstadoRequerimientosId($id);
     	$entityManager->flush();
     	return new JsonResponse($RQ);
+    }
+    /**
+     * @Route("/readCsv", name="readCsv")
+     */
+    public function readCsv(){
+    	$linea = 0;
+		//Abrimos nuestro archivo
+		$archivo = fopen($this->getParameter('kernel.project_dir').'/assets/req.csv', "r");
+		//Lo recorremos
+		//var_dump($archivo);
+		$data = array();
+		$entityManager = $this->getDoctrine()->getManager();
+    	$entityManager->getConnection()->beginTransaction();
+    	try{
+			while (($datos = fgetcsv($archivo,5000, ";")) == true) 
+			{
+			  $this->getDoctrine()->getRepository(Requerimiento::class)->uploadCsv($datos);
+			}
+			//Cerramos el archivo
+			fclose($archivo);
+			//echo $this->getParameter('kernel.project_dir').'/assets/req.csv';
+			$entityManager->getConnection()->commit();
+			return new JsonResponse(array('success'=>true));
+	    }catch(Exception $e){
+	    	$entityManager->getConnection()->rollBack();
+	    	return new JsonResponse(array('success'=>false));
+		}
+		
     }
 }
