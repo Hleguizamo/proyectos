@@ -183,7 +183,7 @@
                         
                          {% endif %}
                     </div>
-                        {% if(app.session.get('id_rol')!= 2 and app.session.get('id_rol')!= 3) %}
+                        {% if(app.session.get('id_rol')!= 2 and app.session.get('id_rol')!= 3 and enableUpload is defined) %}
                             <form method="post" enctype="multipart/form-data" id="myform" data-reply-form>
 
                                   <input name="File" type="file" accept="text/csv"   class="file-input" >

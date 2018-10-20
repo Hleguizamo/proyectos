@@ -44,6 +44,7 @@ class RequerimientosController extends AbstractController
             'estado' => $esta,
             'modulo' => $mod,
             'js' => 'req.js',
+            'enableUpload' => true,
         ]);
     }
     /**
