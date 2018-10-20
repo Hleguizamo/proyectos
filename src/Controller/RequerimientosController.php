@@ -19,8 +19,10 @@ use App\Entity\Aplicacion;
 use App\Entity\Gerencia;
 use App\Entity\TrazabilidadRequerimiento;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use App\Utils\CsvReader;
 
-class RequerimientosController extends AbstractController
+
+class RequerimientosController extends AbstractController 
 {
 
 
@@ -405,28 +407,75 @@ class RequerimientosController extends AbstractController
      * @Route("/readCsv", name="readCsv")
      */
     public function readCsv(){
-    	$linea = 0;
-		//Abrimos nuestro archivo
-		$archivo = fopen($this->getParameter('kernel.project_dir').'/assets/req.csv', "r");
-		//Lo recorremos
-		//var_dump($archivo);
-		$data = array();
-		$entityManager = $this->getDoctrine()->getManager();
-    	$entityManager->getConnection()->beginTransaction();
-    	try{
-			while (($datos = fgetcsv($archivo,5000, ";")) == true) 
-			{
-			  $this->getDoctrine()->getRepository(Requerimiento::class)->uploadCsv($datos);
-			}
-			//Cerramos el archivo
-			fclose($archivo);
-			//echo $this->getParameter('kernel.project_dir').'/assets/req.csv';
-			$entityManager->getConnection()->commit();
-			return new JsonResponse(array('success'=>true));
-	    }catch(Exception $e){
-	    	$entityManager->getConnection()->rollBack();
-	    	return new JsonResponse(array('success'=>false));
-		}
-		
+    	$entityManager = $this->getDoctrine()->getManager();
+    	$lector = new CsvReader();
+
+    	$lector->setParameters(
+    			$this->getParameter('kernel.project_dir').'/assets/req2.csv',
+    			$entityManager,
+    			$this
+    		);
+    	$response = $lector->readCsv();
+		return new JsonResponse($response);
+    }
+
+    public function validarRegistroCsv($entityManager,$registro){
+    	return array(false,'error predefinido');
+    }
+
+    public function guardarRegistroCsv($entityManager,$registro){
+    	
+    		/*
+				fecha crea                   '19/10/18'     		
+                numero_requerimiento,        '569999999'
+                descripcion,				 'requerimiento de prueba plano 1'
+                modulo_id,					 '1'
+                estado_requerimientos_id,    '2'
+                fecha_asignacion,   		 '29/08/18'
+                fecha_estimada_entrega,		 '30/08/18'
+                fecha_cierre,				 '31/08/18'
+                observaciones,   			 'Observación'
+                consultor_id,  				 '1'
+                usuario_id					 '1'
+	    	*/
+	    	$req = new Requerimiento();
+	    	$req->setNumeroRequerimiento($registro[1]);
+	    	$req->setDescripcion($registro[2]);
+	    	$req->setModuloId($registro[3]);
+	    	
+	    	$req->setEstadoRequerimientosId($registro[4]);
+
+	    	$objDT = \DateTime::createFromFormat('d/m/Y', $registro[5]);
+	    	$req->setFechaAsigna($objDT);
+
+	    	$objDT = \DateTime::createFromFormat('d/m/Y', $registro[6]);
+	    	$req->setFechaEntrega($objDT);
+	    	
+	    	$objDT = \DateTime::createFromFormat('d/m/Y', $registro[7]);
+	    	$req->setFechaCierre($objDT);
+	    	$fecha=date("d/m/Y");
+
+	    	$objDT = \DateTime::createFromFormat('d/m/Y', $fecha);
+	    	//dd($objDT);
+	    	$req->setFechaCreacion($objDT);
+	    	$req->setObservacion($registro[8]);
+	    	
+	    	$entityManager->persist($req);
+	        $entityManager->flush();
+
+	        $trazaRq = new TrazabilidadRequerimiento();
+	        $trazaRq->setRequerimientoId($req->getId());
+	        $trazaRq->setUsuarioId($registro[9]);
+	        $trazaRq->setEstadoRequerimientoId($req->getEstadoRequerimientosId());
+	        $trazaRq->setObservacion($req->getObservacion());
+	        $entityManager->persist($trazaRq);
+
+	        
+	        $trazaRq = new TrazabilidadRequerimiento();
+	        $trazaRq->setRequerimientoId($req->getId());
+	        $trazaRq->setUsuarioId($registro[10]);
+	        $trazaRq->setEstadoRequerimientoId($req->getEstadoRequerimientosId());
+	        $trazaRq->setObservacion($req->getObservacion());
+	        $entityManager->persist($trazaRq);
     }
 }
