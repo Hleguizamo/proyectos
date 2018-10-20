@@ -1,0 +1,10 @@
+fech;num req;descr;modulo;estado id;fecha asigna;fecha entre;fecha cierre;Observación;consultor;usuario
+19/10/18;569999999;requerimiento de prueba plano 1;1;2;29/08/18;30/08/18;31/08/18;Observación;1;1
+19/10/18;570000000;requerimiento de prueba plano 2;2;2;30/08/18;31/08/18;01/09/18;Observación;2;1
+19/10/18;570000001;requerimiento de prueba plano 3;1;2;31/08/18;01/09/18;02/09/18;Observación;1;1
+19/10/18;570000002;requerimiento de prueba plano 4;2;2;01/09/18;02/09/18;03/09/18;Observación;2;2
+19/10/18;570000003;requerimiento de prueba plano 5;1;2;02/09/18;03/09/18;04/09/18;Observación;1;2
+19/10/18;570000004;requerimiento de prueba plano 6;2;2;03/09/18;04/09/18;05/09/18;Observación;2;2
+19/10/18;570000005;requerimiento de prueba plano 7;1;2;04/09/18;05/09/18;06/09/18;Observación;1;2
+19/10/18;570000006;requerimiento de prueba plano 8;2;2;05/09/18;06/09/18;07/09/18;Observación;2;1
+19/10/18;570000007;requerimiento de prueba plano 9;1;2;06/09/18;07/09/18;08/09/18;Observación;1;1

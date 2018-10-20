@@ -20,12 +20,12 @@ use App\Entity\Gerencia;
 use App\Entity\TrazabilidadRequerimiento;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
-class RequerimientosController extends AbstractController
+class SeguimientoController extends AbstractController
 {
 
 
     /**
-     * @Route("/requerimientos", name="requerimientos")
+     * @Route("/seguimientos", name="seguimientos")
      */
     public function index()
     {
@@ -45,7 +45,7 @@ class RequerimientosController extends AbstractController
         ]);
     }
     /**
-     * @Route("/requerimientos/crudDatas", name="requerimientos/crudData")
+     * @Route("/seguimientos/crudDatas", name="seguimientos/crudData")
      */
     public function getCrudData(){
     	$session =new  Session(new NativeSessionStorage(), new AttributeBag());
@@ -60,7 +60,7 @@ class RequerimientosController extends AbstractController
 
     	
     	$data = array(
-    		'PageTitle' => 'Requerimientos',
+    		'PageTitle' => 'Seguimiento a los requerimientos',
 
     		'columns' => array(
     			["data"=> "fecha_creacion", 		"name" => "Fecha Creación",		"type"=>"date", "CRUD"=> [0,1,1,1] ],
@@ -85,7 +85,7 @@ class RequerimientosController extends AbstractController
 		        
 		        ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
     		),
-    		'dataRoute' => "misRequerimientosById2",
+    		'dataRoute' => "misSeguiemiento",
     		'dataSrc' => "datos",
     		'dist' => '4-cols',
     		'saveUrl' => 'agregarRequerimiento', //url donde se mandan a guardar los datos  
@@ -95,9 +95,7 @@ class RequerimientosController extends AbstractController
     		'buttons' => ['Estado'=>'mostrarCambiarEstado()']
 
     	);
-    	if($id_rol == 2 or $id_rol == 3){
-    		unset($data['columns'][15]);
-    	}
+    	
     	return new JsonResponse($data);
     }
 
@@ -261,7 +259,7 @@ class RequerimientosController extends AbstractController
     	return new JsonResponse($arr);
     }
     /**
-     * @Route("/misRequerimientosById2", name="requerimientosById2")
+     * @Route("/misSeguiemiento", name="misSeguiemiento")
      */
     public function mis_requerimientos_by_id2()
     {
@@ -409,31 +407,31 @@ class RequerimientosController extends AbstractController
     	return new JsonResponse($RQ);
     }
     /**
-     * @Route("/readCsv2", name="readCsv2")
+     * @Route("/readCsv", name="readCsv")
      */
-    public function readCsv2(Request $r){
-
-    	$dir_subida  = $this->getParameter('kernel.project_dir').'/assets/csv/';
-		$fichero_subido = $dir_subida . basename($_FILES['File']['name']);
-		$uploadOk = 1;
-		if (move_uploaded_file($_FILES['File']['tmp_name'], $fichero_subido)) {
-		    $arr = array(
-	                'success' => true,
-	                'msg' => 'exitoso',
-	                'datos' => null,
-	            );
-		    //unlink($fichero_subido);
-		} else {
-		     $arr = array(
-	                'success' => true,
-	                'msg' => 'error',
-	                'datos' => null,
-	            );
+    public function readCsv(){
+    	$linea = 0;
+		//Abrimos nuestro archivo
+		$archivo = fopen($this->getParameter('kernel.project_dir').'/assets/req.csv', "r");
+		//Lo recorremos
+		//var_dump($archivo);
+		$data = array();
+		$entityManager = $this->getDoctrine()->getManager();
+    	$entityManager->getConnection()->beginTransaction();
+    	try{
+			while (($datos = fgetcsv($archivo,5000, ";")) == true) 
+			{
+			  $this->getDoctrine()->getRepository(Requerimiento::class)->uploadCsv($datos);
+			}
+			//Cerramos el archivo
+			fclose($archivo);
+			//echo $this->getParameter('kernel.project_dir').'/assets/req.csv';
+			$entityManager->getConnection()->commit();
+			return new JsonResponse(array('success'=>true));
+	    }catch(Exception $e){
+	    	$entityManager->getConnection()->rollBack();
+	    	return new JsonResponse(array('success'=>false));
 		}
-	
-
-		return new JsonResponse($arr);
-    	
 		
     }
 }
