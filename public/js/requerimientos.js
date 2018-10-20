@@ -114,17 +114,30 @@ function loadDataConfig(){
       id_registro =  data.idColumn;
       editUrl = data.editUrl;
       addTableHead(data.columns);
+     
       loadDataTable(data.dataRoute,data.dataSrc,data.columns);
-      loadButtons(data.buttons);
+      loadButtons(data.buttons,data.dataRoute);
     }
   });
 
 }
 
-function loadButtons(buttons){
-  $.each(buttons,function(buttonName,buttonAction){
+function loadButtons(buttons,nombreRuta){
+  id_rol=$("#id_rol").val();
+  $ruta=nombreRuta;
+
+  if($ruta!='misRequerimientosById2' && (id_rol!=2 || id_rol!=3 )){
+     $.each(buttons,function(buttonName,buttonAction){
       $("#buttons").append('<button type="button" onclick="'+buttonAction+'" class="btn btn-primary btn-sm"> '+buttonName+' </button>');
-  });
+    });
+  }
+
+  if($ruta=='misRequerimientosById2' && id_rol==1){
+     $.each(buttons,function(buttonName,buttonAction){
+      $("#buttons").append('<button type="button" onclick="'+buttonAction+'" class="btn btn-primary btn-sm"> '+buttonName+' </button>');
+    });
+  }
+ 
 
 }
 
@@ -447,6 +460,44 @@ function filtrar(){
   });
 
 }
+
+function importar(){
+
+
+  
+}
+
+$('#myform').submit(function ( e ) {
+    var data = new FormData(this); //Creamos los datos a enviar con el formulario
+    $.ajax({
+        url: 'readCsv2', //URL destino
+        data: data,
+        processData: false, //Evitamos que JQuery procese los datos, daría error
+        contentType: false, //No especificamos ningún tipo de dato
+        type: 'POST',
+        success: function (resultado) {
+           
+             console.log(resultado);
+             $.alert("Se subio el archivo correctamente");
+           
+        },
+        error:function(error){
+          $.alert("Error al subir el archivo");
+        }
+    });
+ 
+    e.preventDefault(); //Evitamos que se mande del formulario de forma convencional
+});
+
+
+$(".file-input").on("change", function(e){
+
+   $('[data-reply-form]').submit();
+
+
+//..
+
+});
 
 
 
