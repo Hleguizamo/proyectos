@@ -48,8 +48,9 @@ nav{
   font-weight: 700;
   font-size: 10pt;
   visibility: visible;
-  position: relative;
-  margin: 20px;
+
+  margin-right: -100px;
+    position: relative;
 }
 .file-input:hover::before {
   border-color: black;

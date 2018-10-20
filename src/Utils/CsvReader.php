@@ -69,7 +69,7 @@ class CsvReader{
 				//Si no existen errores se confirma la transacción y se retorna true
 				$em->flush();	       
 				$em->getConnection()->commit();
-				return  array('success'=>true);
+				return  array('success'=>true,'errors'=>array());
 			}
 			//En caso de que existan errores se regresa la transacción y se devuelven los errores
 			$em->getConnection()->rollBack();
@@ -78,7 +78,7 @@ class CsvReader{
 	    }catch(Exception $e){
 
 	    	$em->getConnection()->rollBack();
-	    	return array('success'=>false,'Error Inesperado al leer el archivo');
+	    	return array('success'=>false,'errors' => array('Error Inesperado al leer el archivo'));
 		}
    }
 

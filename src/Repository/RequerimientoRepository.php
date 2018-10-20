@@ -37,6 +37,7 @@ class RequerimientoRepository extends ServiceEntityRepository
                 RQ.fecha_estimada_entrega,
                 RQ.fecha_cierre,
                 RQ.observaciones,
+                emp_cons.nombre empresa_consultor,
                 concat_ws(' ', consultor.nombres, consultor.apellidos )  nombre_consultor,
                 concat_ws(' ', usureq.nombres, usureq.apellidos )  nombre_usuario
                 FROM requerimientos RQ
@@ -47,7 +48,7 @@ class RequerimientoRepository extends ServiceEntityRepository
                 INNER JOIN empresas EMP ON gerencias.empresas_id = EMP.id
                 INNER JOIN estado_requerimientos RQ_ST ON RQ.estado_requerimientos_id = RQ_ST.id
                 LEFT JOIN (
-                    SELECT usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
+                    SELECT usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id, usuarios.empresa_id empresa_id
                     FROM trazabilidad_requerimmientos
                     INNER JOIN usuarios ON usuarios.id = usuario_id
                     WHERE usuarios.rol_id = 2
@@ -60,6 +61,7 @@ class RequerimientoRepository extends ServiceEntityRepository
                     WHERE usuarios.rol_id = 3
                     GROUP BY usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
                 ) usureq ON usureq.requermiento_id = RQ.id 
+                LEFT JOIN empresas emp_cons ON emp_cons.id = consultor.empresa_id
 
                 ";
         //Si es un conultor se filtran los proyectos donde aparezca como consultor        

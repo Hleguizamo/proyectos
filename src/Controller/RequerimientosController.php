@@ -77,6 +77,8 @@ class RequerimientosController extends AbstractController
 		        ["data"=> "nombre_gerencia", 		"name"=> "Gerencia",			"type"=>"select", "options"=> $gerencias, "CRUD"=> [0,1,1,1] ],
 		        ["data"=> "nombre_area", 			"name"=> "Área",				"type"=>"select", "options"=> $areas,     "CRUD"=> [0,1,1,1] ],
 		        ["data"=> "nombre_usuario", 		"name"=> "Usuario", 			"type"=>"select", "options"=> $usuarios,        "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "empresa_consultor", 		"name"=> "Empresa Consultor",	"type"=>"text",   "CRUD"=> [0,1,0,0] ],
+
 		        ["data"=> "nombre_consultor", 		"name"=> "Consultor",			"type"=>"select", "options"=> $consultores,     "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "estado_requerimiento", 	"name"=> "Estado Req.",			"type"=>"select", "options"=> $estados,   "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "fecha_asignacion", 		"name"=> "Fecha Asignación",	"type"=>"date", "CRUD"=> [1,1,1,1] ],
@@ -427,7 +429,7 @@ class RequerimientosController extends AbstractController
     }
 
     public function validarRegistroCsv($entityManager,$registro){
-    	return array(false,'error predefinido');
+    	return array(true,'error predefinido');
     }
 
     public function guardarRegistroCsv($entityManager,$registro){
@@ -495,17 +497,30 @@ class RequerimientosController extends AbstractController
 		$fichero_subido = $dir_subida . basename($_FILES['File']['name']);
 		$uploadOk = 1;
 		if (move_uploaded_file($_FILES['File']['tmp_name'], $fichero_subido)) {
+			$entityManager = $this->getDoctrine()->getManager();
+	    	$lector = new CsvReader();
+	    	$lector->setParameters(
+	    			$fichero_subido,
+	    			$entityManager,
+	    			$this
+	    		);
+	    	try{
+	    		$response = $lector->readCsv();
+	    	}catch(Exception $e){
+	    		$response = array(false,'Parametros insuficientes para leer el archivo');
+	    	}
 		    $arr = array(
-	                'success' => true,
-	                'msg' => 'exitoso',
-	                'datos' => null,
+	                'success' => $response['success'],
+	                'msg' => $response['success']? 'Fichero importado exitosamente' : 'Errores al subir el fichero',
+	                'errors' => $response['errors']
+	              
 	            );
 		    //unlink($fichero_subido);
 		} else {
 		     $arr = array(
-	                'success' => true,
-	                'msg' => 'error',
-	                'datos' => null,
+	                'success' => false,
+	                'msg' => 'Error al intentar mover el fichero',
+
 	            );
 		}
 	

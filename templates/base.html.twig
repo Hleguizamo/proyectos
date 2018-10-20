@@ -175,19 +175,22 @@
                         <h2 id="contentTitle">{% block bodyTitle %}{% endblock %}</h2>
                     </div>
                      {% if(app.session.get('id_rol')!= 3 ) %}
-                    <div class="col-xs-12 text-right" id="buttons" style="padding: 5px">
+                    <div class="col-xs-8 text-right" id="buttons" style="padding: 5px">
                         {% if(app.session.get('id_rol')!= 2 and app.session.get('id_rol')!= 3) %}
 
                         <button class="btn btn-success btn-sm" onclick="showAdd()">Agregar</button>
-                        <form method="post" enctype="multipart/form-data" id="myform" data-reply-form>
-
-                          <input name="File" type="file" accept="text/csv"   class="file-input" onchange="this.form.submit();" >
-                          <input type="submit">enviar</button>
-                        </form>
+                        
                         
                          {% endif %}
                     </div>
-                     {% endif %}
+                        {% if(app.session.get('id_rol')!= 2 and app.session.get('id_rol')!= 3) %}
+                            <form method="post" enctype="multipart/form-data" id="myform" data-reply-form>
+
+                                  <input name="File" type="file" accept="text/csv"   class="file-input" >
+                                
+                            </form>
+                        {% endif %}
+                    {% endif %}
                    
             
                     

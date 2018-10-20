@@ -467,7 +467,9 @@ function importar(){
   
 }
 
-$('#myform').submit(function ( e ) {
+$('#myform').submit(function (e) {
+  e.preventDefault();
+  e.stopPropagation();
     var data = new FormData(this); //Creamos los datos a enviar con el formulario
     $.ajax({
         url: 'readCsv2', //URL destino
@@ -478,7 +480,20 @@ $('#myform').submit(function ( e ) {
         success: function (resultado) {
            
              console.log(resultado);
-             $.alert("Se subio el archivo correctamente");
+
+             $.confirm({
+                title: 'Alerta',
+                content: "Se subio el archivo correctamente",
+                type: 'green',
+                typeAnimated: true,
+                buttons: {
+                    
+                    close: function () {
+                      location.reload();
+
+                    }
+                }
+            });
            
         },
         error:function(error){
@@ -486,11 +501,11 @@ $('#myform').submit(function ( e ) {
         }
     });
  
-    e.preventDefault(); //Evitamos que se mande del formulario de forma convencional
+     //Evitamos que se mande del formulario de forma convencional
 });
 
 
-$(".file-input").on("change", function(e){
+$(".file-input").on("change", function(){
 
    $('[data-reply-form]').submit();
 
