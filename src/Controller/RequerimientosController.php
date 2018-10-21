@@ -100,8 +100,8 @@ class RequerimientosController extends AbstractController
     		'buttons' => ['Estado'=>'mostrarCambiarEstado()']
 
     	);
-    	if($id_rol == 2 or $id_rol == 3){
-    		unset($data['columns'][15]);
+    	if($id_rol == 2 || $id_rol == 3){
+    		unset($data['columns'][16]);
     	}
     	return new JsonResponse($data);
     }
