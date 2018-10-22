@@ -47,6 +47,7 @@ class UsuariosController extends AbstractController
             'estado' => $esta,
             'modulo' => $mod,
             'js' => '',
+            'enableUpload' => true,
         ]);
     }
 
