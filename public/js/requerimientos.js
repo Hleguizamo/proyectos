@@ -481,8 +481,9 @@ $('#myform').submit(function (e) {
   e.preventDefault();
   e.stopPropagation();
     var data = new FormData(this); //Creamos los datos a enviar con el formulario
+    var segment = $(location).attr('href').split("/")[3];
     $.ajax({
-        url: 'readCsv2', //URL destino
+        url: segment+'/readCsv2', //URL destino
         data: data,
         processData: false, //Evitamos que JQuery procese los datos, daría error
         contentType: false, //No especificamos ningún tipo de dato

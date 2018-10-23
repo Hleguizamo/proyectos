@@ -370,7 +370,7 @@ class UsuariosController extends AbstractController
         }
 
     /**
-     * @Route("/readCsv2", name="readCsv2")
+     * @Route("usuarios/readCsv2", name="usuarios/readCsv2")
      */
     public function readCsv2(Request $r){
 
