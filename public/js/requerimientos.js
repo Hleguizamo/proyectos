@@ -114,8 +114,8 @@ function loadDataConfig(){
       id_registro =  data.idColumn;
       editUrl = data.editUrl;
       addTableHead(data.columns);
-     
-      loadDataTable(data.dataRoute,data.dataSrc,data.columns);
+      data.exportButtons = data.exportButtons != undefined? data.exportButtons : false;
+      loadDataTable(data.dataRoute,data.dataSrc,data.columns,data.exportButtons);
       loadButtons(data.buttons,data.dataRoute);
     }
   });
@@ -166,7 +166,8 @@ function addTableHead(columns){
 
 
 
-function loadDataTable(url,dataSrc,columns){
+function loadDataTable(url,dataSrc,columns,exportButtons){
+  var dataDom = exportButtons? 'Bfrtip' : 'frtip';
   setColumnFilters("reqTable");
   tablaDatos = $('#reqTable').DataTable({
     orderCellsTop: true,
@@ -175,6 +176,15 @@ function loadDataTable(url,dataSrc,columns){
         dataSrc: dataSrc,
 
     },
+    dom: dataDom,
+    buttons: [
+           
+           {
+                extend: 'excel',
+              
+            },
+           
+       ],
 
      language: {
           "sProcessing":     "Procesando...",

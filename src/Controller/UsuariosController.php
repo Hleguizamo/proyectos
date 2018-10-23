@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+use App\Utils\CsvReader;
 class UsuariosController extends AbstractController
 {
 
@@ -63,16 +64,18 @@ class UsuariosController extends AbstractController
             'PageTitle' => 'Usuarios',
             'columns' => array(
                 ["data"=> "id_documento",               "name" => "Tipo documentos",    "type"=>"select", "options"=>$tipo_documento, "CRUD"=> [1,0,0,0] ],
-            	["data"=> "nombre_documento",           "name" => "Tipo_documento",    "type"=>"text","CRUD"=> [0,1,1,1] ],
-                ["data"=> "numero_documento",           "name" => "Numero_documento",     "type"=>"number", "CRUD"=> [1,1,1,1] ],
-                ["data"=> "nombre_usuario",             "name" => "Nombre",     "type"=>"text","CRUD"=> [1,1,1,1] ],
+            	["data"=> "nombre_documento",           "name" => "Tipo_documento",    "type"=>"text","CRUD"=> [0,0,1,1] ],
+                 ["data"=> "nombre_usuario",             "name" => "Nombre",     "type"=>"text","CRUD"=> [1,1,1,1] ],
                 ["data"=> "apellido_usuario",           "name" => "Apellido",     "type"=>"text","CRUD"=> [1,1,1,1] ],
-                ["data"=> "id_rol",                     "name" => "Rol",    "type"=>"select", "options"=>$rol, "CRUD"=> [1,0,0,0] ],               
-                ["data"=> "celular",             		"name" => "Celular",     "type"=>"text","CRUD"=> [1,1,1,1] ],
-                ["data"=> "telefono",             		"name" => "Telefono",     "type"=>"text","CRUD"=> [1,1,1,1] ],
-                ["data"=> "email",             			"name" => "Email",     "type"=>"email","CRUD"=> [1,1,1,1] ],
-                ["data"=> "nombre_rol",             	"name" => "nombre_rol",    "type"=>"text","CRUD"=> [0,1,1,1] ],
+                ["data"=> "numero_documento",           "name" => "Numero_documento",     "type"=>"number", "CRUD"=> [1,1,1,1] ],
+                ["data"=> "email",                       "name" => "Email",     "type"=>"email","CRUD"=> [1,1,1,1] ],
                 ["data"=> "area_id",                    "name" => "Area",    "type"=>"select", "options"=>$area,"CRUD"=> [1,0,0,0] ],
+                ["data"=> "id_rol",                     "name" => "Rol",    "type"=>"select", "options"=>$rol, "CRUD"=> [1,0,0,0] ],               
+                ["data"=> "celular",             		"name" => "Celular",     "type"=>"text","CRUD"=> [1,0,1,1] ],
+                ["data"=> "telefono",             		"name" => "Telefono",     "type"=>"text","CRUD"=> [1,0,1,1] ],
+                
+                ["data"=> "nombre_rol",             	"name" => "nombre_rol",    "type"=>"text","CRUD"=> [0,1,1,1] ],
+               
                 ["data"=> "estado",                    "name"=> "Estado",      "type"=>"select", 
                                                         "options"=> 
                                                             array(
@@ -319,5 +322,92 @@ class UsuariosController extends AbstractController
 	            );
 	    }
     	return new JsonResponse($arr);
+    }
+
+
+    public function validarRegistroCsv($entityManager,$registro){
+        return array(true,'error predefinido');
+    }
+
+    public function guardarRegistroCsv($entityManager,$registro){
+        
+            /*
+                fecha crea                   '19/10/18'             
+                numero_requerimiento,        '569999999'
+                descripcion,                 'requerimiento de prueba plano 1'
+                modulo_id,                   '1'
+                estado_requerimientos_id,    '2'
+                fecha_asignacion,            '29/08/18'
+                fecha_estimada_entrega,      '30/08/18'
+                fecha_cierre,                '31/08/18'
+                observaciones,               'Observación'
+                consultor_id,                '1'
+                usuario_id                   '1'
+            */
+
+          
+
+
+            $usuario = new Usuario();
+            $usuario->setNombres($registro[0]);
+            $usuario->setApellidos($registro[1]);
+            $usuario->setNumeroDocumento($registro[2]);
+            $usuario->setEmail($registro[3]);
+            $usuario->setAreaId($registro[4]);
+            $usuario->setTipoDocumentoId($registro[5]);  
+            $usuario->setEmpresaId($registro[6]);
+            $usuario->setRolId($registro[7]);        
+            $usuario->setEstado($registro[8]);
+            $usuario->setCelular($registro[9]);         
+            $usuario->setTelefono($registro[10]);
+            $usuario->setTelefono($registro[11]);
+
+          
+            
+            $entityManager->persist($usuario);
+            $entityManager->flush();
+
+        }
+
+    /**
+     * @Route("/readCsv2", name="readCsv2")
+     */
+    public function readCsv2(Request $r){
+
+        $dir_subida  = $this->getParameter('kernel.project_dir').'/assets/csv/';
+        $fichero_subido = $dir_subida . basename($_FILES['File']['name']);
+        $uploadOk = 1;
+        if (move_uploaded_file($_FILES['File']['tmp_name'], $fichero_subido)) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $lector = new CsvReader();
+            $lector->setParameters(
+                    $fichero_subido,
+                    $entityManager,
+                    $this
+                );
+            try{
+                $response = $lector->readCsv();
+            }catch(Exception $e){
+                $response = array(false,'Parametros insuficientes para leer el archivo');
+            }
+            $arr = array(
+                    'success' => $response['success'],
+                    'msg' => $response['success']? 'Fichero importado exitosamente' : 'Errores al subir el fichero',
+                    'errors' => $response['errors']
+                  
+                );
+            //unlink($fichero_subido);
+        } else {
+             $arr = array(
+                    'success' => false,
+                    'msg' => 'Error al intentar mover el fichero',
+
+                );
+        }
+    
+
+        return new JsonResponse($arr);
+        
+        
     }
 }
