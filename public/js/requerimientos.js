@@ -167,7 +167,7 @@ function addTableHead(columns){
 
 
 function loadDataTable(url,dataSrc,columns,exportButtons){
-  var dataDom = exportButtons? 'Bfrtip' : 'frtip';
+  var dataDom = exportButtons? 'Bfrti<"col-12 col-xs-12 text-right" p>' : 'frti<"col-12 col-xs-12 text-right" p>';
   setColumnFilters("reqTable");
   tablaDatos = $('#reqTable').DataTable({
     orderCellsTop: true,
