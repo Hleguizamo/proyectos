@@ -68,7 +68,7 @@ class RequerimientosController extends AbstractController
     		'columns' => array(
     			["data"=> "fecha_creacion", 		"name" => "Fecha Creación",		"type"=>"date", "CRUD"=> [0,1,1,1] ],
     			["data"=> "numero_requerimiento", 	"name"=> "# Requerimiento",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
-    			["data"=> "id_requerimiento", 		"name" => "id_requerimiento",		"type"=>"number", "CRUD"=> [0,1,0,0] ],
+    			["data"=> "id_requerimiento", 		"name" => "id_requerimiento",		"type"=>"number", "CRUD"=> [0,0,0,0] ],
     			["data"=> "descripcion", 			"name"=> "Descripción",			"type"=>"text", "CRUD"=> [1,1,1,1] ],
     			["data"=> "nombre_aplicacion", 		"name"=> "Aplicación",			"type"=>"select", "options"=> $apps, 	  "CRUD"=> [0,1,1,1] ],
 		        
