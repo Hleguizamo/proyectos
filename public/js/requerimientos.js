@@ -10,6 +10,10 @@ var id_edit = null; //id del registro que se esta actualizando actualmente
 $( document ).ready(function() {
   loadDataConfig();
 
+  var segment = $(location).attr('href').split("/")[3];
+
+  $('.profile-usermenu a[href="/'+segment+'"]').parent().addClass("active");
+
 
   
 });
@@ -277,7 +281,11 @@ function getForm(){
         code = code + getSelectOptions(col.options);
         code = code + '</select>';
       }else{
-        code = code +   '<input type="'+col.type+'" class="form-control" name="'+col.data+'">';  
+        var validation = "";
+        if(col.type=="number"){
+          validation = 'onkeydown="javascript: return event.keyCode == 69 ? false : true"';
+        }
+        code = code +   '<input type="'+col.type+'" class="form-control" name="'+col.data+'" id="inputAdd'+col.data+'" '+validation+'>';  
       } 
       code = code + '</div>';
     }
@@ -286,6 +294,8 @@ function getForm(){
   code = code + '</form>';
   return code;
 }
+
+
 
 
 

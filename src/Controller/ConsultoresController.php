@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use App\Utils\CsvReader;
-class UsuariosController extends AbstractController
+class ConsultoresController extends AbstractController
 {
 
 	/**
@@ -31,9 +31,9 @@ class UsuariosController extends AbstractController
         ]);
     }
 	 /**
-     * @Route("/usuarios", name="usuario")
+     * @Route("/consultores", name="consultores")
      */
-    public function usuarios()
+    public function consultores()
     {
         
     	$areas = $this->getDoctrine()->getRepository(Area::class)->findAll();
@@ -53,7 +53,7 @@ class UsuariosController extends AbstractController
     }
 
     /**
-     * @Route("/usuarios/crudDatas", name="areaaplicaciones/crudData")
+     * @Route("/consultores/crudDatas", name="consultores/crudData")
      */
     public function getCrudData(){
         $tipo_documento =  $this->getDoctrine()->getRepository(TipoDocumento::class)->findDocumento();
@@ -61,18 +61,18 @@ class UsuariosController extends AbstractController
          $area =  $this->getDoctrine()->getRepository(Area::class)->findAreasOption();
 
         $data = array(
-            'PageTitle' => 'Usuarios',
+            'PageTitle' => 'Consultores',
             'columns' => array(
                 ["data"=> "id_documento",               "name" => "Tipo documentos",    "type"=>"select", "options"=>$tipo_documento, "CRUD"=> [1,0,0,0] ],
-            	["data"=> "nombre_documento",           "name" => "Tipo_documento",    "type"=>"text","CRUD"=> [0,0,1,1] ],
-                 ["data"=> "nombre_usuario",             "name" => "Nombre",     "type"=>"text","CRUD"=> [1,1,1,1] ],
+            	["data"=> "nombre_documento",           "name" => "Tipo_documento",    "type"=>"number","CRUD"=> [0,0,1,1] ],
+                ["data"=> "nombre_usuario",             "name" => "Nombre",     "type"=>"text","CRUD"=> [1,1,1,1] ],
                 ["data"=> "apellido_usuario",           "name" => "Apellido",     "type"=>"text","CRUD"=> [1,1,1,1] ],
                 ["data"=> "numero_documento",           "name" => "Numero_documento",     "type"=>"number", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "email",                       "name" => "Email",     "type"=>"email","CRUD"=> [1,1,1,1] ],
                 ["data"=> "area_id",                    "name" => "Area",    "type"=>"select", "options"=>$area,"CRUD"=> [1,0,0,0] ],
                 ["data"=> "id_rol",                     "name" => "Rol",    "type"=>"select", "options"=>$rol, "CRUD"=> [1,0,0,0] ],               
-                ["data"=> "celular",             		"name" => "Celular",     "type"=>"text","CRUD"=> [1,0,1,1] ],
-                ["data"=> "telefono",             		"name" => "Telefono",     "type"=>"text","CRUD"=> [1,0,1,1] ],
+                ["data"=> "celular",             		"name" => "Celular",     "type"=>"number","CRUD"=> [1,0,1,1] ],
+                ["data"=> "telefono",             		"name" => "Telefono",     "type"=>"number","CRUD"=> [1,0,1,1] ],
                 
                 ["data"=> "nombre_rol",             	"name" => "nombre_rol",    "type"=>"text","CRUD"=> [0,1,1,1] ],
                
@@ -85,7 +85,7 @@ class UsuariosController extends AbstractController
                 ["data"=> "id_usuario",       "name" => "id_usuario",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
                 ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
             ),
-            'dataRoute' => "getUsuarios",
+            'dataRoute' => "getConsultores",
             'dataSrc' => "datos",
             'dist' => '4-cols',
             'saveUrl' => 'agregarUsuarios',
@@ -197,9 +197,9 @@ class UsuariosController extends AbstractController
 
 
     /**
-     * @Route("/getUsuarios", name="getUsuarios")
+     * @Route("/getConsultores", name="getConsultores")
      */
-    public function getUsuarios(){
+    public function getConsultores(){
         try {
 
 
@@ -210,7 +210,7 @@ class UsuariosController extends AbstractController
             $normalizers = array(new ObjectNormalizer());
 
             $serializer = new Serializer($normalizers, $encoders);*/
-            $gerencia = $this->getDoctrine()->getRepository(Usuario::class)->findUsuario(3);
+            $gerencia = $this->getDoctrine()->getRepository(Usuario::class)->findUsuario(2);
             //dd($empr);
             
             //$jsonContent = $serializer->serialize($empr, 'json');

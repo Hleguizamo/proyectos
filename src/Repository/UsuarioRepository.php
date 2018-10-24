@@ -42,7 +42,7 @@ class UsuarioRepository extends ServiceEntityRepository
 
 
 
-    public function findUsuario(){
+    public function findUsuario($rol){
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT u.numero_documento numero_documento,
         u.tipo_documento_id id_documento, 
@@ -60,9 +60,11 @@ class UsuarioRepository extends ServiceEntityRepository
     
         FROM usuarios u
         INNER JOIN tipo_documentos t ON u.tipo_documento_id=t.id
-        INNER JOIN roles ON u.rol_id=roles.id';
+        INNER JOIN roles ON u.rol_id=roles.id
+        WHERE u.rol_id = :rol
+        ';
         $stmt = $conn->prepare($sql);
-        $stmt->execute();
+        $stmt->execute(['rol'=>$rol]);
         return $stmt->fetchAll();
     }
 

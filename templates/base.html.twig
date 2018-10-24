@@ -98,8 +98,8 @@
                 <div class="profile-usermenu">
                     <ul class="nav">
                         {% if(app.session.get('id_rol')!= 2 and app.session.get('id_rol')!= 3) %}
-                        <li class="active">
-                            <a ref="{{asset('requerimientos')}}">
+                        <li class="">
+                            <a href="{{asset('requerimientos')}}">
                                 <i class="glyphicon glyphicon-home"></i>
                             Home </a>
                         </li>
@@ -112,6 +112,11 @@
                             <a href="{{asset('usuarios')}}" >
                                 <i class="glyphicon glyphicon-ok"></i>
                             Usuarios </a>
+                        </li>
+                        <li>
+                            <a href="{{asset('consultores')}}" >
+                                <i class="glyphicon glyphicon-ok"></i>
+                            Consultores </a>
                         </li>
                         <li>
                             <a href="{{asset('areas')}}">
