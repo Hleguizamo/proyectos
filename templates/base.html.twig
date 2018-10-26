@@ -45,6 +45,10 @@
     border: 1px solid transparent;
     border-radius: 2px;
 }
+
+
+
+
     </style>
     {% block stylesheets %}{% endblock %}
 </head>
@@ -60,7 +64,7 @@
  </a>
 
  <span class="navbar-text">
-  Usuario : {{app.session.get('nombre_usuario')}}  &nbsp; &nbsp;
+  
   <a class="btn btn-primary" href="{{'cerrar'}}">Salir</a>
 </span>
 
@@ -75,7 +79,17 @@
             <div class="profile-sidebar">
                 <!-- SIDEBAR USERPIC -->
                 <div class="profile-userpic">
-                    <img src="http://keenthemes.com/preview/metronic/theme/assets/admin/pages/media/profile/profile_user.jpg" class="img-responsive" alt="">
+                    {% if(app.session.get('id_rol')== 2 ) %}
+                        <img src="{{asset('img/Consultor.png')}}" class="img-responsive">
+                    {% endif %}
+
+                    {% if(app.session.get('id_rol')== 3 ) %}
+                        <img src="{{asset('img/usuarios.png')}}" class="img-responsive">
+                    {% endif %}
+
+                    {% if(app.session.get('id_rol')== 1 ) %}
+                        <img src="{{asset('img/Administrador.png')}}" class="img-responsive">
+                    {% endif %}
                 </div>
                 <!-- END SIDEBAR USERPIC -->
                 <!-- SIDEBAR USER TITLE -->
