@@ -1,4 +1,5 @@
 var columns = [];
+var ocultar=0;
 var distribucion = null;
 var saveUrl = null;  //Url donde se mandan a crear los datos
 var editUrl = null; //Url donde se mandan a ediatar los datos
@@ -8,6 +9,10 @@ var tablaDatos = null;
 var id_edit = null; //id del registro que se esta actualizando actualmente
 
 $( document ).ready(function() {
+  $('#preloader').hide(); // will first fade out the loading animation 
+   
+
+
   loadDataConfig();
 
   var segment = $(location).attr('href').split("/")[3];
@@ -17,6 +22,19 @@ $( document ).ready(function() {
 
   
 });
+function OcultarMenu(){
+  if(ocultar==0){
+    ocultar=1;
+    $(".profile-sidebar").hide();
+    $("#menu-lateral").removeClass('col-md-9');
+    $("#menu-lateral").addClass('col-md-12');
+  }else{
+    ocultar=0;
+    $(".profile-sidebar").show();
+    $("#menu-lateral").removeClass('col-md-12');
+    $("#menu-lateral").addClass('col-md-9');
+  }
+}
 
 function edit(event,control){
   event.preventDefault();
@@ -492,6 +510,7 @@ $('#myform').submit(function (e) {
   e.stopPropagation();
     var data = new FormData(this); //Creamos los datos a enviar con el formulario
     var segment = $(location).attr('href').split("/")[3];
+    $('#preloader').show();
     $.ajax({
         url: segment+'/readCsv2', //URL destino
         data: data,
@@ -501,7 +520,7 @@ $('#myform').submit(function (e) {
         success: function (resultado) {
            
              console.log(resultado);
-
+             $('#preloader').delay(350).fadeOut('slow');
              $.confirm({
                 title: 'Alerta',
                 content: "Se subio el archivo correctamente",

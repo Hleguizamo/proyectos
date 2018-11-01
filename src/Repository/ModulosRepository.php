@@ -25,8 +25,10 @@ class ModulosRepository extends ServiceEntityRepository
         $sql = "SELECT 
                     m.nombre nombre_modulo,
                     m.id id_modulo,
-                    m.aplicacion_id id_aplicacion          
-        FROM modulos m";
+                    ap.nombre id_aplicacion          
+        FROM modulos m
+        INNER JOIN aplicaciones ap ON m.aplicacion_id = ap.id
+        ";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();
