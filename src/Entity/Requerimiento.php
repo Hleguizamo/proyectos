@@ -69,6 +69,18 @@ class Requerimiento
      */
     private $fecha_actualizacion;
 
+    /**
+     * @ORM\Column(name="estado", type="integer", options={"default" : 1})
+     */
+    private $estado;
+
+
+
+    public function getEstado(): ?int
+    {
+        return $this->estado;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -169,6 +181,12 @@ class Requerimiento
 
         return $this;
     }
+
+    public function setEstado($estado): self
+    {
+        $this->estado=$estado;
+        return $this;
+    }
     public function getFechaCreacion(): ?\DateTimeInterface
     {
         return $this->fecha_creacion;
@@ -185,6 +203,8 @@ class Requerimiento
     {
         return $this->fecha_actualizacion;
     }
+
+
 
     public function setFechaActualizacion(?\DateTimeInterface $fecha_actualizacion): self
     {

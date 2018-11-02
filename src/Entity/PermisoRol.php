@@ -22,6 +22,11 @@ class PermisoRol
     private $roles_id;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $permiso_id;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $fecha_creacion;
@@ -44,6 +49,13 @@ class PermisoRol
     public function setRolesId(int $roles_id): self
     {
         $this->roles_id = $roles_id;
+
+        return $this;
+    }
+
+    public function setPermisoId(int $permiso_id): self
+    {
+        $this->permiso_id = $permiso_id;
 
         return $this;
     }

@@ -2,6 +2,7 @@ var columns = [];
 var distribucion = null;
 var saveUrl = null;  //Url donde se mandan a crear los datos
 var editUrl = null; //Url donde se mandan a ediatar los datos
+var deleteUrl = null; //Url donde se manda a eliminar un registro
 var dataEditUrl = null; //Url donde se consultan los datos a editar
 var id_registro = null; //nombre de la columna que es id para el registro actual
 var tablaDatos = null;
@@ -33,6 +34,63 @@ function edit(event,control){
   var id = data[id_registro];
   getDataEdit(id);
   
+}
+
+function deleteReg(event,control){
+  event.preventDefault();
+  var index = $(control).parent().parent().index();
+  var pagina = tablaDatos.page();
+  var numReg = pagina == 0? 0 : tablaDatos.page.len();
+  pagina = pagina == 0? 1 : pagina;
+  index = (index * pagina) + numReg;
+  var index2 = tablaDatos.rows()[0][index];
+  //console.log("index "+index+" index2: "+index2)
+  var data = tablaDatos.row(index2).data();
+
+  //console.log(data);
+  var id = data[id_registro];
+  sendDelete(id);
+
+}
+
+function sendDelete(id){
+  $.confirm({
+      title: '¿Está seguro que desea eliminar el registro?',
+      theme : 'material',
+      type : 'red',
+      content: '',
+      buttons: {
+          Eliminar: {
+              text: 'Eliminar',
+              btnClass: 'btn-red',
+              keys: ['enter'],
+              action: function(){
+                  sendAjaxDelete(id);
+              }
+          },
+          
+          Cancelar: {
+              text: 'Cancelar',
+              btnClass: 'btn-blue',
+              
+              action: function(){
+                  
+              }
+          },
+          
+      }
+  });
+
+}
+function sendAjaxDelete(id){
+  $.ajax({
+    url : deleteUrl,
+    type : "POST",
+    data : {id : id},
+    success : function(data){
+      console.log(data);
+    }
+  });
 }
 
 function getDataEdit(id_reg){
@@ -117,6 +175,7 @@ function loadDataConfig(){
       dataEditUrl = data.getDataEdit;
       id_registro =  data.idColumn;
       editUrl = data.editUrl;
+      deleteUrl = data.deleteUrl;
       addTableHead(data.columns);
       data.exportButtons = data.exportButtons != undefined? data.exportButtons : false;
       loadDataTable(data.dataRoute,data.dataSrc,data.columns,data.exportButtons);

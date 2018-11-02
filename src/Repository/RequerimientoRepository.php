@@ -62,6 +62,7 @@ class RequerimientoRepository extends ServiceEntityRepository
                     GROUP BY usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id
                 ) usureq ON usureq.requermiento_id = RQ.id 
                 LEFT JOIN empresas emp_cons ON emp_cons.id = consultor.empresa_id
+                WHERE RQ.estado <> 0
 
                 ";
         //Si es un conultor se filtran los proyectos donde aparezca como consultor        
@@ -308,6 +309,9 @@ class RequerimientoRepository extends ServiceEntityRepository
 
 
     }
+
+
+
 
     public function filtrarRequerimientosAll($id_area,$id_requerimiento,$id_estado,$id_modulo){
 

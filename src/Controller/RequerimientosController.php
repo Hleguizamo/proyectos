@@ -88,13 +88,14 @@ class RequerimientosController extends AbstractController
 		        ["data"=> "observaciones", 			"name"=> "Observaciones",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
 		        
 		        
-		        ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
+		        ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
     		),
     		'dataRoute' => "misRequerimientosById2",
     		'dataSrc' => "datos",
     		'dist' => '4-cols',
     		'saveUrl' => 'agregarRequerimiento', //url donde se mandan a guardar los datos  
     		'editUrl' => 'editarRequerimiento',  // url donde se mandan a editar los datos
+    		'deleteUrl' => 'eliminarRequerimiento', // Url donde se manda a eliminar un registro
     		'getDataEdit' => 'datosEditarReqs',  // url donde se consultan los datos a editar
     		'idColumn' => 'id_requerimiento',  	// nombre de la columna que es id para los registros	
     		'buttons' => ['Estado'=>'mostrarCambiarEstado()'],
@@ -105,6 +106,35 @@ class RequerimientosController extends AbstractController
     		unset($data['columns'][16]);
     	}
     	return new JsonResponse($data);
+    }
+
+    /** 
+     * @Route("/eliminarRequerimiento", name="eliminarRequerimiento")
+     */
+    public function eliminarRequerimiento(Request $rq){
+    	$id = $rq->get("id");
+
+    	$entityManager = $this->getDoctrine()->getManager();
+    	$entityManager->getConnection()->beginTransaction();
+    	try{
+	    	
+	    	$req = $entityManager->find(Requerimiento::class,$id);
+	    	$req->setEstado(0);
+	    	
+	        $entityManager->persist($req);
+			
+	        $entityManager->flush();
+	        $data = array('success' => true);
+	        $entityManager->getConnection()->commit();
+	    }catch(Exception $e){
+	    	$entityManager->getConnection()->rollBack();
+	    	$data = array('success'=>false);
+	    }
+    	return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Requerimiento actualizado correctamente'
+        ));
+
     }
 
     /** 
@@ -184,6 +214,7 @@ class RequerimientosController extends AbstractController
      * @Route("/agregarRequerimiento", name="agregarRequerimiento")
      */
     public function agregarRequerimiento(Request $rq){
+    	
     	$entityManager = $this->getDoctrine()->getManager();
     	$entityManager->getConnection()->beginTransaction();
     	try{
@@ -192,6 +223,8 @@ class RequerimientosController extends AbstractController
 	    	$req->setNumeroRequerimiento($rq->get("numero_requerimiento"));
 	    	$req->setDescripcion($rq->get("descripcion"));
 	    	$req->setModuloId($rq->get("nombre_modulo"));
+	    	$req->setEstado(1);
+
 	    	//$req->setAplicacionId($rq->get("nombre_aplicacion"));
 	    	//$req->setGerenciaId($rq->get("nombre_gerencia"));
 	    	//$req->setAreaId($rq->get("nombre_area"));

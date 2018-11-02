@@ -172,9 +172,11 @@ class SeguimientoController extends AbstractController
     	return new JsonResponse(array('success'=>true, 'data' => $data));
     }
 
-    /** 
-     * @Route("/agregarRequerimiento", name="agregarRequerimiento")
-     */
+    /*
+
+     
+     * ("/agregarRequerimiento", name="agregarRequerimiento")
+     
     public function agregarRequerimiento(Request $rq){
     	$entityManager = $this->getDoctrine()->getManager();
     	$entityManager->getConnection()->beginTransaction();
@@ -227,7 +229,7 @@ class SeguimientoController extends AbstractController
 	    	$data = array('success'=>false);
 	    }
     	return new JsonResponse($data);
-    }
+    }*/
     
 
     /**

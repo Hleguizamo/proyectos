@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+
+
+{% block body %}
+
+{{ dump(permisos) }}
+
+<div>
+	<form method="POST" action="GuardarPermisos">
+		<div class="text-right">
+			<button type="submit" class="btn btn-primary btn-sm"> Guardar </button>
+		</div>
+		<table class="table text-center">
+			<thead>
+				<tr>
+					<th>Perfil</th>
+					<th>Agregar</th>
+					<th>Editar</th>
+					<th>Eliminar</th>
+					<th>Subir CSV</th>
+					<th>Descargar Excel</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>Consultor</th>
+					<td> <input type="checkbox" name="ConsAdd"> </td>
+					<td> <input type="checkbox" name="ConsEdit"> </td>
+					<td> <input type="checkbox" name="ConsDel"> </td>
+					<td> <input type="checkbox" name="ConsUpload"> </td>
+					<td> <input type="checkbox" name="ConsDownload"> </td>
+				</tr>
+				<tr>
+					<th>Usuario</th>
+					<td> <input type="checkbox" name="UsuAdd"> </td>
+					<td> <input type="checkbox" name="UsuEdit"> </td>
+					<td> <input type="checkbox" name="UsuDel"> </td>
+					<td> <input type="checkbox" name="UsuUpload"> </td>
+					<td> <input type="checkbox" name="UsuDownload"> </td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+
+
+
+
+
+
+{% endblock %}
