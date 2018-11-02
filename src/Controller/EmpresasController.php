@@ -52,7 +52,7 @@ class EmpresasController extends AbstractController
     		'columns' => array(
     			["data"=> "nombre_empresa", 			"name" => "Nombre",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "pais", 						"name"=> "Pais",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "codigo_empresa", 			"name"=> "Código",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "codigo_empresa", 			"name"=> "Código",		"type"=>"text", "CRUD"=> [0,0,0,1] ],
 		        ["data"=> "estado", 					"name"=> "Estado",		"type"=>"select", 
 		        										"options"=> 
 		        											array(
@@ -78,7 +78,7 @@ class EmpresasController extends AbstractController
      */
     public function agregarEmpresa(Request $rq){
     	$nombre = $rq->get("nombre_empresa");
-    	$codigo = $rq->get("codigo_empresa");
+    	$codigo = 1;
     	$pais   = $rq->get("pais");
     	$estado = $rq->get("estado");
     	$entityManager = $this->getDoctrine()->getManager();
@@ -114,14 +114,14 @@ class EmpresasController extends AbstractController
      */
     public function updateEmpresas(Request $rq){
         $nombre = $rq->get("nombre_empresa");
-        $codigo = $rq->get("codigo_empresa");
+      
         $pais   = $rq->get("pais");
         $estado = $rq->get("estado");
         $id_empresa = $rq->get("id");
         $entityManager = $this->getDoctrine()->getManager();
         $empresa = $entityManager->find(Empresa::class,$id_empresa);
         $empresa->setNombre($nombre);
-        $empresa->setCodigo($codigo);
+        
         $empresa->setPais($pais);
         $empresa->setEstado($estado);
         $entityManager->persist($empresa);

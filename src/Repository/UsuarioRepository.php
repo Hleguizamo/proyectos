@@ -42,14 +42,14 @@ class UsuarioRepository extends ServiceEntityRepository
 
 
 
-    public function findUsuario($rol){
+    public function findUsuario($roladmin,$rol=null){
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT u.numero_documento numero_documento,
         u.tipo_documento_id id_documento, 
         roles.nombre nombre_rol,
         u.rol_id id_rol,        
         t.nombre nombre_documento, 
-        u.nombres nombre_usuario ,
+        CONCAT(u.nombres," ",u.apellidos) nombre_usuario,
         u.apellidos apellido_usuario,
         u.id id_usuario, 
         u.celular celular, 
@@ -62,9 +62,10 @@ class UsuarioRepository extends ServiceEntityRepository
         INNER JOIN tipo_documentos t ON u.tipo_documento_id=t.id
         INNER JOIN roles ON u.rol_id=roles.id
         WHERE u.rol_id = :rol
+        OR u.rol_id= :roladmin
         ';
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['rol'=>$rol]);
+        $stmt->execute(['rol'=>$rol,'roladmin'=>$roladmin]);
         return $stmt->fetchAll();
     }
 
@@ -86,7 +87,7 @@ class UsuarioRepository extends ServiceEntityRepository
         roles.nombre nombre_rol,
         u.rol_id id_rol,        
         t.nombre nombre_documento, 
-        u.nombres nombre_usuario ,
+        CONCAT(u.apellidos,u.nombres," ") nombre_usuario,
         u.apellidos apellido_usuario,
         u.id id_usuario, 
         u.celular celular, 
