@@ -70,7 +70,9 @@ class ConsultoresController extends AbstractController
                 ["data"=> "numero_documento",           "name" => "Numero_documento",     "type"=>"number", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "email",                       "name" => "Email",     "type"=>"email","CRUD"=> [1,1,1,1] ],
                 ["data"=> "area_id",                    "name" => "Area",    "type"=>"select", "options"=>$area,"CRUD"=> [1,0,0,0] ],
-                ["data"=> "id_rol",                     "name" => "Rol",    "type"=>"select", "options"=>$rol, "CRUD"=> [1,0,0,0] ],               
+                ["data"=> "id_rol",                     "name" => "Rol",    "type"=>"select", "options"=> 
+                                                            array(
+                                                                ['value'=>'2','name'=>'Consultor']), "CRUD"=> [1,0,0,0] ],               
                 ["data"=> "celular",             		"name" => "Celular",     "type"=>"number","CRUD"=> [1,0,1,1] ],
                 ["data"=> "telefono",             		"name" => "Telefono",     "type"=>"number","CRUD"=> [1,0,1,1] ],
                 

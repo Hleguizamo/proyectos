@@ -70,7 +70,10 @@ class UsuariosController extends AbstractController
                 ["data"=> "numero_documento",           "name" => "Numero_documento",     "type"=>"number", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "email",                       "name" => "Email",     "type"=>"email","CRUD"=> [1,1,1,1] ],
                 ["data"=> "area_id",                    "name" => "Area",    "type"=>"select", "options"=>$area,"CRUD"=> [1,0,0,0] ],
-                ["data"=> "id_rol",                     "name" => "Rol",    "type"=>"select", "options"=>$rol, "CRUD"=> [1,0,0,0] ],               
+                ["data"=> "id_rol",                     "name" => "Rol",    "type"=>"select", "options"=> 
+                                                            array(
+                                                                ['value'=>'1','name'=>'Administrador'],
+                                                                ['value'=>'3','name'=>'Usuario']), "CRUD"=> [1,0,0,0] ],               
                 ["data"=> "celular",             		"name" => "Celular",     "type"=>"text","CRUD"=> [1,0,1,1] ],
                 ["data"=> "telefono",             		"name" => "Telefono",     "type"=>"text","CRUD"=> [1,0,1,1] ],
                 
@@ -210,7 +213,7 @@ class UsuariosController extends AbstractController
             $normalizers = array(new ObjectNormalizer());
 
             $serializer = new Serializer($normalizers, $encoders);*/
-            $gerencia = $this->getDoctrine()->getRepository(Usuario::class)->findUsuario(3);
+            $gerencia = $this->getDoctrine()->getRepository(Usuario::class)->findUsuario(1,3);
             //dd($empr);
             
             //$jsonContent = $serializer->serialize($empr, 'json');
