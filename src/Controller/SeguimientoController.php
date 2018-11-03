@@ -19,6 +19,7 @@ use App\Entity\Aplicacion;
 use App\Entity\Gerencia;
 use App\Entity\TrazabilidadRequerimiento;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use App\Utils\OptionsBuilder;
 
 class SeguimientoController extends AbstractController
 {
@@ -34,7 +35,15 @@ class SeguimientoController extends AbstractController
     	$req = $this->getDoctrine()->getRepository(Requerimiento::class)->findAll();
     	$esta = $this->getDoctrine()->getRepository(EstadoRequerimiento::class)->findAll();
     	$mod = $this->getDoctrine()->getRepository(Modulos::class)->findAll();
-  
+  		$optBuilder = new OptionsBuilder();
+        $optBuilder->getOptions($this->getDoctrine());
+        $session =new  Session(new NativeSessionStorage(), new AttributeBag());
+        $id_rol=$session->get('id_rol');
+        if($id_rol != 1){
+            $permisoAgregar = $optBuilder->consultarPermiso($id_rol,1)!=null;
+        }else{
+            $permisoAgregar = true;
+        }
         return $this->render('requerimientos/requerimientos.html.twig', [
             'controller_name' => 'RequerimientosController',
             'areas' => $areas,
@@ -42,6 +51,7 @@ class SeguimientoController extends AbstractController
             'estado' => $esta,
             'modulo' => $mod,
             'js' => 'req.js',
+            'permisoAgregar' => $permisoAgregar
         ]);
     }
     /**

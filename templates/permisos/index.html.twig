@@ -4,7 +4,6 @@
 
 {% block body %}
 
-{{ dump(permisos) }}
 
 <div>
 	<form method="POST" action="GuardarPermisos">
@@ -25,19 +24,19 @@
 			<tbody>
 				<tr>
 					<th>Consultor</th>
-					<td> <input type="checkbox" name="ConsAdd"> </td>
-					<td> <input type="checkbox" name="ConsEdit"> </td>
-					<td> <input type="checkbox" name="ConsDel"> </td>
-					<td> <input type="checkbox" name="ConsUpload"> </td>
-					<td> <input type="checkbox" name="ConsDownload"> </td>
+					<td> <input type="checkbox" name="ConsAdd"      {{ permisos[0]==null? '':'checked' }}> </td>					
+					<td> <input type="checkbox" name="ConsEdit"     {{ permisos[1]==null? '':'checked' }}> </td>
+					<td> <input type="checkbox" name="ConsDel"      {{ permisos[2]==null? '':'checked' }}> </td>
+					<td> <input type="checkbox" name="ConsUpload"   {{ permisos[3]==null? '':'checked' }}> </td>
+					<td> <input type="checkbox" name="ConsDownload" {{ permisos[4]==null? '':'checked' }}> </td>
 				</tr>
 				<tr>
 					<th>Usuario</th>
-					<td> <input type="checkbox" name="UsuAdd"> </td>
-					<td> <input type="checkbox" name="UsuEdit"> </td>
-					<td> <input type="checkbox" name="UsuDel"> </td>
-					<td> <input type="checkbox" name="UsuUpload"> </td>
-					<td> <input type="checkbox" name="UsuDownload"> </td>
+					<td> <input type="checkbox" name="UsuAdd"      {{ permisos[5]==null? '':'checked' }}> </td>
+					<td> <input type="checkbox" name="UsuEdit"     {{ permisos[6]==null? '':'checked' }}> </td>
+					<td> <input type="checkbox" name="UsuDel"      {{ permisos[7]==null? '':'checked' }}> </td>
+					<td> <input type="checkbox" name="UsuUpload"   {{ permisos[8]==null? '':'checked' }}> </td>
+					<td> <input type="checkbox" name="UsuDownload" {{ permisos[9]==null? '':'checked' }}> </td>
 				</tr>
 			</tbody>
 		</table>

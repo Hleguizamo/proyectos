@@ -170,6 +170,11 @@
                             Estado requerimientos </a>
                         </li>
 
+                        <li>
+                            <a href="{{asset('permisos')}}">
+                                <i class="glyphicon glyphicon-flag"></i>
+                            Permisos </a>
+                        </li>
 
                         {%
 
@@ -230,23 +235,25 @@
                     <div class="col-xs-3">
                         <h2 id="contentTitle">{% block bodyTitle %}{% endblock %}</h2>
                     </div>
-                     {% if(app.session.get('id_rol')!= 3 ) %}
+                    
                     <div class="col-xs-8 text-right" id="buttons" style="padding: 5px">
-                        {% if(app.session.get('id_rol')!= 2 and app.session.get('id_rol')!= 3) %}
+                        {% if(permisoAgregar) %}
 
                         <button class="btn btn-success btn-sm" onclick="showAdd()">Agregar</button>
                         
                         
                          {% endif %}
                     </div>
-                        {% if(app.session.get('id_rol')!= 2 and app.session.get('id_rol')!= 3 and enableUpload is defined) %}
-                            <form method="post" enctype="multipart/form-data" id="myform" data-reply-form>
+                        {% if(enableUpload is defined) %}
+                            {% if (enableUpload) %}
+                                <form method="post" enctype="multipart/form-data" id="myform" data-reply-form>
 
-                                  <input name="File" type="file" accept="text/csv"   class="file-input" >
-                                
-                            </form>
+                                      <input name="File" type="file" accept="text/csv"   class="file-input" >
+                                    
+                                </form>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
+                    
                    
             
                     

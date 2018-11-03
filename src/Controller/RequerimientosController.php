@@ -20,6 +20,7 @@ use App\Entity\Gerencia;
 use App\Entity\TrazabilidadRequerimiento;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use App\Utils\CsvReader;
+use App\Utils\OptionsBuilder;
 
 
 class RequerimientosController extends AbstractController 
@@ -36,7 +37,18 @@ class RequerimientosController extends AbstractController
     	$req = $this->getDoctrine()->getRepository(Requerimiento::class)->findAll();
     	$esta = $this->getDoctrine()->getRepository(EstadoRequerimiento::class)->findAll();
     	$mod = $this->getDoctrine()->getRepository(Modulos::class)->findAll();
-  
+    	$optBuilder = new OptionsBuilder();
+    	$optBuilder->getOptions($this->getDoctrine());
+  		$session =new  Session(new NativeSessionStorage(), new AttributeBag());
+    	$id_rol=$session->get('id_rol');
+    	if($id_rol != 1){
+    		$permisoAgregar = $optBuilder->consultarPermiso($id_rol,1)!=null;
+    		$permisoUpload = $optBuilder->consultarPermiso($id_rol,4)!=null;
+    	}else{
+    		$permisoAgregar = true;
+    		$permisoUpload = true;
+    	}
+    	
         return $this->render('requerimientos/requerimientos.html.twig', [
             'controller_name' => 'RequerimientosController',
             'areas' => $areas,
@@ -44,7 +56,8 @@ class RequerimientosController extends AbstractController
             'estado' => $esta,
             'modulo' => $mod,
             'js' => 'req.js',
-            'enableUpload' => true,
+            'enableUpload' => $permisoUpload,
+            'permisoAgregar' => $permisoAgregar
         ]);
     }
     /**
@@ -60,7 +73,9 @@ class RequerimientosController extends AbstractController
     	$estados =  $this->getDoctrine()->getRepository(EstadoRequerimiento::class)->findEstadoRequerimientoOption();
     	$consultores =  $this->getDoctrine()->getRepository(Usuario::class)->getUsersByRolOption(2);
     	$usuarios =  $this->getDoctrine()->getRepository(Usuario::class)->getUsersByRolOption(3);
+    	$optBuilder = new OptionsBuilder();
 
+    	
     	
     	$data = array(
     		'PageTitle' => 'Requerimientos',
@@ -86,9 +101,9 @@ class RequerimientosController extends AbstractController
 		        ["data"=> "fecha_estimada_entrega", "name"=> "Fecha Entrega",		"type"=>"date", "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "fecha_cierre", 			"name"=> "Fecha Cierre",		"type"=>"date", "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "observaciones", 			"name"=> "Observaciones",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
+		        $optBuilder->getOptions($this->getDoctrine()),
 		        
-		        
-		        ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
+		        //["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
     		),
     		'dataRoute' => "misRequerimientosById2",
     		'dataSrc' => "datos",
@@ -99,12 +114,10 @@ class RequerimientosController extends AbstractController
     		'getDataEdit' => 'datosEditarReqs',  // url donde se consultan los datos a editar
     		'idColumn' => 'id_requerimiento',  	// nombre de la columna que es id para los registros	
     		'buttons' => ['Estado'=>'mostrarCambiarEstado()'],
-    		'exportButtons' => true,
+    		'exportButtons' => $optBuilder->consultarPermiso($id_rol,5)!=null || $id_rol == 1,
 
     	);
-    	if($id_rol == 2 || $id_rol == 3){
-    		unset($data['columns'][16]);
-    	}
+    	
     	return new JsonResponse($data);
     }
 

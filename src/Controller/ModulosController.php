@@ -22,6 +22,10 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use App\Utils\OptionsBuilder;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 class ModulosController extends AbstractController
 {
@@ -35,7 +39,15 @@ class ModulosController extends AbstractController
         $req = $this->getDoctrine()->getRepository(Requerimiento::class)->findAll();
         $esta = $this->getDoctrine()->getRepository(EstadoRequerimiento::class)->findAll();
         $mod = $this->getDoctrine()->getRepository(Modulos::class)->findAll();
-  
+        $optBuilder = new OptionsBuilder();
+        $optBuilder->getOptions($this->getDoctrine());
+        $session =new  Session(new NativeSessionStorage(), new AttributeBag());
+        $id_rol=$session->get('id_rol');
+        if($id_rol != 1){
+            $permisoAgregar = $optBuilder->consultarPermiso($id_rol,1)!=null;
+        }else{
+            $permisoAgregar = true;
+        }
         return $this->render('requerimientos/requerimientos.html.twig', [
             'controller_name' => 'RequerimientosController',
             'areas' => $areas,
@@ -43,6 +55,7 @@ class ModulosController extends AbstractController
             'estado' => $esta,
             'modulo' => $mod,
             'js' => '',
+            'permisoAgregar' => $permisoAgregar
         ]);
     }
 
