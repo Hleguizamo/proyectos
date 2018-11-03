@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 use App\Utils\CsvReader;
+use App\Utils\OptionsBuilder;
 class ConsultoresController extends AbstractController
 {
 
@@ -28,6 +29,7 @@ class ConsultoresController extends AbstractController
     {
         return $this->render('usuarios/index.html.twig', [
             'controller_name' => 'UsuariosController',
+
         ]);
     }
 	 /**
@@ -49,6 +51,7 @@ class ConsultoresController extends AbstractController
             'modulo' => $mod,
             'js' => '',
             'enableUpload' => true,
+            'permisoAgregar' => false,
         ]);
     }
 

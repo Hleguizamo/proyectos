@@ -68,10 +68,10 @@ class RequerimientoRepository extends ServiceEntityRepository
                 ";
         //Si es un conultor se filtran los proyectos donde aparezca como consultor        
         if($id_rol == 2){
-            $sql = $sql . " WHERE consultor.usuario_id = :id_usuario";
+            $sql = $sql . " AND consultor.usuario_id = :id_usuario";
         }else if($id_rol == 3){
             //Si es un usuario se filtran solo los requerimientos que el usuario tenga
-            $sql = $sql . " WHERE usureq.usuario_id = :id_usuario";
+            $sql = $sql . "  AND usureq.usuario_id = :id_usuario";
         }
         $sql = $sql . " ORDER BY RQ.id DESC";
         //$sql = $this->addOptionsToGrid($sql);
