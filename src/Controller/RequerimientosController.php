@@ -309,6 +309,7 @@ class RequerimientosController extends AbstractController
     	$id_rol = $session->get('id_rol');//
     	
     	$empr = $this->getDoctrine()->getRepository(Requerimiento::class)->getRequerimientosGrid($id_usuario,$id_rol);
+    		
 	    try {
 	    	 $arr = array(
 	                'success' => true,

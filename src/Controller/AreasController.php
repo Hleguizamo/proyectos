@@ -58,7 +58,7 @@ class AreasController extends AbstractController
                 ["data"=> "nombre_area",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "gerencia_id",             "name" => "Gerencia",    "type"=>"select", "options"=>$gerencias, "CRUD"=> [1,1,1,1] ],
                 ["data"=> "id_area",       "name" => "id_area",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
-                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
+                ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
                 
             ),
             'dataRoute' => "getAreas",
@@ -66,10 +66,42 @@ class AreasController extends AbstractController
             'dist' => '4-cols',
             'saveUrl' => 'agregarArea',
             'editUrl' => 'updateArea',  // url donde se mandan a editar los datos
+            'deleteUrl' => 'eliminarArea',
             'getDataEdit' => 'showArea',  // url donde se consultan los datos a editar
             'idColumn' => 'id_area',   // nombre de la columna que es id para los registros    
         );
         return new JsonResponse($data);
+    }
+
+    /** 
+     * @Route("/eliminarArea", name="eliminarArea")
+     */
+    public function eliminarArea(Request $rq){
+        $id_area = $rq->get("id");
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->getConnection()->beginTransaction();
+        try{
+            
+            
+            $area = $entityManager->find(Area::class,$id_area);
+            $area->setEstado(0);
+           
+           
+            $entityManager->persist($area);
+            $entityManager->flush();
+     
+            $data = array('success' => true);
+            $entityManager->getConnection()->commit();
+        }catch(Exception $e){
+            $entityManager->getConnection()->rollBack();
+            $data = array('success'=>false);
+        }
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Requerimiento actualizado correctamente'
+        ));
+
     }
 
     /**
@@ -83,6 +115,7 @@ class AreasController extends AbstractController
         $area = new Area();
         $area->setNombre($nombre);
         $area->setGerenciaId($gerencia);
+        $area->setEstado(1);
        
         $entityManager->persist($area);
         $entityManager->flush();
