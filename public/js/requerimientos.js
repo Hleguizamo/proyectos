@@ -29,6 +29,7 @@ function OcultarMenu(){
     $(".profile-sidebar").hide();
     $("#menu-lateral").removeClass('col-md-9');
     $("#menu-lateral").addClass('col-md-12');
+
   }else{
     ocultar=0;
     $(".profile-sidebar").show();

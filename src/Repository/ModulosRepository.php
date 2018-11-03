@@ -28,6 +28,7 @@ class ModulosRepository extends ServiceEntityRepository
                     ap.nombre id_aplicacion          
         FROM modulos m
         INNER JOIN aplicaciones ap ON m.aplicacion_id = ap.id
+        WHERE m.estado <> 0
         ";
         $stmt = $conn->prepare($sql);
         $stmt->execute();

@@ -71,7 +71,7 @@ class ModulosController extends AbstractController
                 ["data"=> "nombre_modulo",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "id_aplicacion",             "name" => "Aplicacion",    "type"=>"select", "options"=>$aplicacion, "CRUD"=> [1,1,1,1] ],
                 ["data"=> "id_modulo",       "name" => "id_modulo",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
-                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
+                ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
   
                 
             ),
@@ -80,10 +80,42 @@ class ModulosController extends AbstractController
             'dist' => '4-cols',
             'saveUrl' => 'agregarModulos',
             'editUrl' => 'updateModulos',  // url donde se mandan a editar los datos
+            'deleteUrl' => 'eliminarModulo',
             'getDataEdit' => 'showModulo',  // url donde se consultan los datos a editar
             'idColumn' => 'id_modulo',   // nombre de la columna que es id para los registros    
         );
         return new JsonResponse($data);
+    }
+
+
+    /** 
+     * @Route("/eliminarModulo", name="eliminarModulo")
+     */
+    public function eliminarModulo(Request $rq){
+        $id_modulo = $rq->get("id");
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->getConnection()->beginTransaction();
+        try{
+            
+            $mod = $entityManager->find(Modulos::class,$id_modulo);
+            $mod->setEstado(0);
+            
+        
+            $entityManager->persist($mod);
+            $entityManager->flush();
+     
+            $data = array('success' => true);
+            $entityManager->getConnection()->commit();
+        }catch(Exception $e){
+            $entityManager->getConnection()->rollBack();
+            $data = array('success'=>false);
+        }
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Requerimiento actualizado correctamente'
+        ));
+
     }
 
     /**
@@ -96,6 +128,7 @@ class ModulosController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $mod = new Modulos();
         $mod->setNombre($nombre);
+        $mod->setEstado(1);
         $mod->setAplicacionId($aplicacion);
        
         $entityManager->persist($mod);

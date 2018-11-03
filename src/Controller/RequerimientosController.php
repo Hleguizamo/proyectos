@@ -60,6 +60,17 @@ class RequerimientosController extends AbstractController
             'permisoAgregar' => $permisoAgregar
         ]);
     }
+
+
+    /**
+     * @Route("/home", name="home")
+     */
+    public function home()
+    {
+    	return $this->index();
+    }
+
+
     /**
      * @Route("/requerimientos/crudDatas", name="requerimientos/crudData")
      */
@@ -322,7 +333,6 @@ class RequerimientosController extends AbstractController
     	$id_rol = $session->get('id_rol');//
     	
     	$empr = $this->getDoctrine()->getRepository(Requerimiento::class)->getRequerimientosGrid($id_usuario,$id_rol);
-    		
 	    try {
 	    	 $arr = array(
 	                'success' => true,
@@ -478,7 +488,36 @@ class RequerimientosController extends AbstractController
     }
 
     public function validarRegistroCsv($entityManager,$registro){
-    	return array(true,'error predefinido');
+    	
+    	$resp=$this->ValidarRequerimiento($registro);
+    	if($resp==true){
+    		return array(true,'Se inserto correctamente');
+    	}else{
+    		return array(false,$resp[1]);
+    	}
+
+    	
+    }
+
+    public function ValidarRequerimiento($registro){
+
+
+    	$repository = $this->getDoctrine()->getRepository(Requerimiento::class);
+    	$id=$registro[1];
+    
+	    	
+	    $req = $repository->findOneBy(array(
+					'numero_requerimiento'=>$id
+				));
+
+	    if(count($req)>0){
+	    	return true;
+
+	    }else{
+	    	return false;
+	    }
+	    	
+	 
     }
 
     public function guardarRegistroCsv($entityManager,$registro){

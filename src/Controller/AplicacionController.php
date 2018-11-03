@@ -24,6 +24,10 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use App\Utils\OptionsBuilder;
 
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+
 class AplicacionController extends AbstractController
 {
     /**
@@ -68,7 +72,7 @@ class AplicacionController extends AbstractController
                 ["data"=> "name",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "area_id",             "name" => "Area",    "type"=>"select", "options"=>$area, "CRUD"=> [1,1,1,1] ],
                 ["data"=> "id_aplicacion",       "name" => "id_aplicacion",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
-                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
+                ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
                 
             ),
             'dataRoute' => "getAplicacion",
@@ -76,10 +80,40 @@ class AplicacionController extends AbstractController
             'dist' => '4-cols',
             'saveUrl' => 'agregarAplicacion',
             'editUrl' => 'updateAplicacion',  // url donde se mandan a editar los datos
+            'deleteUrl' => 'eliminarAplicacion', // Url donde se manda a eliminar un registro
             'getDataEdit' => 'showAplicacion',  // url donde se consultan los datos a editar
             'idColumn' => 'id_aplicacion',   // nombre de la columna que es id para los registros
         );
         return new JsonResponse($data);
+    }
+
+    /** 
+     * @Route("/eliminarAplicacion", name="eliminarAplicacion")
+     */
+    public function eliminarAplicacion(Request $rq){
+        $id_aplicacion = $rq->get("id");
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->getConnection()->beginTransaction();
+        try{
+            
+            $aplicacion = $entityManager->find(Aplicacion::class,$id_aplicacion);
+            $aplicacion->setEstado(0);
+            
+            $entityManager->persist($aplicacion);
+            
+            $entityManager->flush();
+            $data = array('success' => true);
+            $entityManager->getConnection()->commit();
+        }catch(Exception $e){
+            $entityManager->getConnection()->rollBack();
+            $data = array('success'=>false);
+        }
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Requerimiento actualizado correctamente'
+        ));
+
     }
 
     /**
@@ -93,6 +127,7 @@ class AplicacionController extends AbstractController
         $aplicacion = new Aplicacion();
         $aplicacion->setNombre($nombre);
         $aplicacion->setAreaId($area);
+        $aplicacion->setEstado(1);
        
         $entityManager->persist($aplicacion);
         $entityManager->flush();

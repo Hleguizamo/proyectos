@@ -372,6 +372,7 @@ class UsuariosController extends AbstractController
 
 
     public function validarRegistroCsv($entityManager,$registro){
+        
         return array(true,'error predefinido');
     }
 
