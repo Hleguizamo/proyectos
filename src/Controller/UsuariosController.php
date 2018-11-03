@@ -38,9 +38,9 @@ class UsuariosController extends AbstractController
     {
         
     	$areas = $this->getDoctrine()->getRepository(Area::class)->findAll();
-    	$req = $this->getDoctrine()->getRepository(Requerimiento::class)->findAll();
-    	$esta = $this->getDoctrine()->getRepository(EstadoRequerimiento::class)->findAll();
-    	$mod = $this->getDoctrine()->getRepository(Modulos::class)->findAll();
+    	$req   = $this->getDoctrine()->getRepository(Requerimiento::class)->findAll();
+    	$esta  = $this->getDoctrine()->getRepository(EstadoRequerimiento::class)->findAll();
+    	$mod   = $this->getDoctrine()->getRepository(Modulos::class)->findAll();
         $optBuilder = new OptionsBuilder();
         $optBuilder->getOptions($this->getDoctrine());
         $session =new  Session(new NativeSessionStorage(), new AttributeBag());
@@ -161,6 +161,21 @@ class UsuariosController extends AbstractController
         $id_empresa=$session->get('id_empresa');
         $entityManager = $this->getDoctrine()->getManager();
 
+        $usr = $this->getDoctrine()
+                        ->getRepository(Usuario::class)
+                        ->findOneBy(
+                            array(
+                                'tipo_documento_id'=>$tipo_doc,
+                                'numero_documento' => $num_doc
+                            )
+                        );
+        if($usr!= null){
+            return new JsonResponse(array(
+                'success' => false,
+                'msg' => 'No se ha podido insertar el usuario debido a que ya existe un usuario con documento .'.$num_doc
+            ));
+
+        }
         $usuario = new Usuario();
         $usuario->setEmpresaId($id_empresa);
         $usuario->setRolId($rol);
@@ -180,7 +195,7 @@ class UsuariosController extends AbstractController
         $entityManager->flush();
         return new JsonResponse(array(
             'success' => true,
-            'msg' => 'Usuario insertada correctamente'
+            'msg' => 'Usuario insertado correctamente'
         ));
 
 
@@ -372,9 +387,57 @@ class UsuariosController extends AbstractController
 
 
     public function validarRegistroCsv($entityManager,$registro){
-        
-        return array(true,'error predefinido');
+
+        //Valida que no exista un usuario con el tipo de documento y numero de documento a insertar
+        $val = $this->usuarioEsUnico($registro[5],$registro[2]);
+        if(!$val[0]) return $val;
+
+        //Verifica que el tipo de documento exista en la tabla tipo de documento
+        $val = $this->registroExiste($registro[5],TipoDocumento::class,'El id del tipo de documento no existe');
+        if(!$val[0]) return $val;
+
+        $val = $this->registroExiste($registro[4],Area::class,'El id del area no existe');
+        if(!$val[0]) return $val;
+
+        $val = $this->registroExiste($registro[6],Empresa::class,'El id de la empresa no existe');
+        if(!$val[0]) return $val;
+
+        $val = $this->registroExiste($registro[4],Area::class,'El id del area no existe');
+        if(!$val[0]) return $val;
+
+        $val = $this->registroExiste($registro[7],Rol::class,'El id del rol (perfil) no existe');
+        if(!$val[0]) return $val;
+
+        return array(true,'');
     }
+
+    private function usuarioEsUnico($tipo_doc,$num_doc){
+        $usr = $this->getDoctrine()
+                        ->getRepository(Usuario::class)
+                        ->findOneBy(
+                            array(
+                                'tipo_documento_id'=>$tipo_doc,
+                                'numero_documento' => $num_doc
+                            )
+                        );
+        if($usr!=null){
+            return array(false,'El usuario ya existe');
+        }else{
+            return array(true,'');
+        }
+
+    }
+
+    private function registroExiste($id,$class,$msg){
+        $tip = $this->getDoctrine()->getRepository($class)->find($id);
+        if($tip!=null){
+            return array(true,'');
+        }else{
+            return array(false,$msg);
+        }
+    }
+
+
 
     public function guardarRegistroCsv($entityManager,$registro){
         

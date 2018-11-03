@@ -45,7 +45,8 @@ function edit(event,control){
   var numReg = pagina == 0? 0 : tablaDatos.page.len();
   pagina = pagina == 0? 1 : pagina;
   index = (index * pagina) + numReg;
-  var index2 = tablaDatos.rows()[0][index];
+  var index2 = tablaDatos.rows({ filter : 'applied'})[0][index];
+  
   //console.log("index "+index+" index2: "+index2)
   var data = tablaDatos.row(index2).data();
 
@@ -62,7 +63,7 @@ function deleteReg(event,control){
   var numReg = pagina == 0? 0 : tablaDatos.page.len();
   pagina = pagina == 0? 1 : pagina;
   index = (index * pagina) + numReg;
-  var index2 = tablaDatos.rows()[0][index];
+  var index2 = tablaDatos.rows({ filter : 'applied'})[0][index];
   //console.log("index "+index+" index2: "+index2)
   var data = tablaDatos.row(index2).data();
 
@@ -108,6 +109,7 @@ function sendAjaxDelete(id){
     data : {id : id},
     success : function(data){
       console.log(data);
+      tablaDatos.ajax.reload();
     }
   });
 }
@@ -437,12 +439,13 @@ function save(data, url = null){
       if(ReqData.success){
         if (ReqData.msg) {}
       }
-      var color = (data.success)? "green" : "red";
+      var color = (ReqData.success)? "green" : "red";
+      console.log(data);
       if(ReqData.msg){
         $.confirm({
             title: 'Alerta',
             content: ReqData.msg,
-            type: 'red',
+            type: color,
             typeAnimated: true,
             buttons: {
                 
