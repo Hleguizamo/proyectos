@@ -449,8 +449,14 @@ function save(data, url = null){
             typeAnimated: true,
             buttons: {
                 
-                close: function () {
-                }
+                cerrar: {
+                    text: 'Cerrar',
+                    btnClass: 'btn-red',
+                    keys: ['enter'],
+                    action: function(){
+                        
+                    }
+                },
             }
         });
         if(ReqData.success){
@@ -467,9 +473,14 @@ function save(data, url = null){
             type: 'red',
             typeAnimated: true,
             buttons: {
-                
-                close: function () {
-                }
+                cerrar: {
+                    text: 'Cerrar',
+                    btnClass: 'btn-red',
+                    keys: ['enter'],
+                    action: function(){
+                        
+                    }
+                },
             }
         });
       console.log(errors);
@@ -587,23 +598,58 @@ $('#myform').submit(function (e) {
            
              console.log(resultado);
              $('#preloader').delay(350).fadeOut('slow');
-             $.confirm({
-                title: 'Alerta',
-                content: "Se subio el archivo correctamente",
-                type: 'green',
-                typeAnimated: true,
-                buttons: {
-                    
-                    close: function () {
-                      location.reload();
+             if(resultado.success){
+                $.confirm({
+                    title: 'Alerta',
+                    content: "Se subio el archivo correctamente",
+                    type: 'green',
+                    typeAnimated: true,
+                    buttons: {
 
+                        cerrar: {
+                            text: 'Cerrar',
+                            btnClass: 'btn-red',
+                            keys: ['enter'],
+                            action: function(){
+                                tablaDatos.ajax.reload();
+                            }
+                        },
+                        
+                       
                     }
-                }
-            });
+                });
+             }else{
+                var errores = '<ul>';
+                $.each(resultado.errors,function(index,err){
+                  errores += '<i> '+err+' </i>';
+                });
+                errores += '</ul>'; 
+                $.confirm({
+                    title: 'Error al subir el archivo',
+                    content: errores,
+                    type: 'red',
+                    typeAnimated: true,
+                    buttons: {
+
+                        cerrar: {
+                            text: 'Cerrar',
+                            btnClass: 'btn-red',
+                            keys: ['enter'],
+                            action: function(){
+                                
+                            }
+                        },
+                        
+                       
+                    }
+                });
+             }
+             
            
         },
         error:function(error){
-          $.alert("Error al subir el archivo");
+          $('#preloader').delay(350).fadeOut('slow');
+          $.alert("Error al subir el archivo, por favor comunicarse con soporte.");
         }
     });
  
