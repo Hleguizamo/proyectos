@@ -621,7 +621,7 @@ $('#myform').submit(function (e) {
              }else{
                 var errores = '<ul>';
                 $.each(resultado.errors,function(index,err){
-                  errores += '<i> '+err+' </i>';
+                  errores += '<li> '+err+' </li>';
                 });
                 errores += '</ul>'; 
                 $.confirm({
