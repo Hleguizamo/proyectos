@@ -489,36 +489,56 @@ class RequerimientosController extends AbstractController
 
     public function validarRegistroCsv($entityManager,$registro){
     	
-    	$resp=$this->ValidarRequerimiento($registro);
-    	if($resp==true){
-    		return array(true,'Se inserto correctamente');
-    	}else{
+    	$resp=$this->registroExiste($registro[1],Requerimiento::class,"El requerimiento ya existe");
+    	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
+    	$resp=$this->registroExiste($registro[3],Aplicacion::class,"La aplicacion ya existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+    	$resp=$this->registroExiste($registro[4],Modulos::class,"El modulo ya existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+    	$resp=$this->registroExiste($registro[5],Gerencia::class,"La gerencia ya existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+    	$resp=$this->registroExiste($registro[6],Area::class,"El area ya existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+    	$resp=$this->registroExiste($registro[10],EstadoRequerimiento::class,"El estado del requerimiento ya existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+    	$resp=$this->registroExiste($registro[7],Usuario::class,"El usuario ya existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+    	$resp=$this->registroExiste($registro[9],Usuario::class,"El Consultor ya existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+
+
+
+
 
     	
     }
 
-    public function ValidarRequerimiento($registro){
+    private function registroExiste($id,$class,$msg){
+       $tip = $this->getDoctrine()->getRepository($class)->find($id);
+       if($tip!=null){
+           return array(true,'');
+       }else{
+           return array(false,$msg);
+       }
+   }
 
-
-    	$repository = $this->getDoctrine()->getRepository(Requerimiento::class);
-    	$id=$registro[1];
-    
-	    	
-	    $req = $repository->findOneBy(array(
-					'numero_requerimiento'=>$id
-				));
-
-	    if(count($req)>0){
-	    	return true;
-
-	    }else{
-	    	return false;
-	    }
-	    	
-	 
-    }
+   
 
     public function guardarRegistroCsv($entityManager,$registro){
     	

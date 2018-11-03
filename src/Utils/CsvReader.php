@@ -55,7 +55,6 @@ class CsvReader{
 			{
 				$validation = $this->CsvInterface->validarRegistroCsv($em,$datos);
 				$dataOk = $dataOk && $validation[0];
-				
 				if($dataOk){
 					$this->CsvInterface->guardarRegistroCsv($em,$datos);
 				}else{
