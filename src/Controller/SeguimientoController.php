@@ -51,7 +51,7 @@ class SeguimientoController extends AbstractController
             'estado' => $esta,
             'modulo' => $mod,
             'js' => 'req.js',
-            'permisoAgregar' => $permisoAgregar
+            'permisoAgregar' => false
         ]);
     }
     /**
@@ -93,7 +93,7 @@ class SeguimientoController extends AbstractController
 		        ["data"=> "observaciones", 			"name"=> "Observaciones",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
 		        
 		        
-		        ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
+		        
     		),
     		'dataRoute' => "misSeguiemiento",
     		'dataSrc' => "datos",

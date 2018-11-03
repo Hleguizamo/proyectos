@@ -67,7 +67,7 @@ class GerenciasController extends AbstractController
             'columns' => array(
                 ["data"=> "nombre_gerencia",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "id_gerencia",       "name" => "id_gerencia",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
-                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
+                ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ], 
                 
             ),
             'dataRoute' => "getGerencias",
@@ -75,10 +75,40 @@ class GerenciasController extends AbstractController
             'dist' => '4-cols',
             'saveUrl' => 'agregarGerencia',
             'editUrl' => 'updateGerencia',  // url donde se mandan a editar los datos
+            'deleteUrl' => 'eliminarGerencia', // Url donde se manda a eliminar un registro
             'getDataEdit' => 'showGerencia',  // url donde se consultan los datos a editar
             'idColumn' => 'id_gerencia',   // nombre de la columna que es id para los registros    
         );
         return new JsonResponse($data);
+    }
+    /** 
+     * @Route("/eliminarGerencia", name="eliminarGerencia")
+     */
+    public function eliminarGerencia(Request $rq){
+        $id_gerencia = $rq->get("id");
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->getConnection()->beginTransaction();
+        try{
+            
+            $gerencia = $entityManager->find(Gerencia::class,$id_gerencia);
+            
+            $gerencia->setEstado(0);
+            
+            $entityManager->persist($gerencia);
+            
+            $entityManager->flush();
+            $data = array('success' => true);
+            $entityManager->getConnection()->commit();
+        }catch(Exception $e){
+            $entityManager->getConnection()->rollBack();
+            $data = array('success'=>false);
+        }
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Requerimiento actualizado correctamente'
+        ));
+
     }
 
     /**
@@ -90,6 +120,7 @@ class GerenciasController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $gerencia = new Gerencia();
         $gerencia->setNombre($nombre);
+        $gerencia->setEstado(1);
        
         $entityManager->persist($gerencia);
         $entityManager->flush();

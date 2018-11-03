@@ -73,17 +73,47 @@ class EmpresasController extends AbstractController
 		        												['value'=>'0','name'=>'Inactivo'])
 		        , "CRUD"=> [1,0,0,0] ],
                 ["data"=> "id_empresa",       "name" => "id_empresa",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
-                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
+                ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
     		),
     		'dataRoute' => "getEmpresas",
     		'dataSrc' => "datos",
     		'dist' => '4-cols',
     		'saveUrl' => 'agregarEmpresa',
             'editUrl' => 'updateEmpresas',  // url donde se mandan a editar los datos
+            'deleteUrl' => 'eliminarEmpresa', // Url donde se manda a eliminar un registro
             'getDataEdit' => 'showEmpresas',  // url donde se consultan los datos a editar
             'idColumn' => 'id_empresa',   // nombre de la columna que es id para los registros    
     	);
     	return new JsonResponse($data);
+    }
+
+    /** 
+     * @Route("/eliminarEmpresa", name="eliminarEmpresa")
+     */
+    public function eliminarEmpresa(Request $rq){
+        $id_empresa = $rq->get("id");
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->getConnection()->beginTransaction();
+        try{
+            
+            $empresa = $entityManager->find(Empresa::class,$id_empresa);
+            $empresa->setEstado(0);
+            
+            $entityManager->persist($empresa);
+            
+            $entityManager->flush();
+            $data = array('success' => true);
+            $entityManager->getConnection()->commit();
+        }catch(Exception $e){
+            $entityManager->getConnection()->rollBack();
+            $data = array('success'=>false);
+        }
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Requerimiento actualizado correctamente'
+        ));
+
     }
 
     /**

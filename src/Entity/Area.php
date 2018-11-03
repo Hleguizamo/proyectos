@@ -33,10 +33,20 @@ class Area
     private $fecha_creacion;
 
     /**
+    * @ORM\Column(type="integer")
+    */
+    private $estado;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $fecha_actualizacion;
 
+
+    public function  getEstado(): ?int
+    {
+        return $this->estado;
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -63,6 +73,12 @@ class Area
     {
         $this->nombre = $nombre;
 
+        return $this;
+    }
+    public function  setEstado(int $estado): self
+    {
+
+        $this->estado=$estado;
         return $this;
     }
 

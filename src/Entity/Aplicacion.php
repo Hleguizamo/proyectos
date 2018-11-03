@@ -37,6 +37,23 @@ class Aplicacion
      */
     private $fecha_creacion;
 
+    /**
+    * @ORM\Column(type="integer")
+    */
+    private $estado;
+
+    public function getEstado(): ?int
+    {
+        return $this->estado;
+    }
+
+    public function  setEstado(int $estado): self
+    {
+
+        $this->estado=$estado;
+        return $this;
+    }
+    
      /**
      * @ORM\Column(type="datetime")
      */

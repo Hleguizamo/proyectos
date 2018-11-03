@@ -25,7 +25,8 @@ class EstadoRequerimientoRepository extends ServiceEntityRepository
                     e.id id_estado
                     
                             
-        FROM estado_requerimientos e";
+        FROM estado_requerimientos e
+        WHERE e.estado <> 0";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();
@@ -51,7 +52,8 @@ class EstadoRequerimientoRepository extends ServiceEntityRepository
                     
                             
         FROM estado_requerimientos e
-        WHERE e.id = :id_estado";
+        WHERE e.id = :id_estado
+        ";
         $parametros = array('id_estado'=>$id_estado);
         $stmt = $conn->prepare($sql);
         $stmt->execute($parametros);

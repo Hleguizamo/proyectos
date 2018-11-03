@@ -31,6 +31,7 @@ class EmpresaRepository extends ServiceEntityRepository
                         ELSE 'Inactivo'
                     END estado
         FROM empresas e
+        WHERE e.estado <> 0
         ";
         $stmt = $conn->prepare($sql);
         $stmt->execute();

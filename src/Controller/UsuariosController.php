@@ -94,19 +94,51 @@ class UsuariosController extends AbstractController
                                                             array(
                                                                 ['value'=>'1','name'=>'Activo'],
                                                                 ['value'=>'0','name'=>'Inactivo'])
-                ,"CRUD"=> [1,1,1,1]],
+                ,"CRUD"=> [1,0,1,1]],
                 ["data"=> "id_usuario",       "name" => "id_usuario",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
-                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
+                ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
             ),
             'dataRoute' => "getUsuarios",
             'dataSrc' => "datos",
             'dist' => '4-cols',
             'saveUrl' => 'agregarUsuarios',
             'editUrl' => 'updateUsuarios',  // url donde se mandan a editar los datos
+            'deleteUrl' => 'eliminarUsuario', 
             'getDataEdit' => 'showUsuario',  // url donde se consultan los datos a editar
             'idColumn' => 'id_usuario',   // nombre de la columna que es id para los registros    
         );
         return new JsonResponse($data);
+    }
+
+
+    /** 
+     * @Route("/eliminarUsuario", name="eliminarUsuario")
+     */
+    public function eliminarUsuario(Request $rq){
+        $id_usuario = $rq->get("id");
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->getConnection()->beginTransaction();
+        try{
+            
+            $usuario = $entityManager->find(Usuario::class,$id_usuario);
+        
+            $usuario->setEstado(0);
+        
+            $entityManager->persist($usuario);
+            $entityManager->flush();
+     
+            $data = array('success' => true);
+            $entityManager->getConnection()->commit();
+        }catch(Exception $e){
+            $entityManager->getConnection()->rollBack();
+            $data = array('success'=>false);
+        }
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Requerimiento actualizado correctamente'
+        ));
+
     }
    
                
@@ -147,6 +179,7 @@ class UsuariosController extends AbstractController
         $usuario = new Usuario();
         $usuario->setEmpresaId($id_empresa);
         $usuario->setRolId($rol);
+    
         $usuario->setTipoDocumentoId($tipo_doc);
         $usuario->setEstado($estado);
         $usuario->setNumeroDocumento($num_doc);
@@ -354,6 +387,7 @@ class UsuariosController extends AbstractController
 
 
     public function validarRegistroCsv($entityManager,$registro){
+
         //Valida que no exista un usuario con el tipo de documento y numero de documento a insertar
         $val = $this->usuarioEsUnico($registro[5],$registro[2]);
         if(!$val[0]) return $val;
@@ -391,6 +425,7 @@ class UsuariosController extends AbstractController
         }else{
             return array(true,'');
         }
+
     }
 
     private function registroExiste($id,$class,$msg){

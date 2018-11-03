@@ -70,7 +70,7 @@ class EstadosRequerimientosController extends AbstractController
             'columns' => array(
                 ["data"=> "nombre_estado",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "id_estado",       "name" => "id_estado",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
-                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> ', "CRUD"=> [0,1,0,0] ],
+                ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
     
                 
             ),
@@ -79,10 +79,44 @@ class EstadosRequerimientosController extends AbstractController
             'dist' => '4-cols',
             'saveUrl' => 'agregarEstados',
             'editUrl' => 'updateEstados',  // url donde se mandan a editar los datos
+            'deleteUrl' => 'eliminarEstadoRequerimiento', // Url donde se manda a eliminar un registro
             'getDataEdit' => 'showEstado',  // url donde se consultan los datos a editar
             'idColumn' => 'id_estado',   // nombre de la columna que es id para los registros    
         );
         return new JsonResponse($data);
+    }
+
+    /** 
+     * @Route("/eliminarEstadoRequerimiento", name="eliminarEstadoRequerimiento")
+     */
+    public function eliminarEstadoRequerimiento(Request $rq){
+        $id_estado = $rq->get("id");
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->getConnection()->beginTransaction();
+        try{
+            
+            $estado = $entityManager->find(EstadoRequerimiento::class,$id_estado);
+  
+    
+       
+      
+            $estado->setEstado(0);
+            
+            $entityManager->persist($estado);
+            
+            $entityManager->flush();
+            $data = array('success' => true);
+            $entityManager->getConnection()->commit();
+        }catch(Exception $e){
+            $entityManager->getConnection()->rollBack();
+            $data = array('success'=>false);
+        }
+        return new JsonResponse(array(
+            'success' => true,
+            'msg' => 'Requerimiento actualizado correctamente'
+        ));
+
     }
 
     /**
@@ -95,7 +129,7 @@ class EstadosRequerimientosController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $mod = new EstadoRequerimiento();
         $mod->setNombre($nombre);
-    
+        $mod->setEstado(1);
        
         $entityManager->persist($mod);
         $entityManager->flush();

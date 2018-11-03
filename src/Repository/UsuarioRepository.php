@@ -63,6 +63,7 @@ class UsuarioRepository extends ServiceEntityRepository
         INNER JOIN roles ON u.rol_id=roles.id
         WHERE u.rol_id = :rol
         OR u.rol_id= :roladmin
+        AND u.estado <> 0
         ';
         $stmt = $conn->prepare($sql);
         $stmt->execute(['rol'=>$rol,'roladmin'=>$roladmin]);
@@ -98,7 +99,8 @@ class UsuarioRepository extends ServiceEntityRepository
         FROM usuarios u
         INNER JOIN tipo_documentos t ON u.tipo_documento_id=t.id
         INNER JOIN roles ON u.rol_id=roles.id
-        WHERE u.id = :id_usuario';
+        WHERE u.id = :id_usuario       
+        ';
         $parametros = array('id_usuario'=>$id_usuario);
         $stmt = $conn->prepare($sql);
         $stmt->execute($parametros);

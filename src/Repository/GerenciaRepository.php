@@ -22,7 +22,8 @@ class GerenciaRepository extends ServiceEntityRepository
     public function findGerencias(){
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT g.nombre nombre_gerencia, g.id id_gerencia
-                FROM gerencias g";
+                FROM gerencias g
+                WHERE g.estado <> 0";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();

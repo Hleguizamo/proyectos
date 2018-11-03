@@ -25,7 +25,7 @@ class RequerimientoRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
         $sql="  SELECT 
                 RQ.id id_requerimiento,
-                RQ.fecha_creacion,
+                Cast(RQ.fecha_creacion As Date) as fecha_creacion,
                 RQ.numero_requerimiento,
                 RQ.descripcion,
                 APP.nombre nombre_aplicacion,
@@ -33,9 +33,10 @@ class RequerimientoRepository extends ServiceEntityRepository
                 gerencias.nombre nombre_gerencia,
                 areas.nombre nombre_area,
                 RQ_ST.nombre estado_requerimiento,
-                RQ.fecha_asignacion,
-                RQ.fecha_estimada_entrega,
-                RQ.fecha_cierre,
+                Cast(RQ.fecha_asignacion As Date) as fecha_asignacion,
+                Cast(RQ.fecha_estimada_entrega As Date) as fecha_estimada_entrega,
+                Cast(RQ.fecha_cierre As Date) as fecha_cierre,
+     
                 RQ.observaciones,
                 emp_cons.nombre empresa_consultor,
                 concat_ws(' ', consultor.nombres, consultor.apellidos )  nombre_consultor,

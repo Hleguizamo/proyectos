@@ -29,6 +29,7 @@ function OcultarMenu(){
     $(".profile-sidebar").hide();
     $("#menu-lateral").removeClass('col-md-9');
     $("#menu-lateral").addClass('col-md-12');
+
   }else{
     ocultar=0;
     $(".profile-sidebar").show();
@@ -264,6 +265,9 @@ function loadDataTable(url,dataSrc,columns,exportButtons){
            
            {
                 extend: 'excel',
+                exportOptions: {
+                    columns: [0,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+                }
               
             },
            

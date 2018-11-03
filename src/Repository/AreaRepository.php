@@ -41,7 +41,8 @@ class AreaRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
         $sql ="SELECT a.nombre nombre_area, g.nombre gerencia_id, a.id id_area
                FROM areas a
-               INNER JOIN gerencias g ON a.gerencia_id = g.id";
+               INNER JOIN gerencias g ON a.gerencia_id = g.id
+               WHERE a.estado <> 0";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();
