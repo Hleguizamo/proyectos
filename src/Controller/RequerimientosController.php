@@ -487,9 +487,10 @@ class RequerimientosController extends AbstractController
 		return new JsonResponse($response);
     }
 
+    
     public function validarRegistroCsv($entityManager,$registro){
     	
-    	$resp=$this->registroExiste($registro[1],Requerimiento::class,"El requerimiento ya existe");
+    	$resp=$this->requerimientoExiste($registro[1],Requerimiento::class,"El requerimiento ya existe");
     	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
@@ -521,6 +522,7 @@ class RequerimientosController extends AbstractController
     	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
+    	return array(true,"Todo funciono correctamente");	
 
 
 
@@ -529,16 +531,33 @@ class RequerimientosController extends AbstractController
     	
     }
 
-    private function registroExiste($id,$class,$msg){
+    private function requerimientoExiste($id,$class,$msg){
        $tip = $this->getDoctrine()->getRepository($class)->find($id);
-       if($tip!=null){
+       if($tip==null){
            return array(true,'');
        }else{
            return array(false,$msg);
        }
-   }
+    }
+    
+    public function ValidarRequerimiento($id,$class,$msg){
 
-   
+
+    	$repository = $this->getDoctrine()->getRepository($class);
+        	    	
+	    $req = $repository->findOneBy(array(
+					'numero_requerimiento'=>$id
+				));
+
+	    if($req==null){
+	    	return array(true,$msg);
+
+	    }else{
+	    	return array(false,'Exitoso');
+	    }
+	    	
+	 
+    }
 
     public function guardarRegistroCsv($entityManager,$registro){
     	
