@@ -69,7 +69,12 @@ class RequerimientosController extends AbstractController
     {
     	return $this->index();
     }
-
+    /**
+     * @Route("/home/crudDatas", name="home/crudData")
+     */
+    public function homeCrudData(){
+    	return $this->getCrudData();
+    }
 
     /**
      * @Route("/requerimientos/crudDatas", name="requerimientos/crudData")
@@ -494,31 +499,21 @@ class RequerimientosController extends AbstractController
     	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
-    	$resp=$this->registroExiste($registro[3],Aplicacion::class,"La aplicacion ya existe");
+    	
+    	$resp=$this->registroExiste($registro[3],Modulos::class,"El modulo no existe");
     	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
-    	$resp=$this->registroExiste($registro[4],Modulos::class,"El modulo ya existe");
+    	
+    	$resp=$this->registroExiste($registro[4],EstadoRequerimiento::class,"El estado del requerimiento no existe");
     	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
-    	$resp=$this->registroExiste($registro[5],Gerencia::class,"La gerencia ya existe");
+    	$resp=$this->registroExiste($registro[9],Usuario::class,"El usuario no existe");
     	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
-    	$resp=$this->registroExiste($registro[6],Area::class,"El area ya existe");
-    	if($resp[0]==false){    		
-    		return array(false,$resp[1]);
-    	}
-    	$resp=$this->registroExiste($registro[10],EstadoRequerimiento::class,"El estado del requerimiento ya existe");
-    	if($resp[0]==false){    		
-    		return array(false,$resp[1]);
-    	}
-    	$resp=$this->registroExiste($registro[7],Usuario::class,"El usuario ya existe");
-    	if($resp[0]==false){    		
-    		return array(false,$resp[1]);
-    	}
-    	$resp=$this->registroExiste($registro[9],Usuario::class,"El Consultor ya existe");
+    	$resp=$this->registroExiste($registro[10],Usuario::class,"El Consultor no existe");
     	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
@@ -532,12 +527,27 @@ class RequerimientosController extends AbstractController
     }
 
     private function requerimientoExiste($id,$class,$msg){
-       $tip = $this->getDoctrine()->getRepository($class)->find($id);
-       if($tip==null){
-           return array(true,'');
-       }else{
-           return array(false,$msg);
-       }
+      $usr = $this->getDoctrine()
+                        ->getRepository($class)
+                        ->findOneBy(
+                            array(
+                                'numero_requerimiento'=>$id
+                               
+                            )
+                        );
+        if($usr!=null){
+            return array(false,$msg);
+        }else{
+            return array(true,'');
+        }
+    }
+    private function registroExiste($id,$class,$msg){
+        $tip = $this->getDoctrine()->getRepository($class)->find($id);
+        if($tip!=null){
+            return array(true,'');
+        }else{
+            return array(false,$msg);
+        }
     }
     
     public function ValidarRequerimiento($id,$class,$msg){

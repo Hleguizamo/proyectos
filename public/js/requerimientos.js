@@ -266,7 +266,7 @@ function loadDataTable(url,dataSrc,columns,exportButtons){
            {
                 extend: 'excel',
                 exportOptions: {
-                    columns: [0,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+                    columns: [0,3,4,5,6,7,8,9,10,11,12,13,14,15]
                 }
               
             },
@@ -611,7 +611,8 @@ $('#myform').submit(function (e) {
                             btnClass: 'btn-red',
                             keys: ['enter'],
                             action: function(){
-                                tablaDatos.ajax.reload();
+                                //tablaDatos.ajax.reload();
+                                location.reload();
                             }
                         },
                         
@@ -621,7 +622,7 @@ $('#myform').submit(function (e) {
              }else{
                 var errores = '<ul>';
                 $.each(resultado.errors,function(index,err){
-                  errores += '<i> '+err+' </i>';
+                  errores += '<li> '+err+' </li>';
                 });
                 errores += '</ul>'; 
                 $.confirm({
@@ -636,7 +637,7 @@ $('#myform').submit(function (e) {
                             btnClass: 'btn-red',
                             keys: ['enter'],
                             action: function(){
-                                
+                                location.reload();
                             }
                         },
                         

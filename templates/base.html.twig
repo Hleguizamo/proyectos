@@ -17,6 +17,19 @@
     <link rel="stylesheet" href="{{ asset('build/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
     <style type="text/css">
+
+        .no-login{
+          width: 70%;
+          height: 250px;
+          margin: 0px auto;
+          background-color: rgba(255,255,255,0.9);
+          margin-top: 20px;
+          padding: 20px;
+          border-radius: 12px 12px 12px 12px;
+        }
+        .btn-login{
+            margin-top: 20px;
+        }
         .dataTables_paginate {
           float: left !important;
         }
@@ -170,11 +183,11 @@
                             Estado requerimientos </a>
                         </li>
 
-                        <li>
+                        <!--<li>
                             <a href="{{asset('permisos')}}">
                                 <i class="glyphicon glyphicon-flag"></i>
                             Permisos </a>
-                        </li>
+                        </li>-->
 
                         {%
 
@@ -294,12 +307,12 @@
 
 {% block javascripts %}{% endblock %}
 {% else %}
-Usuario no logueado
+<div class="no-login text-center">
+    <h3>Usuario no logueado</h3>
+    <a href="/" class="btn btn-success btn-login" >Regresar al login</a>
+</div>
 {%
 
-    endif
-
-
-    %}
+endif%}
 </body>
 </html>

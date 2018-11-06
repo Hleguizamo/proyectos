@@ -57,7 +57,7 @@ class CsvReader{
 				$dataOk = $dataOk && $validation[0];
 				if($dataOk){
 					$this->CsvInterface->guardarRegistroCsv($em,$datos);
-				}else if(!$validation[1]){
+				}else if(!$validation[0]){
 					$errors[] = "Error en la línea ".$linea." ".$validation[1];
 				}
 				$linea++;				
