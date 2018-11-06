@@ -34,7 +34,7 @@ function changeState(){
 			req : $("#numReqChange").val()
 		},
 		success:function(data){
-
+			tablaDatos.ajax.reload();
 		}
 	});
 }

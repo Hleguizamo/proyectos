@@ -623,7 +623,15 @@ class RequerimientosController extends AbstractController
 	        $trazaRq->setEstadoRequerimientoId($req->getEstadoRequerimientosId());
 	        $trazaRq->setObservacion($req->getObservacion());
 	        $entityManager->persist($trazaRq);
-	}	   
+	}	 
+
+
+	/**
+     * @Route("home/readCsv2", name="home/readCsv2")
+     */
+    public function readCsv2Home(Request $r){
+    	return $this->readCsv2($r);
+    }  
 
 	/**
      * @Route("requerimientos/readCsv2", name="requerimientos/readCsv2")
