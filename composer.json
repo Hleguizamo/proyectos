@@ -8,6 +8,7 @@
         "doctrine/doctrine-bundle": "^1.9",
         "jms/serializer-bundle": "^2.4",
         "sensio/framework-extra-bundle": "^5.2",
+        "symfony/apache-pack": "^1.0",
         "symfony/asset": "*",
         "symfony/console": "*",
         "symfony/expression-language": "*",
