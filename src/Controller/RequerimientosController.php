@@ -69,7 +69,12 @@ class RequerimientosController extends AbstractController
     {
     	return $this->index();
     }
-
+    /**
+     * @Route("/home/crudDatas", name="home/crudData")
+     */
+    public function homeCrudData(){
+    	return $this->getCrudData();
+    }
 
     /**
      * @Route("/requerimientos/crudDatas", name="requerimientos/crudData")
@@ -487,34 +492,78 @@ class RequerimientosController extends AbstractController
 		return new JsonResponse($response);
     }
 
+    
     public function validarRegistroCsv($entityManager,$registro){
     	
-    	$resp=$this->ValidarRequerimiento($registro);
-    	if($resp==true){
-    		return array(true,'Se inserto correctamente');
-    	}else{
+    	$resp=$this->requerimientoExiste($registro[1],Requerimiento::class,"El requerimiento ya existe");
+    	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
+    	
+    	$resp=$this->registroExiste($registro[3],Modulos::class,"El modulo no existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+    	
+    	$resp=$this->registroExiste($registro[4],EstadoRequerimiento::class,"El estado del requerimiento no existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+    	$resp=$this->registroExiste($registro[9],Usuario::class,"El usuario no existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+    	$resp=$this->registroExiste($registro[10],Usuario::class,"El Consultor no existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+    	return array(true,"Todo funciono correctamente");	
+
+
+
+
 
     	
     }
 
-    public function ValidarRequerimiento($registro){
-
-
-    	$repository = $this->getDoctrine()->getRepository(Requerimiento::class);
-    	$id=$registro[1];
+    private function requerimientoExiste($id,$class,$msg){
+      $usr = $this->getDoctrine()
+                        ->getRepository($class)
+                        ->findOneBy(
+                            array(
+                                'numero_requerimiento'=>$id
+                               
+                            )
+                        );
+        if($usr!=null){
+            return array(false,$msg);
+        }else{
+            return array(true,'');
+        }
+    }
+    private function registroExiste($id,$class,$msg){
+        $tip = $this->getDoctrine()->getRepository($class)->find($id);
+        if($tip!=null){
+            return array(true,'');
+        }else{
+            return array(false,$msg);
+        }
+    }
     
-	    	
+    public function ValidarRequerimiento($id,$class,$msg){
+
+
+    	$repository = $this->getDoctrine()->getRepository($class);
+        	    	
 	    $req = $repository->findOneBy(array(
 					'numero_requerimiento'=>$id
 				));
 
-	    if(count($req)>0){
-	    	return true;
+	    if($req==null){
+	    	return array(true,$msg);
 
 	    }else{
-	    	return false;
+	    	return array(false,'Exitoso');
 	    }
 	    	
 	 
@@ -574,7 +623,15 @@ class RequerimientosController extends AbstractController
 	        $trazaRq->setEstadoRequerimientoId($req->getEstadoRequerimientosId());
 	        $trazaRq->setObservacion($req->getObservacion());
 	        $entityManager->persist($trazaRq);
-	}	   
+	}	 
+
+
+	/**
+     * @Route("home/readCsv2", name="home/readCsv2")
+     */
+    public function readCsv2Home(Request $r){
+    	return $this->readCsv2($r);
+    }  
 
 	/**
      * @Route("requerimientos/readCsv2", name="requerimientos/readCsv2")

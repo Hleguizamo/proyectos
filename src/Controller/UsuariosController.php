@@ -9,6 +9,7 @@ use App\Entity\Requerimiento;
 
 use App\Entity\EstadoRequerimiento;
 use App\Entity\Modulos;
+use App\Entity\Empresa;
 use App\Entity\Rol;
 use App\Entity\Area;
 use App\Entity\TipoDocumento;
@@ -404,8 +405,7 @@ class UsuariosController extends AbstractController
         $val = $this->registroExiste($registro[6],Empresa::class,'El id de la empresa no existe');
         if(!$val[0]) return $val;
 
-        $val = $this->registroExiste($registro[4],Area::class,'El id del area no existe');
-        if(!$val[0]) return $val;
+      
 
         $val = $this->registroExiste($registro[7],Rol::class,'El id del rol (perfil) no existe');
         if(!$val[0]) return $val;
