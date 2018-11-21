@@ -73,21 +73,23 @@ class UsuariosController extends AbstractController
         $data = array(
             'PageTitle' => 'Usuarios',
             'columns' => array(
-                ["data"=> "id_documento",               "name" => "Tipo documentos",    "type"=>"select", "options"=>$tipo_documento, "CRUD"=> [1,0,0,0] ],
-            	["data"=> "nombre_documento",           "name" => "Tipo_documento",    "type"=>"text","CRUD"=> [0,0,1,1] ],
+                ["data"=> "id_documento",               "name" => "Tipo documentos",    "type"=>"select", "options"=>$tipo_documento, "CRUD"=> [1,0,1,0] ],
+            	["data"=> "nombre_documento",           "name" => "Tipo_documento",    "type"=>"text","CRUD"=> [0,1,0,0] ],
                 ["data"=> "nombre_usuario",             "name" => "Nombre",     "type"=>"text","CRUD"=> [1,1,1,1] ],
                 ["data"=> "apellido_usuario",           "name" => "Apellido",     "type"=>"text","CRUD"=> [1,0,1,1] ],
                 ["data"=> "numero_documento",           "name" => "Numero_documento",     "type"=>"number", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "email",                       "name" => "Email",     "type"=>"email","CRUD"=> [1,1,1,1] ],
-                ["data"=> "area_id",                    "name" => "Area",    "type"=>"select", "options"=>$area,"CRUD"=> [1,0,0,0] ],
+                ["data"=> "area_id",                    "name" => "Area",    "type"=>"select", "options"=>$area,"CRUD"=> [1,0,1,0] ],
+                ["data"=> "nombre_area",                "name" => "Area",    "type"=>"text", "CRUD"=> [0,1,0,0] ],
+                ["data"=> "nombre_gerencia",            "name" => "Gerencia",    "type"=>"text", "CRUD"=> [0,1,0,0] ],
                 ["data"=> "id_rol",                     "name" => "Rol",    "type"=>"select", "options"=> 
                                                             array(
                                                                 ['value'=>'1','name'=>'Administrador'],
-                                                                ['value'=>'3','name'=>'Usuario']), "CRUD"=> [1,0,0,0] ],               
+                                                                ['value'=>'3','name'=>'Usuario']), "CRUD"=> [1,0,1,0] ],               
                 ["data"=> "celular",             		"name" => "Celular",     "type"=>"text","CRUD"=> [1,0,1,1] ],
                 ["data"=> "telefono",             		"name" => "Telefono",     "type"=>"text","CRUD"=> [1,0,1,1] ],
                 
-                ["data"=> "nombre_rol",             	"name" => "nombre_rol",    "type"=>"text","CRUD"=> [0,1,1,1] ],
+                ["data"=> "nombre_rol",             	"name" => "Rol",    "type"=>"text","CRUD"=> [0,1,0,0] ],
                
                 ["data"=> "estado",                    "name"=> "Estado",      "type"=>"select", 
                                                         "options"=> 

@@ -183,7 +183,7 @@ function setColumnFilters(tableId){
 }
 
 function loadDataConfig(){
-  var segment = $(location).attr('href').split("/")[4];
+  var segment = $(location).attr('href').split("/")[3];
   $.ajax({
     url : segment+"/crudDatas",
     type : "GET",

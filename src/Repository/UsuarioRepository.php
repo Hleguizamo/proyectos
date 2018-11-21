@@ -56,13 +56,17 @@ class UsuarioRepository extends ServiceEntityRepository
         u.email email, 
         u.telefono telefono, 
         u.estado estado,
-        u.area_id area_id
+        u.area_id area_id,
+        areas.nombre nombre_area,
+        gerencias.nombre nombre_gerencia
     
         FROM usuarios u
         INNER JOIN tipo_documentos t ON u.tipo_documento_id=t.id
         INNER JOIN roles ON u.rol_id=roles.id
-        WHERE u.rol_id = :rol
-        OR u.rol_id= :roladmin
+        INNER JOIN areas ON u.area_id = areas.id
+        INNER JOIN gerencias ON areas.gerencia_id = gerencias.id
+        WHERE (u.rol_id = :rol
+        OR u.rol_id= :roladmin )
         AND u.estado <> 0
         ';
         $stmt = $conn->prepare($sql);

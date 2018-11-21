@@ -244,12 +244,16 @@
                         
                          {% endif %}
                     </div>
+                      
                         {% if(enableUpload is defined) %}
                             {% if (enableUpload) %}
+                            
                                 <form method="post" enctype="multipart/form-data" id="myform" data-reply-form>
-
-                                      <input name="File" type="file" accept="text/csv"   class="file-input" >
                                     
+                                    <div class="form-group">
+                                      <input name="File" type="file" accept="text/csv" id="fileUploadCsv"   class="file-input" \>
+                                      <label for="fileUploadCsv" class="btn btn-primary btn-sm">Importar csv</label>
+                                    </div>
                                 </form>
                             {% endif %}
                         {% endif %}
