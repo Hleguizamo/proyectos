@@ -599,6 +599,7 @@ class RequerimientosController extends AbstractController
 	    	
 	    	$objDT = \DateTime::createFromFormat('d/m/Y', $registro[7]);
 	    	$req->setFechaCierre($objDT);
+	    	$req->setEstado(1);
 	    	$fecha=date("d/m/Y");
 
 	    	$objDT = \DateTime::createFromFormat('d/m/Y', $fecha);
