@@ -63,6 +63,7 @@ class EmpresasController extends AbstractController
     	$data = array(
     		'PageTitle' => 'Empresas',
     		'columns' => array(
+                ["data"=> "id_empresa",       "name" => "Id Empresa",       "type"=>"number", "CRUD"=> [0,1,0,0] ],
     			["data"=> "nombre_empresa", 			"name" => "Nombre",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "pais", 						"name"=> "Pais",		"type"=>"text", "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "codigo_empresa", 			"name"=> "Código",		"type"=>"text", "CRUD"=> [0,0,0,1] ],
@@ -72,7 +73,7 @@ class EmpresasController extends AbstractController
 		        												['value'=>'1','name'=>'Activo'],
 		        												['value'=>'0','name'=>'Inactivo'])
 		        , "CRUD"=> [1,0,0,0] ],
-                ["data"=> "id_empresa",       "name" => "id_empresa",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
+                
                 ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
     		),
     		'dataRoute' => "getEmpresas",

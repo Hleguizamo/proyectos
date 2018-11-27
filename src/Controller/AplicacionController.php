@@ -69,9 +69,10 @@ class AplicacionController extends AbstractController
         $data = array(
             'PageTitle' => 'Aplicaciones',
             'columns' => array(
+                ["data"=> "id_aplicacion",       "name" => "Id Aplicación",       "type"=>"number", "CRUD"=> [0,1,0,0] ],
                 ["data"=> "name",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
                 ["data"=> "area_id",             "name" => "Area",    "type"=>"select", "options"=>$area, "CRUD"=> [1,1,1,1] ],
-                ["data"=> "id_aplicacion",       "name" => "id_aplicacion",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
+                
                 ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
                 
             ),

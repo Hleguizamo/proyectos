@@ -58,13 +58,15 @@ class UsuarioRepository extends ServiceEntityRepository
         u.estado estado,
         u.area_id area_id,
         areas.nombre nombre_area,
-        gerencias.nombre nombre_gerencia
+        gerencias.nombre nombre_gerencia,
+        empresas.nombre nombre_empresa
     
         FROM usuarios u
         INNER JOIN tipo_documentos t ON u.tipo_documento_id=t.id
         INNER JOIN roles ON u.rol_id=roles.id
         INNER JOIN areas ON u.area_id = areas.id
         INNER JOIN gerencias ON areas.gerencia_id = gerencias.id
+        INNER JOIN empresas ON u.empresa_id = empresas.id
         WHERE (u.rol_id = :rol
         OR u.rol_id= :roladmin )
         AND u.estado <> 0

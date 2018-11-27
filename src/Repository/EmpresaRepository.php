@@ -73,6 +73,17 @@ class EmpresaRepository extends ServiceEntityRepository
         $stmt->execute($parametros);
         return $stmt->fetchAll();
     }
+
+    public function findEmpresasOption(){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql ="SELECT e.nombre name, e.id value
+               FROM empresas e";
+              
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+
+    }
     
 
     /*

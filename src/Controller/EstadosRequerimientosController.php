@@ -68,8 +68,9 @@ class EstadosRequerimientosController extends AbstractController
         $data = array(
             'PageTitle' => 'Estados de requerimiento',
             'columns' => array(
+                ["data"=> "id_estado",       "name" => "Id Estado Req.",       "type"=>"number", "CRUD"=> [0,1,0,0] ],
                 ["data"=> "nombre_estado",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
-                ["data"=> "id_estado",       "name" => "id_estado",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
+                
                 ["data"=> "options",                    "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning" onclick="edit(event,this)" >Editar</button> <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
     
                 

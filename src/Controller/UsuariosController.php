@@ -69,11 +69,13 @@ class UsuariosController extends AbstractController
     public function getCrudData(){
         $tipo_documento =  $this->getDoctrine()->getRepository(TipoDocumento::class)->findDocumento();
         $rol= $this->getDoctrine()->getRepository(Rol::class)->findRol();
-         $area =  $this->getDoctrine()->getRepository(Area::class)->findAreasOption();
+        $area =  $this->getDoctrine()->getRepository(Area::class)->findAreasOption();
+        $empresas =  $this->getDoctrine()->getRepository(Empresa::class)->findEmpresasOption();
 
         $data = array(
             'PageTitle' => 'Usuarios',
             'columns' => array(
+                ["data"=> "id_usuario",       "name" => "Id Usuario",       "type"=>"number", "CRUD"=> [0,1,0,0] ],
                 ["data"=> "id_documento",               "name" => "Tipo documentos",    "type"=>"select", "options"=>$tipo_documento, "CRUD"=> [1,0,1,0] ],
             	["data"=> "nombre_documento",           "name" => "Tipo_documento",    "type"=>"text","CRUD"=> [0,1,0,0] ],
                 ["data"=> "nombre_usuario",             "name" => "Nombre",     "type"=>"text","CRUD"=> [1,1,1,1] ],
@@ -91,6 +93,7 @@ class UsuariosController extends AbstractController
                 ["data"=> "telefono",             		"name" => "Telefono",     "type"=>"text","CRUD"=> [1,0,1,1] ],
                 
                 ["data"=> "nombre_rol",             	"name" => "Rol",    "type"=>"text","CRUD"=> [0,1,0,0] ],
+                ["data"=> "nombre_empresa",             "name" => "Empresa",       "type"=>"select", "options"=>$empresas,"CRUD"=> [1,1,1,0] ],
                
                 ["data"=> "estado",                    "name"=> "Estado",      "type"=>"select", 
                                                         "options"=> 
@@ -98,7 +101,7 @@ class UsuariosController extends AbstractController
                                                                 ['value'=>'1','name'=>'Activo'],
                                                                 ['value'=>'0','name'=>'Inactivo'])
                 ,"CRUD"=> [1,0,1,1]],
-                ["data"=> "id_usuario",       "name" => "id_usuario",       "type"=>"number", "CRUD"=> [0,0,0,0] ],
+                
                 ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
             ),
             'dataRoute' => "getUsuarios",
@@ -161,7 +164,7 @@ class UsuariosController extends AbstractController
         $estado = $rq->get("estado");
         $num_doc = $rq->get("numero_documento");
         $tipo_doc = $rq->get("id_documento");
-        $id_empresa=$session->get('id_empresa');
+        $id_empresa=$rq->get("nombre_empresa");//$session->get('id_empresa');
         $entityManager = $this->getDoctrine()->getManager();
 
         $usr = $this->getDoctrine()
@@ -232,7 +235,7 @@ class UsuariosController extends AbstractController
         $estado = $rq->get("estado");
         $num_doc = $rq->get("numero_documento");
         $tipo_doc = $rq->get("id_documento");
-        $id_empresa=$session->get('id_empresa');
+        $id_empresa= $rq->get("nombre_empresa");//$session->get('id_empresa');
         $entityManager = $this->getDoctrine()->getManager();
 
         $usuario = $entityManager->find(Usuario::class,$id_usuario);
