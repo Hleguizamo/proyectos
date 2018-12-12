@@ -12,6 +12,7 @@ use App\Entity\Modulos;
 use App\Entity\Empresa;
 use App\Entity\Rol;
 use App\Entity\Area;
+use App\Entity\Gerencia;
 use App\Entity\TipoDocumento;
 use App\Entity\Usuario;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,6 +72,7 @@ class UsuariosController extends AbstractController
         $rol= $this->getDoctrine()->getRepository(Rol::class)->findRol();
         $area =  $this->getDoctrine()->getRepository(Area::class)->findAreasOption();
         $empresas =  $this->getDoctrine()->getRepository(Empresa::class)->findEmpresasOption();
+        $gerencias =  $this->getDoctrine()->getRepository(Gerencia::class)->findGerenciasOptions();
 
         $data = array(
             'PageTitle' => 'Usuarios',
@@ -84,7 +86,7 @@ class UsuariosController extends AbstractController
                 ["data"=> "email",                       "name" => "Email",     "type"=>"email","CRUD"=> [1,1,1,1] ],
                 ["data"=> "area_id",                    "name" => "Area",    "type"=>"select", "options"=>$area,"CRUD"=> [1,0,1,0] ],
                 ["data"=> "nombre_area",                "name" => "Area",    "type"=>"text", "CRUD"=> [0,1,0,0] ],
-                ["data"=> "nombre_gerencia",            "name" => "Gerencia",    "type"=>"text", "CRUD"=> [0,1,0,0] ],
+                ["data"=> "nombre_gerencia",            "name" => "Gerencia",    "type"=>"select",'options'=>$gerencias, "CRUD"=> [1,1,1,0] ],
                 ["data"=> "id_rol",                     "name" => "Rol",    "type"=>"select", "options"=> 
                                                             array(
                                                                 ['value'=>'1','name'=>'Administrador'],
@@ -165,6 +167,11 @@ class UsuariosController extends AbstractController
         $num_doc = $rq->get("numero_documento");
         $tipo_doc = $rq->get("id_documento");
         $id_empresa=$rq->get("nombre_empresa");//$session->get('id_empresa');
+        $gerencia_id = $rq->get('nombre_gerencia');
+        if($rol==2){
+            //Cuando se crea un consultor, se asigna una gerencia por defecto
+            $gerencia_id = 1;
+        }
         $entityManager = $this->getDoctrine()->getManager();
 
         $usr = $this->getDoctrine()
@@ -195,8 +202,9 @@ class UsuariosController extends AbstractController
         $usuario->setTelefono($telefono);
         $usuario->setAreaId($area);
         $usuario->setEmail($email);
-
+        $usuario->setGerenciaId($gerencia_id);
         
+
         $entityManager->persist($usuario);
         $entityManager->flush();
         return new JsonResponse(array(
@@ -236,6 +244,14 @@ class UsuariosController extends AbstractController
         $num_doc = $rq->get("numero_documento");
         $tipo_doc = $rq->get("id_documento");
         $id_empresa= $rq->get("nombre_empresa");//$session->get('id_empresa');
+
+        $gerencia_id = $rq->get('nombre_gerencia');
+
+        if($rol==2){
+            //Cuando se crea un consultor, se asigna una gerencia por defecto
+            $gerencia_id = 1;
+        }
+
         $entityManager = $this->getDoctrine()->getManager();
 
         $usuario = $entityManager->find(Usuario::class,$id_usuario);
@@ -250,6 +266,7 @@ class UsuariosController extends AbstractController
         $usuario->setTelefono($telefono);
         $usuario->setAreaId($area);
         $usuario->setEmail($email);
+        $usuario->setGerenciaId($gerencia_id);
 
         
         $entityManager->persist($usuario);
@@ -395,22 +412,22 @@ class UsuariosController extends AbstractController
     public function validarRegistroCsv($entityManager,$registro){
 
         //Valida que no exista un usuario con el tipo de documento y numero de documento a insertar
-        $val = $this->usuarioEsUnico($registro[5],$registro[2]);
+        $val = $this->usuarioEsUnico($registro[6],$registro[2]);
         if(!$val[0]) return $val;
 
         //Verifica que el tipo de documento exista en la tabla tipo de documento
-        $val = $this->registroExiste($registro[5],TipoDocumento::class,'El id del tipo de documento no existe');
+        $val = $this->registroExiste($registro[6],TipoDocumento::class,'El id del tipo de documento no existe');
         if(!$val[0]) return $val;
 
         $val = $this->registroExiste($registro[4],Area::class,'El id del area no existe');
         if(!$val[0]) return $val;
 
-        $val = $this->registroExiste($registro[6],Empresa::class,'El id de la empresa no existe');
+        $val = $this->registroExiste($registro[7],Empresa::class,'El id de la empresa no existe');
         if(!$val[0]) return $val;
 
       
 
-        $val = $this->registroExiste($registro[7],Rol::class,'El id del rol (perfil) no existe');
+        $val = $this->registroExiste($registro[8],Rol::class,'El id del rol (perfil) no existe');
         if(!$val[0]) return $val;
 
         return array(true,'');
@@ -469,13 +486,15 @@ class UsuariosController extends AbstractController
             $usuario->setNumeroDocumento($registro[2]);
             $usuario->setEmail($registro[3]);
             $usuario->setAreaId($registro[4]);
-            $usuario->setTipoDocumentoId($registro[5]);  
-            $usuario->setEmpresaId($registro[6]);
-            $usuario->setRolId($registro[7]);        
-            $usuario->setEstado($registro[8]);
-            $usuario->setCelular($registro[9]);         
-            $usuario->setTelefono($registro[10]);
+            $usuario->setGerenciaId($registro[5]);
+            $usuario->setTipoDocumentoId($registro[6]);  
+
+            $usuario->setEmpresaId($registro[7]);
+            $usuario->setRolId($registro[8]);        
+            $usuario->setEstado($registro[9]);
+            $usuario->setCelular($registro[10]);         
             $usuario->setTelefono($registro[11]);
+            $usuario->setTelefono($registro[12]);
 
           
             

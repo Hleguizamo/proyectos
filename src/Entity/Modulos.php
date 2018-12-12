@@ -17,10 +17,7 @@ class Modulos
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $aplicacion_id;
+ 
 
     /**
      * @ORM\Column(type="string", length=45)

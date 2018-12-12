@@ -42,23 +42,7 @@ class Gerencias
      */
     private $fechaActualizacion;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Empresas", inversedBy="gerencias")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $empresa;
-
-    public function getEmpresa(): ?Empresas
-    {
-        return $this->empresa;
-    }
-
-    public function setEmpresa(?Empresas $empresa): self
-    {
-        $this->empresa = $empresa;
-
-        return $this;
-    }
+    
 
    
  

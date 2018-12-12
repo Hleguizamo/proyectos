@@ -65,7 +65,7 @@ class UsuarioRepository extends ServiceEntityRepository
         INNER JOIN tipo_documentos t ON u.tipo_documento_id=t.id
         INNER JOIN roles ON u.rol_id=roles.id
         INNER JOIN areas ON u.area_id = areas.id
-        INNER JOIN gerencias ON areas.gerencia_id = gerencias.id
+        INNER JOIN gerencias ON u.gerencia_id = gerencias.id
         INNER JOIN empresas ON u.empresa_id = empresas.id
         WHERE (u.rol_id = :rol
         OR u.rol_id= :roladmin )

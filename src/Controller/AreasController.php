@@ -70,7 +70,7 @@ class AreasController extends AbstractController
             'columns' => array(
                 ["data"=> "id_area",       "name" => "Id Area",       "type"=>"number", "CRUD"=> [0,1,0,0] ],
                 ["data"=> "nombre_area",             "name" => "Nombre",     "type"=>"text", "CRUD"=> [1,1,1,1] ],
-                ["data"=> "gerencia_id",             "name" => "Gerencia",    "type"=>"select", "options"=>$gerencias, "CRUD"=> [1,1,1,1] ],
+                
                 
                 ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
                 
@@ -128,7 +128,7 @@ class AreasController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $area = new Area();
         $area->setNombre($nombre);
-        $area->setGerenciaId($gerencia);
+        //$area->setGerenciaId($gerencia);
         $area->setEstado(1);
        
         $entityManager->persist($area);
@@ -164,7 +164,7 @@ class AreasController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $area = $entityManager->find(Area::class,$id_area);
         $area->setNombre($nombre);
-        $area->setGerenciaId($gerencia);
+        //$area->setGerenciaId($gerencia);
        
         $entityManager->persist($area);
         $entityManager->flush();

@@ -1,0 +1,5 @@
+fecha creacion;numero Requerimiento;Descripción;Id_modulo;Id_aplicación;Id_gerencia;Id_area;Id_estado;fecha_asigna;fecha_entrega;fecha_cierre;Observación;Usuario;Consultor
+12/12/2018;1220;prueba;20;32;17;30;6;20/20/2020;20/20/2020;20/20/2020;obsPrueba;2;1
+13/12/2018;1221;prueba;20;32;14;27;6;20/20/2020;20/20/2020;20/20/2020;obsPrueba;2;1
+14/12/2018;1222;prueba;16;28;13;26;1;20/20/2020;20/20/2020;20/20/2020;obsPrueba;2;1
+15/12/2018;1223;prueba;17;29;14;27;1;20/20/2020;20/20/2020;20/20/2020;obsPrueba;2;1

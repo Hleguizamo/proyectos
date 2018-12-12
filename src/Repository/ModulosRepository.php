@@ -24,10 +24,10 @@ class ModulosRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT 
                     m.nombre nombre_modulo,
-                    m.id id_modulo,
-                    ap.nombre id_aplicacion          
+                    m.id id_modulo
+                             
         FROM modulos m
-        INNER JOIN aplicaciones ap ON m.aplicacion_id = ap.id
+        
         WHERE m.estado <> 0
         ";
         $stmt = $conn->prepare($sql);
@@ -48,8 +48,8 @@ class ModulosRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT 
                     m.nombre nombre_modulo,
-                    m.id id_modulo,
-                    m.aplicacion_id id_aplicacion          
+                    m.id id_modulo
+                            
         FROM modulos m
         WHERE m.id = :id_modulo";
         $parametros = array('id_modulo'=>$id_modulo);

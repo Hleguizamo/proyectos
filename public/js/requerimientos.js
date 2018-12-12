@@ -459,9 +459,9 @@ function save(data, url = null){
                 },
             }
         });
-        if(ReqData.success){
-          tablaDatos.ajax.reload();
-        }
+        
+        tablaDatos.ajax.reload();
+        
       }
       id_edit = null;
 

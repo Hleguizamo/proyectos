@@ -82,10 +82,13 @@ class RequerimientosController extends AbstractController
     public function getCrudData(){
     	$session =new  Session(new NativeSessionStorage(), new AttributeBag());
     	$id_rol=$session->get('id_rol');
+
     	$apps = $this->getDoctrine()->getRepository(Aplicacion::class)->findAplicacionesOptions();
     	$mod = $this->getDoctrine()->getRepository(Modulos::class)->findModulosOptions();
     	$gerencias = $this->getDoctrine()->getRepository(Gerencia::class)->findGerenciasOptions();
     	$areas =  $this->getDoctrine()->getRepository(Area::class)->findAreasOption();
+    	
+
     	$estados =  $this->getDoctrine()->getRepository(EstadoRequerimiento::class)->findEstadoRequerimientoOption();
     	$consultores =  $this->getDoctrine()->getRepository(Usuario::class)->getUsersByRolOption(2);
     	$usuarios =  $this->getDoctrine()->getRepository(Usuario::class)->getUsersByRolOption(3);
@@ -101,13 +104,13 @@ class RequerimientosController extends AbstractController
     			["data"=> "numero_requerimiento", 	"name"=> "# Requerimiento",		"type"=>"number", "CRUD"=> [1,1,1,1] ],
     			["data"=> "id_requerimiento", 		"name" => "id_requerimiento",		"type"=>"number", "CRUD"=> [0,0,0,0] ],
     			["data"=> "descripcion", 			"name"=> "Descripción",			"type"=>"text", "CRUD"=> [1,1,1,1] ],
-    			["data"=> "nombre_aplicacion", 		"name"=> "Aplicación",			"type"=>"select", "options"=> $apps, 	  "CRUD"=> [0,1,1,1] ],
+    			["data"=> "nombre_aplicacion", 		"name"=> "Aplicación",			"type"=>"select", "options"=> $apps, 	  "CRUD"=> [1,1,1,1] ],
 		        
 		        
 		        
 		        ["data"=> "nombre_modulo", 			"name"=> "Módulo",				"type"=>"select", "options"=> $mod,  	  "CRUD"=> [1,1,1,1] ],
-		        ["data"=> "nombre_gerencia", 		"name"=> "Gerencia",			"type"=>"select", "options"=> $gerencias, "CRUD"=> [0,1,1,1] ],
-		        ["data"=> "nombre_area", 			"name"=> "Área",				"type"=>"select", "options"=> $areas,     "CRUD"=> [0,1,1,1] ],
+		        ["data"=> "nombre_gerencia", 		"name"=> "Gerencia",			"type"=>"select", "options"=> $gerencias, "CRUD"=> [1,1,1,1] ],
+		        ["data"=> "nombre_area", 			"name"=> "Área",				"type"=>"select", "options"=> $areas,     "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "nombre_usuario", 		"name"=> "Usuario", 			"type"=>"select", "options"=> $usuarios,        "CRUD"=> [1,1,1,1] ],
 		        ["data"=> "empresa_consultor", 		"name"=> "Empresa Consultor",	"type"=>"text",   "CRUD"=> [0,1,0,0] ],
 
@@ -171,6 +174,7 @@ class RequerimientosController extends AbstractController
      */
      public function editarRequerimiento(Request $rq){
      	$id = $rq->get("id");
+     	//dd($rq);
 
     	$entityManager = $this->getDoctrine()->getManager();
     	$entityManager->getConnection()->beginTransaction();
@@ -180,9 +184,9 @@ class RequerimientosController extends AbstractController
 	    	$req->setNumeroRequerimiento($rq->get("numero_requerimiento"));
 	    	$req->setDescripcion($rq->get("descripcion"));
 	    	$req->setModuloId($rq->get("nombre_modulo"));
-	    	//$req->setAplicacionId($rq->get("nombre_aplicacion"));
-	    	//$req->setGerenciaId($rq->get("nombre_gerencia"));
-	    	//$req->setAreaId($rq->get("nombre_area"));
+	    	$req->setAplicacionId($rq->get("nombre_aplicacion"));
+	    	$req->setGerenciaId($rq->get("nombre_gerencia"));
+	    	$req->setAreaId($rq->get("nombre_area"));
 	    	
 	    	$req->setEstadoRequerimientosId($rq->get("estado_requerimiento"));
 	    	$objDT = \DateTime::createFromFormat('Y-m-d', $rq->get("fecha_estimada_entrega"));
@@ -254,9 +258,9 @@ class RequerimientosController extends AbstractController
 	    	$req->setModuloId($rq->get("nombre_modulo"));
 	    	$req->setEstado(1);
 
-	    	//$req->setAplicacionId($rq->get("nombre_aplicacion"));
-	    	//$req->setGerenciaId($rq->get("nombre_gerencia"));
-	    	//$req->setAreaId($rq->get("nombre_area"));
+	    	$req->setAplicacionId($rq->get("nombre_aplicacion"));
+	    	$req->setGerenciaId($rq->get("nombre_gerencia"));
+	    	$req->setAreaId($rq->get("nombre_area"));
 	    	
 	    	$req->setEstadoRequerimientosId($rq->get("estado_requerimiento"));
 	    	$objDT = \DateTime::createFromFormat('Y-m-d', $rq->get("fecha_estimada_entrega"));
@@ -504,16 +508,31 @@ class RequerimientosController extends AbstractController
     	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
+
+    	$resp=$this->registroExiste($registro[4],Aplicacion::class,"La aplicación no existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+
+    	$resp=$this->registroExiste($registro[5],Gerencia::class,"La gerencia no existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
+
+    	$resp=$this->registroExiste($registro[6],Area::class,"El area no existe");
+    	if($resp[0]==false){    		
+    		return array(false,$resp[1]);
+    	}
     	
-    	$resp=$this->registroExiste($registro[4],EstadoRequerimiento::class,"El estado del requerimiento no existe");
+    	$resp=$this->registroExiste($registro[7],EstadoRequerimiento::class,"El estado del requerimiento no existe");
     	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
-    	$resp=$this->registroExiste($registro[9],Usuario::class,"El usuario no existe");
+    	$resp=$this->registroExiste($registro[12],Usuario::class,"El usuario no existe");
     	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
-    	$resp=$this->registroExiste($registro[10],Usuario::class,"El Consultor no existe");
+    	$resp=$this->registroExiste($registro[13],Usuario::class,"El Consultor no existe");
     	if($resp[0]==false){    		
     		return array(false,$resp[1]);
     	}
@@ -588,16 +607,20 @@ class RequerimientosController extends AbstractController
 	    	$req->setNumeroRequerimiento($registro[1]);
 	    	$req->setDescripcion($registro[2]);
 	    	$req->setModuloId($registro[3]);
+	    	$req->setAplicacionId($registro[4]);
+	    	$req->setGerenciaId($registro[5]);
+	    	$req->setAreaId($registro[6]);
 	    	
-	    	$req->setEstadoRequerimientosId($registro[4]);
+	    	
+	    	$req->setEstadoRequerimientosId($registro[7]);
 
-	    	$objDT = \DateTime::createFromFormat('d/m/Y', $registro[5]);
+	    	$objDT = \DateTime::createFromFormat('d/m/Y', $registro[8]);
 	    	$req->setFechaAsigna($objDT);
 
-	    	$objDT = \DateTime::createFromFormat('d/m/Y', $registro[6]);
+	    	$objDT = \DateTime::createFromFormat('d/m/Y', $registro[9]);
 	    	$req->setFechaEntrega($objDT);
 	    	
-	    	$objDT = \DateTime::createFromFormat('d/m/Y', $registro[7]);
+	    	$objDT = \DateTime::createFromFormat('d/m/Y', $registro[10]);
 	    	$req->setFechaCierre($objDT);
 	    	$req->setEstado(1);
 	    	$fecha=date("d/m/Y");
@@ -605,14 +628,14 @@ class RequerimientosController extends AbstractController
 	    	$objDT = \DateTime::createFromFormat('d/m/Y', $fecha);
 	    	//dd($objDT);
 	    	$req->setFechaCreacion($objDT);
-	    	$req->setObservacion($registro[8]);
+	    	$req->setObservacion($registro[11]);
 	    	
 	    	$entityManager->persist($req);
 	        $entityManager->flush();
 
 	        $trazaRq = new TrazabilidadRequerimiento();
 	        $trazaRq->setRequerimientoId($req->getId());
-	        $trazaRq->setUsuarioId($registro[9]);
+	        $trazaRq->setUsuarioId($registro[12]);
 	        $trazaRq->setEstadoRequerimientoId($req->getEstadoRequerimientosId());
 	        $trazaRq->setObservacion($req->getObservacion());
 	        $entityManager->persist($trazaRq);
@@ -620,7 +643,7 @@ class RequerimientosController extends AbstractController
 	        
 	        $trazaRq = new TrazabilidadRequerimiento();
 	        $trazaRq->setRequerimientoId($req->getId());
-	        $trazaRq->setUsuarioId($registro[10]);
+	        $trazaRq->setUsuarioId($registro[13]);
 	        $trazaRq->setEstadoRequerimientoId($req->getEstadoRequerimientosId());
 	        $trazaRq->setObservacion($req->getObservacion());
 	        $entityManager->persist($trazaRq);

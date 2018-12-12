@@ -160,7 +160,7 @@ class EmpresasController extends AbstractController
         $nombre = $rq->get("nombre_empresa");
       
         $pais   = $rq->get("pais");
-        $estado = $rq->get("estado");
+        $estado = 1;
         $id_empresa = $rq->get("id");
         $entityManager = $this->getDoctrine()->getManager();
         $empresa = $entityManager->find(Empresa::class,$id_empresa);

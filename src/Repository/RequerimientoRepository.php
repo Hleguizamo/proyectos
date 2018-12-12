@@ -43,10 +43,10 @@ class RequerimientoRepository extends ServiceEntityRepository
                 concat_ws(' ', usureq.nombres, usureq.apellidos )  nombre_usuario
                 FROM requerimientos RQ
                 INNER JOIN modulos MD ON RQ.modulo_id = MD.id
-                INNER JOIN aplicaciones APP ON MD.aplicacion_id = APP.id
-                INNER JOIN areas ON APP.area_id = areas.id
-                INNER JOIN gerencias ON areas.gerencia_id = gerencias.id
-                INNER JOIN empresas EMP ON gerencias.empresas_id = EMP.id
+                INNER JOIN aplicaciones APP ON RQ.aplicacion_id = APP.id
+                INNER JOIN areas ON RQ.area_id = areas.id
+                INNER JOIN gerencias ON RQ.gerencia_id = gerencias.id
+                
                 INNER JOIN estado_requerimientos RQ_ST ON RQ.estado_requerimientos_id = RQ_ST.id
                 LEFT JOIN (
                     SELECT usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id, usuarios.empresa_id empresa_id
@@ -108,10 +108,10 @@ class RequerimientoRepository extends ServiceEntityRepository
                 usureq.usuario_id  nombre_usuario
                 FROM requerimientos RQ
                 INNER JOIN modulos MD ON RQ.modulo_id = MD.id
-                INNER JOIN aplicaciones APP ON MD.aplicacion_id = APP.id
-                INNER JOIN areas ON APP.area_id = areas.id
-                INNER JOIN gerencias ON areas.gerencia_id = gerencias.id
-                INNER JOIN empresas EMP ON gerencias.empresas_id = EMP.id
+                INNER JOIN aplicaciones APP ON RQ.aplicacion_id = APP.id
+                INNER JOIN areas ON RQ.area_id = areas.id
+                INNER JOIN gerencias ON RQ.gerencia_id = gerencias.id
+                
                 INNER JOIN estado_requerimientos RQ_ST ON RQ.estado_requerimientos_id = RQ_ST.id
                 LEFT JOIN (
                     SELECT usuario_id, requermiento_id,usuarios.nombres,usuarios.apellidos,usuarios.rol_id

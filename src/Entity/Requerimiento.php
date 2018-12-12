@@ -26,6 +26,18 @@ class Requerimiento
      * @ORM\Column(type="integer")
      */
     private $modulo_id;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $aplicacion_id;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $area_id;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $gerencia_id;
 
     /**
      * @ORM\Column(name="numero_requerimiento", type="string", length=45)
@@ -101,6 +113,30 @@ class Requerimiento
     public function getModuloId(): ?int
     {
         return $this->modulo_id;
+    }
+
+    public function getAplicacionId(){
+        return $this->aplicacion_id;
+    }
+
+    public function setAplicacionId($aplicacion_id){
+        $this->aplicacion_id = $aplicacion_id;
+    }
+
+    public function getAreaId(){
+        return $this->area_id;
+    }
+
+    public function setAreaId($area_id){
+        $this->area_id = $area_id;
+    }
+
+    public function getGerenciaId(){
+        return $this->gerencia_id;
+    }
+
+    public function setGerenciaId($gerencia_id){
+        $this->gerencia_id = $gerencia_id;
     }
 
     public function setModuloId(int $modulo_id): self

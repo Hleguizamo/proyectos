@@ -110,7 +110,7 @@ class SeguimientoController extends AbstractController
     }
 
     /** 
-     * @Route("/editarRequerimiento", name="editarRequerimiento")
+     * @Route("/editarRequerimiento2", name="editarRequerimiento2")
      */
      public function editarRequerimiento(Request $rq){
      	$id = $rq->get("id");

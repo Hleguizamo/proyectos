@@ -26,6 +26,11 @@ class Usuario
     private $area_id;
 
     /**
+     * @ORM\Column(name="gerencia_id", type="integer")
+     */
+    private $gerencia_id;
+
+    /**
      * @ORM\Column(type="integer")
      */
     private $empresa_id;
@@ -134,6 +139,11 @@ class Usuario
     {
         return $this->area_id;
     } 
+
+    public function getGerenciaId(): ?int
+    {
+        return $this->gerenica_id;
+    } 
    
     public function getTipoDocumentoId(): ?int
     {
@@ -165,6 +175,15 @@ class Usuario
 
         return $this;
     }
+
+
+    public function setGerenciaId(string $gerenica_id): self
+    {
+        $this->gerencia_id = $gerenica_id;
+
+        return $this;
+    }
+
 
     public function getNumeroDocumento(): ?string
     {

@@ -17,10 +17,7 @@ class Aplicacion
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $area_id;
+    
 
     /**
      * @ORM\Column(type="string", length=45)

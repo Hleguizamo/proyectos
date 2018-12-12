@@ -1,10 +1,7 @@
-nombre;apellido;numero_documento;email;area;tipodocumento;empresa;idrol;estado;celular;telefono;fechacreacion
-Luisa Maria;Marin Muñoz;1088299;luma@gmail.com;2;1;1;1;1;3333444;3333333;20/10/18
-Luisa Maria;Marin Muñoz;1088300;luma@gmail.com;2;1;1;1;2;3333445;3333334;20/10/19
-Luisa Maria;Marin Muñoz;1088301;luma@gmail.com;2;1;1;1;3;3333446;3333335;20/10/20
-Luisa Maria;Marin Muñoz;1088302;luma@gmail.com;1;1;1;1;4;3333447;3333336;20/10/21
-Luisa Maria;Marin Muñoz;1088303;luma@gmail.com;1;1;1;2;5;3333448;3333337;20/10/22
-Luisa Maria;Marin Muñoz;1088304;luma@gmail.com;1;1;1;2;6;3333449;3333338;20/10/23
-Luisa Maria;Marin Muñoz;1088305;luma@gmail.com;1;1;1;2;7;3333450;3333339;20/10/24
-Luisa Maria;Marin Muñoz;1088306;luma@gmail.com;3;1;1;2;8;3333451;3333340;20/10/25
-Luisa Maria;Marin Muñoz;1088307;luma@gmail.com;3;1;1;3;9;3333452;3333341;20/10/26
+Nombre;Apellido;Numero Documento;Email;Area;Gerencia;TIpo Documento;Empresa;Id rol;Estado;Celular;Telefono;Fechacreacion
+laura;Perez;10900;luma@gmail.com;29;13;1;8;1;1;3333444;3333333;20/10/18
+Kathe;Sanchez;101001;luma@gmail.com;29;14;1;8;1;1;3333445;3333334;20/10/19
+Sara;Quiz;101102;luma@gmail.com;29;13;1;8;1;1;3333446;3333335;20/10/20
+Charly;Ochoa;101203;luma@gmail.com;29;13;1;8;1;1;3333447;3333336;20/10/21
+Tamy;Rendon;101304;luma@gmail.com;29;1;1;8;2;1;3333448;3333337;20/10/22
+Carolina;Perez;10882993333;luma@gmail.com;30;17;1;1;2;1;452532;543535;20/10/2012

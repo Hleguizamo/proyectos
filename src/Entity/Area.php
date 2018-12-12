@@ -17,10 +17,7 @@ class Area
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $gerencia_id;
+    
 
     /**
      * @ORM\Column(type="string", length=45)
@@ -52,17 +49,7 @@ class Area
         return $this->id;
     }
 
-    public function getGerenciaId(): ?int
-    {
-        return $this->gerencia_id;
-    }
-
-    public function setGerenciaId(int $gerencia_id): self
-    {
-        $this->gerencia_id = $gerencia_id;
-
-        return $this;
-    }
+   
 
     public function getNombre(): ?string
     {
