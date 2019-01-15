@@ -73,6 +73,8 @@ class UsuariosController extends AbstractController
         $area =  $this->getDoctrine()->getRepository(Area::class)->findAreasOption();
         $empresas =  $this->getDoctrine()->getRepository(Empresa::class)->findEmpresasOption();
         $gerencias =  $this->getDoctrine()->getRepository(Gerencia::class)->findGerenciasOptions();
+        $session =new  Session(new NativeSessionStorage(), new AttributeBag());
+        $id_rol=$session->get('id_rol');
 
         $data = array(
             'PageTitle' => 'Usuarios',
@@ -114,7 +116,9 @@ class UsuariosController extends AbstractController
             'deleteUrl' => 'eliminarUsuario', 
             'getDataEdit' => 'showUsuario',  // url donde se consultan los datos a editar
             'idColumn' => 'id_usuario',   // nombre de la columna que es id para los registros    
+            'exportButtons' =>  $id_rol == 1,
         );
+
         return new JsonResponse($data);
     }
 
