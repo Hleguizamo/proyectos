@@ -64,33 +64,26 @@ class ConsultoresController extends AbstractController
         $rol= $this->getDoctrine()->getRepository(Rol::class)->findRol();
          $area =  $this->getDoctrine()->getRepository(Area::class)->findAreasOption();
          $empresas =  $this->getDoctrine()->getRepository(Empresa::class)->findEmpresasOption();
+         $session =new  Session(new NativeSessionStorage(), new AttributeBag());
+        $id_rol=$session->get('id_rol');
 
         $data = array(
             'PageTitle' => 'Consultores',
             'columns' => array(
-                ["data"=> "id_usuario",       "name" => "Id Consultor",       "type"=>"number", "CRUD"=> [0,1,0,0] ],
-                ["data"=> "id_documento",               "name" => "Tipo documentos",    "type"=>"select", "options"=>$tipo_documento, "CRUD"=> [1,0,1,0] ],
-            	["data"=> "nombre_documento",           "name" => "Tipo documento",    "type"=>"number","CRUD"=> [0,1,0,0] ],
-                ["data"=> "nombre_usuario",             "name" => "Nombre",     "type"=>"text","CRUD"=> [1,1,1,1] ],
-                ["data"=> "apellido_usuario",           "name" => "Apellido",     "type"=>"text","CRUD"=> [1,0,1,1] ],
-                ["data"=> "numero_documento",           "name" => "Numero_documento",     "type"=>"number", "CRUD"=> [1,1,1,1] ],
-                ["data"=> "email",                       "name" => "Email",     "type"=>"email","CRUD"=> [1,1,1,1] ],
-                ["data"=> "area_id",                    "name" => "Area",    "type"=>"select", "options"=>$area,"CRUD"=> [1,0,1,0] ],
-                ["data"=> "id_rol",                     "name" => "Rol",    "type"=>"select", "options"=> 
-                                                            array(
-                                                                ['value'=>'2','name'=>'Consultor']), "CRUD"=> [1,0,1,0] ],               
-                ["data"=> "celular",             		"name" => "Celular",     "type"=>"number","CRUD"=> [1,0,1,1] ],
-                ["data"=> "telefono",             		"name" => "Telefono",     "type"=>"number","CRUD"=> [1,0,1,1] ],
-                
-                ["data"=> "nombre_rol",             	"name" => "nombre_rol",    "type"=>"text","CRUD"=> [0,1,0,0] ],
-                ["data"=> "nombre_empresa",             "name" => "Empresa",       "type"=>"select", "options"=>$empresas,"CRUD"=> [1,1,1,0] ],
-               
-                ["data"=> "estado",                    "name"=> "Estado",      "type"=>"select", 
-                                                        "options"=> 
-                                                            array(
-                                                                ['value'=>'1','name'=>'Activo'],
-                                                                ['value'=>'0','name'=>'Inactivo'])
-                ,"CRUD"=> [1,0,1,1]],
+                ["data"=> "id_usuario",                 "name" => "Id Consultor",       "type"=>"number",   "CRUD"=> [0,1,0,0] ],
+                ["data"=> "id_documento",               "name" => "Tipo documentos",    "type"=>"select",   "options"=>$tipo_documento, "CRUD"=> [1,0,1,0] ],
+            	["data"=> "nombre_documento",           "name" => "Tipo documento",     "type"=>"number",   "CRUD"=> [0,1,0,0] ],
+                ["data"=> "nombre_usuario",             "name" => "Nombre",             "type"=>"text",     "CRUD"=> [1,1,1,1] ],
+                ["data"=> "apellido_usuario",           "name" => "Apellido",           "type"=>"text",     "CRUD"=> [1,0,1,1] ],
+                ["data"=> "numero_documento",           "name" => "Numero_documento",   "type"=>"number",   "CRUD"=> [1,1,1,1] ],
+                ["data"=> "email",                       "name" => "Email",             "type"=>"email",    "CRUD"=> [1,1,1,1] ],
+                ["data"=> "area_id",                    "name" => "Area",               "type"=>"select",   "options"=>$area,           "CRUD"=> [1,0,1,0] ],
+                ["data"=> "id_rol",                     "name" => "Rol",                "type"=>"select",   "options"=> array( ['value'=>'2','name'=>'Consultor']), "CRUD"=> [1,0,1,0] ],               
+                ["data"=> "celular",             		"name" => "Celular",            "type"=>"number",   "CRUD"=> [1,0,1,1] ],
+                ["data"=> "telefono",             		"name" => "Telefono",           "type"=>"number",   "CRUD"=> [1,0,1,1] ],
+                ["data"=> "nombre_rol",             	"name" => "nombre_rol",         "type"=>"text",     "CRUD"=> [0,1,0,0] ],
+                ["data"=> "nombre_empresa",             "name" => "Empresa",            "type"=>"select",   "options"=>$empresas,"CRUD"=> [1,1,1,0] ],
+                ["data"=> "estado",                    "name"=> "Estado",               "type"=>"select",   "options"=> array(['value'=>'1','name'=>'Activo'],['value'=>'0','name'=>'Inactivo']),"CRUD"=> [1,0,1,1]],
                 
                 ["data"=> "options",  "width"=>"200px",                  "name"=> "Opciones" , "defaultContent"=> '<button class="editor_edit btn btn-warning btn-sm" onclick="edit(event,this)" >Editar</button>   <button type="button" class="btn btn-danger btn-sm" onclick="deleteReg(event,this)"> Eliminar </button>', "CRUD"=> [0,1,0,0] ],
             ),
@@ -102,6 +95,7 @@ class ConsultoresController extends AbstractController
             'deleteUrl' => 'eliminarConsultor',
             'getDataEdit' => 'showUsuario',  // url donde se consultan los datos a editar
             'idColumn' => 'id_usuario',   // nombre de la columna que es id para los registros    
+            'exportButtons' =>  $id_rol == 1,
         );
         return new JsonResponse($data);
     }

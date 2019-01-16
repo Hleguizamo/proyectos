@@ -190,6 +190,7 @@ function loadDataConfig(){
     data: {},
     success : function(data){
       $("#contentTitle").html(data.PageTitle);
+      document.title = data.PageTitle;
       columns = data.columns;
       distribucion = data.dist;
       saveUrl = data.saveUrl;
@@ -197,13 +198,29 @@ function loadDataConfig(){
       id_registro =  data.idColumn;
       editUrl = data.editUrl;
       deleteUrl = data.deleteUrl;
+      var downloadFields = data.downloadFields != undefined ? data.downloadFields : [];
+      downloadFields = setDownloadFields(downloadFields,data.columns);
       addTableHead(data.columns);
       data.exportButtons = data.exportButtons != undefined? data.exportButtons : false;
-      loadDataTable(data.dataRoute,data.dataSrc,data.columns,data.exportButtons);
+      loadDataTable(data.dataRoute,data.dataSrc,data.columns,data.exportButtons,downloadFields);
       loadButtons(data.buttons,data.dataRoute);
     }
   });
 
+}
+
+function setDownloadFields(descargables,columns){
+  var campos = [];
+  if(descargables.length > 0 ){
+    campos = descargables;
+  }else{
+    $.each(columns, function(index,col){
+      if(col.CRUD[1] && col.data != "options"){
+        campos.push(index);
+      }
+    });
+  }
+  return campos;
 }
 
 function loadButtons(buttons,nombreRuta){
@@ -250,7 +267,7 @@ function addTableHead(columns){
 
 
 
-function loadDataTable(url,dataSrc,columns,exportButtons){
+function loadDataTable(url,dataSrc,columns,exportButtons,downloadFields){
   var dataDom = exportButtons? 'Bfrti<"col-12 col-xs-12 text-right" p>' : 'frti<"col-12 col-xs-12 text-right" p>';
   setColumnFilters("reqTable");
   tablaDatos = $('#reqTable').DataTable({
@@ -266,7 +283,7 @@ function loadDataTable(url,dataSrc,columns,exportButtons){
            {
                 extend: 'excel',
                 exportOptions: {
-                    columns: [0,3,4,5,6,7,8,9,10,11,12,13,14,15]
+                    columns: downloadFields 
                 }
               
             },

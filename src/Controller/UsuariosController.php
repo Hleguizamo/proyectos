@@ -117,6 +117,7 @@ class UsuariosController extends AbstractController
             'getDataEdit' => 'showUsuario',  // url donde se consultan los datos a editar
             'idColumn' => 'id_usuario',   // nombre de la columna que es id para los registros    
             'exportButtons' =>  $id_rol == 1,
+            'downloadFields' => [0,3,4,5,6,7,8,9,10,11,12,13,14,15],
         );
 
         return new JsonResponse($data);
